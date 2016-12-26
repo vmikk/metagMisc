@@ -12,7 +12,7 @@
 #' @examples
 #'
 # Function to parse taxonomy from SILVA db
-silva.tax.parse <- function(x, db){
+silva_tax_parse <- function(x, db){
   # x = character string from BLAST
   # db = data frame with SILVA taxonomy
 
@@ -53,12 +53,12 @@ silva.tax.parse <- function(x, db){
 #' @examples
 #'
 # Prepare taxonomy table
-silva.tax.parse.batch <- function(x, db){
+silva_tax_parse_batch <- function(x, db){
   # x = vector of character strings (taxonomy assigned by BLAST)
   # db = data frame with SILVA taxonomy
 
   # Prepare list of taxonomic assignments
-  res <- alply(.data = x, .margins = 1, .fun = silva.tax.parse)
+  res <- alply(.data = x, .margins = 1, .fun = silva_tax_parse)
 
   # Convert each vector to matrix
   res <- llply(.data = res, .fun = function(x){ t(as.matrix(x)) })
@@ -94,6 +94,6 @@ silva.tax.parse.batch <- function(x, db){
 # "Eukaryota;Opisthokonta;Holozoa;Metazoa (Animalia);Eumetazoa;Bilateria;Rotifera;Monogononta;Ploimida;Lepadella patella",
 # "Eukaryota;SAR;Rhizaria;Cercozoa;Novel Clade 10;uncultured eukaryote"
 # )
-# silva.tax.parse.batch(x, tax.db)
+# silva_tax_parse_batch(x, tax.db)
 
 
