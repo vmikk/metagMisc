@@ -10,9 +10,9 @@
 #' @return Matrix with estimated error rates that can be used with dada-function.
 #' @export
 #'
-#' @references
-#' https://benjjneb.github.io/dada2/bigdata.html
+#' @references \url{https://benjjneb.github.io/dada2/bigdata.html}
 #'
+#' @seealso \code{\link{dada}}
 #' @examples
 #' library(dada2)
 #' # filtF and filtR are character vectors with the full path to fastq.gz-files
