@@ -38,7 +38,7 @@ dada_learn_errors_subset <- function(filts, n = 25, samps = NULL, multitr = TRUE
     if(verbose == TRUE){
         # Count number of reads in the selected samples
         readn <- plyr::laply(.data = drp.learn, .fun = function(z){ sum(z$uniques) })
-        cat("There are ", sum(readn), " reads in the ", n, " selected samples.\n")
+        cat("There are ", sum(readn), " reads in the ", length(filts.learn), " selected samples.\n")
     }
 
     # Estimate error rates
