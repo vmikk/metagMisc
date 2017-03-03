@@ -1,9 +1,10 @@
 # metagMisc
 Miscellaneous functions for metagenomic analysis.
+The repository is currently in **ALPHA** state. Nothing is guaranteed.
 
 # Installation
 ```
-devtools::install_github("vmikk/phylonest")
+devtools::install_github("vmikk/metagMisc")
 ```
 
 ####Dependencies####
