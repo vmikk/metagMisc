@@ -1,5 +1,6 @@
 # metagMisc
 Miscellaneous functions for metagenomic analysis.
+
 The repository is currently in **ALPHA** state. Nothing is guaranteed.
 
 # Installation
