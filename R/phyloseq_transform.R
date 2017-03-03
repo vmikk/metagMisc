@@ -29,6 +29,14 @@ vst_blind_scaling <- function(physeq, dropneg = F, dropmissing = T, ...){
 
   require(DESeq2)
 
+  # Add dummy sample data (phyloseq_to_deseq2 doesn't work without sample_data)
+  if(is.null( sample_data(physeq, errorIfNULL = F) )){
+    smpdat_nul <- TRUE
+    smpdat <- data.frame(TMP = rep(1, times = nsamples(physeq)))
+    rownames(smpdat) <- sample_names(physeq)
+    sample_data(physeq) <- smpdat
+  }
+
   dsc <- phyloseq_to_deseq2(physeq, design = formula(~ 1))
   # otu_norm <- varianceStabilizingTransformation(dsc, blind = T, ...)
   # otu_norm <- assay(otu_norm)
@@ -52,6 +60,11 @@ vst_blind_scaling <- function(physeq, dropneg = F, dropmissing = T, ...){
     physeq.tr <- prune_taxa(taxa_sums(physeq.tr) > 0, physeq.tr)
   }
 
+  # Remove dummy sample data if present
+  if(smpdat_nul == TRUE){
+    pp@sam_data <- NULL
+  }
+
   return(physeq.tr)
 }
 
@@ -60,6 +73,14 @@ vst_blind_scaling <- function(physeq, dropneg = F, dropmissing = T, ...){
 # rlog is preferable to the vst if the size factors vary widely
 rlog_blind_scaling <- function(physeq, dropneg = F, dropmissing = T, ...){
   require(DESeq2)
+
+  # Add dummy sample data (phyloseq_to_deseq2 doesn't work without sample_data)
+  if(is.null( sample_data(physeq, errorIfNULL = F) )){
+    smpdat_nul <- TRUE
+    smpdat <- data.frame(TMP = rep(1, times = nsamples(physeq)))
+    rownames(smpdat) <- sample_names(physeq)
+    sample_data(physeq) <- smpdat
+  }
 
   dsc <- phyloseq_to_deseq2(physeq, design = formula(~ 1))
   otu_norm <- rlogTransformation(dsc, blind = T, ...)
@@ -77,6 +98,11 @@ rlog_blind_scaling <- function(physeq, dropneg = F, dropmissing = T, ...){
   # Remove missing OTUs
   if(dropneg == TRUE & dropmissing == TRUE){
     physeq.tr <- prune_taxa(taxa_sums(physeq.tr) > 0, physeq.tr)
+  }
+
+  # Remove dummy sample data if present
+  if(smpdat_nul == TRUE){
+    pp@sam_data <- NULL
   }
 
   return(physeq.tr)
