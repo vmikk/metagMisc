@@ -1,10 +1,29 @@
 ## Functions to transform phyloseq OTU tables
 
-## Cumulative sum scaling (CSS) normalization
-# median scaling factor across samples will be used as default
-# Paulson et al. Nature Methods 10, 1200–1202 (2013) doi:10.1038/nmeth.2658
-# http://www.nature.com/nmeth/journal/v10/n12/full/nmeth.2658.html
-css_scaling <- function(physeq, norm = TRUE, log = TRUE, ...){
+## TO DO:
+# - add warning about negative values
+# - add function description
+# - add documentation and links (e.g., to DESeq2 manual)
+# - make single wrapper function for all methods ??
+
+
+#' @title Cumulative sum scaling (CSS) normalization.
+#' @description
+#'
+#' @param physeq Phyloseq object.
+#' @param norm Logical, return normalized counts.
+#' @param log Logical, apply a logarithmic transform (log2) to the normalized count data.
+#' @param ... Additional arguments will be passed to \code{\link{MRcounts}.
+#'
+#' @details Median scaling factor across samples will be used as default.
+#' @return Phyloseq object with transformed counts in OTU table.
+#' @export
+#' @references
+#' Paulson et al. Nature Methods 10, 1200–1202 (2013) doi:10.1038/nmeth.2658. http://www.nature.com/nmeth/journal/v10/n12/full/nmeth.2658.html
+#' @seealso \code{\link{phyloseq_transform_vst_blind}, \code{\link{phyloseq_transform_rlog_blind}, \code{\link{rlog} \code{\link{varianceStabilizingTransformation}
+#' @examples
+#'
+phyloseq_transform_css <- function(physeq, norm = TRUE, log = TRUE, ...){
   require(metagenomeSeq)
 
   MGS <- phyloseq_to_metagenomeSeq(physeq)
@@ -22,10 +41,19 @@ css_scaling <- function(physeq, norm = TRUE, log = TRUE, ...){
 }
 
 
-## Variance stabilizing transformation (VST)
-# For downstream analysis use sample covariate information (blind = F) !!!!!
-vst_blind_scaling <- function(physeq, dropneg = F, dropmissing = T, ...){
-  ## dropneg = replace negative transformed values with 0
+#' @title Variance stabilizing transformation (VST).
+#'
+#' @param physeq Phyloseq object.
+#' @param dropneg Logical, replace negative transformed values with 0.
+#' @param dropmissing Logical, remove missing data.
+#@param ... Additional arguments will be passed to \code{\link{varianceStabilizingTransformation}.
+#'
+#' @details For downstream analysis it could be better to use sample covariate information (blind = FALSE in \code{\link{varianceStabilizingTransformation}).
+#' @return Phyloseq object with transformed counts in OTU table.
+#' @export
+#' @seealso \code{\link{phyloseq_transform_rlog_blind}, \code{\link{phyloseq_transform_css}, \code{\link{varianceStabilizingTransformation}, \code{\link{rlog}
+#' @examples
+phyloseq_transform_vst_blind <- function(physeq, dropneg = F, dropmissing = T, ...){
 
   require(DESeq2)
 
@@ -69,9 +97,19 @@ vst_blind_scaling <- function(physeq, dropneg = F, dropmissing = T, ...){
 }
 
 
-## Regularized-log transformation
-# rlog is preferable to the vst if the size factors vary widely
-rlog_blind_scaling <- function(physeq, dropneg = F, dropmissing = T, ...){
+#' @title Regularized-log (rlog) transformation.
+#' @description
+#' @param physeq Phyloseq object.
+#' @param dropneg Logical, replace negative transformed values with 0.
+#' @param dropmissing Logical, remove missing data.
+#' @param ... Additional arguments will be passed to \code{\link{rlogTransformation}.
+#'
+#' @details rlog transformation (this function) is preferable to the vst (\code{\link{phyloseq_transform_vst_blind}) if the size factors vary widely.
+#' @return Phyloseq object with transformed counts in OTU table.
+#' @export
+#' @seealso \code{\link{phyloseq_transform_vst_blind}, \code{\link{phyloseq_transform_css}, \code{\link{rlog}, \code{\link{varianceStabilizingTransformation}
+#' @examples
+phyloseq_transform_rlog_blind <- function(physeq, dropneg = F, dropmissing = T, ...){
   require(DESeq2)
 
   # Add dummy sample data (phyloseq_to_deseq2 doesn't work without sample_data)
