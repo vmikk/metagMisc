@@ -39,7 +39,8 @@ parse_swarms <- function(x){
     names(sw) <- sw.names
 
     # Convert result to data.frame
-    sw <- ldply(.data = sw, .fun = function(z){ data.frame(Query = z) }, .id = "OTU")
+    sw <- ldply(.data = sw, .fun = function(z){ data.frame(Query = z, stringsAsFactors = F) }, .id = "OTU")
+    sw$OTU <- as.character(sw$OTU)
 
     return(sw)
 }
