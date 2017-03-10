@@ -147,9 +147,25 @@ phyloseq_transform_rlog_blind <- function(physeq, dropneg = F, dropmissing = T, 
 }
 
 
-## Log-transform OTU abundance table (logarithmic transformation as suggested by Anderson et al. (2006))
-# non-integer data will be divided by smallest positive value
-# log(x) + 1 for x > 0,
+
+#' @title Log-transformation of OTU abundance table.
+#'
+#' @param physeq Phyloseq object.
+#' @param ... Additional arguments (e.g., "logbase" for the logarithm base) will be passed to \code{\link{decostand}.
+#'
+#' @details
+#' Logarithmic transformation as suggested by Anderson et al. (2006) will be applied to the OTU table in phyloseq-object. First, non-integer data will be divided by smallest positive value. Second, log(x) + 1 for x > 0.
+#' Default value of the logarithm base ("logbase" parameter) is 2.
+#' This function is a wrapper to \code{\link{decostand} in vegan.
+#' @return Phyloseq object with log-transformed counts in OTU table.
+#' @export
+#' @seealso \code{\link{decostand}
+#' @references  Anderson MJ, Ellingsen KE and McArdle BH. (2006) Multivariate dispersion as a measure of beta diversity. Ecology Letters 9, P. 683–693.
+#'
+#' @examples
+#' data(enterotype)
+#' physeq_transform_anderson_log(enterotype)
+#'
 physeq_transform_anderson_log <- function(physeq, ...){
   require(vegan)
   otus <- as.data.frame( otu_table(physeq) )
@@ -158,4 +174,3 @@ physeq_transform_anderson_log <- function(physeq, ...){
   otu_table(physeq) <- otu_table(otu_log, taxa_are_rows = T)
   return(physeq)
 }
-
