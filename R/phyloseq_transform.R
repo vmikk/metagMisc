@@ -7,7 +7,7 @@
 # - make single wrapper function for all methods ??
 
 
-#' @title Cumulative sum scaling (CSS) normalization.
+#' @title Cumulative sum scaling (CSS) normalization of OTU abundance table.
 #' @description
 #'
 #' @param physeq Phyloseq object.
@@ -41,7 +41,7 @@ phyloseq_transform_css <- function(physeq, norm = TRUE, log = TRUE, ...){
 }
 
 
-#' @title Variance stabilizing transformation (VST).
+#' @title Variance stabilizing transformation (VST) of OTU abundance table.
 #'
 #' @param physeq Phyloseq object.
 #' @param dropneg Logical, replace negative transformed values with 0.
@@ -97,7 +97,7 @@ phyloseq_transform_vst_blind <- function(physeq, dropneg = F, dropmissing = T, .
 }
 
 
-#' @title Regularized-log (rlog) transformation.
+#' @title Regularized-log (rlog) transformation of OTU abundance table.
 #' @description
 #' @param physeq Phyloseq object.
 #' @param dropneg Logical, replace negative transformed values with 0.
