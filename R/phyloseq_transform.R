@@ -146,3 +146,16 @@ phyloseq_transform_rlog_blind <- function(physeq, dropneg = F, dropmissing = T, 
   return(physeq.tr)
 }
 
+
+## Log-transform OTU abundance table (logarithmic transformation as suggested by Anderson et al. (2006))
+# non-integer data will be divided by smallest positive value
+# log(x) + 1 for x > 0,
+physeq_transform_anderson_log <- function(physeq, ...){
+  require(vegan)
+  otus <- as.data.frame( otu_table(physeq) )
+  otu_log <- decostand(otus, method = "log", ...)
+  rownames(otu_log) <- taxa_names(physeq)
+  otu_table(physeq) <- otu_table(otu_log, taxa_are_rows = T)
+  return(physeq)
+}
+
