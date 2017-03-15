@@ -3,18 +3,23 @@
 
 #' @title Split single SILVA taxonomic annotation to taxonomic ranks.
 #'
-#' @param x Character string with taxonomic annotation.
-#' @param db Data frame with SILVA taxonomy.
+#' @param x Character string with taxonomic annotation from BLAST.
+#' @param db Data frame with rank designations for all taxonomic paths in the SILVA taxonomy.
 #'
-#' @return
+#' @details This function will split the taxonomic annotation based on the SILVA database and assign a corresponding taxonomic rank to the obtained parts.
+#' @return Named charcter vector with taxonomic annotation (names = rank designations).
 #' @export
-#'
+#' @seealso \code{\link{silva_tax_parse_batch}}
 #' @examples
+#' # Download taxonomic rank designations for all taxonomic paths used in the SILVA taxonomies
+#' tax.db <- read.delim("https://www.arb-silva.de/fileadmin/silva_databases/release_128/Exports/taxonomy/tax_slv_ssu_128.txt", header = F, stringsAsFactors = F)
+#' colnames(tax.db) <- c("path", "taxid", "rank", "remark", "release")
+#'
+#' x <- "Eukaryota;SAR;Alveolata;Ciliophora;Intramacronucleata;Conthreep;Oligohymenophorea;Peritrichia;Telotrochidium;uncultured eukaryote"
+#' silva_tax_parse(x, tax.db)
 #'
 # Function to parse taxonomy from SILVA db
 silva_tax_parse <- function(x, db){
-  # x = character string from BLAST
-  # db = data frame with SILVA taxonomy
 
   # Split the search string
   xs <- strsplit(x, split = ";")[[1]]
@@ -26,7 +31,7 @@ silva_tax_parse <- function(x, db){
   }
 
   # Find path in db and assign taxonomic level
-  tl <- aaply(.data = pp, .margins = 1, .fun = function(z){ tax.db$rank[ match(table = tax.db$path, x = z) ] })
+  tl <- aaply(.data = pp, .margins = 1, .fun = function(z){ db$rank[ match(table = db$path, x = z) ] })
   names(xs) <- tl
 
   # Assign the last column with 'species' if it is NA
@@ -36,29 +41,38 @@ silva_tax_parse <- function(x, db){
 
   return(xs)
 }
-## Example
-# x <- "Eukaryota;SAR;Alveolata;Ciliophora;Intramacronucleata;Conthreep;Oligohymenophorea;Peritrichia;Telotrochidium;uncultured eukaryote"
-# silva.tax.parse(x, tax.db)
 
 
-
-#' Title
 #' @title Split vector of SILVA taxonomic annotations and prepare taxonomy table.
-#' @param x Vector of character strings with taxonomic annotation.
-#' @param db Data frame with SILVA taxonomy
+#' @param x Vector of character strings with taxonomic annotation (assigned by BLAST)
+#' @param db Data frame with rank designations for all taxonomic paths in the SILVA taxonomy
 #'
-#' @return
+#' @return Data frame with OTUs or species as rows and their taxonomic ranks as columns.
 #' @export
-#'
+#' @seealso \code{\link{silva_tax_parse}}
 #' @examples
+#' # Download taxonomic rank designations for all taxonomic paths used in the SILVA taxonomies
+#' tax.db <- read.delim("https://www.arb-silva.de/fileadmin/silva_databases/release_128/Exports/taxonomy/tax_slv_ssu_128.txt", header = F, stringsAsFactors = F)
+#' colnames(tax.db) <- c("path", "taxid", "rank", "remark", "release")
 #'
-# Prepare taxonomy table
+#' x <- c("Eukaryota;Opisthokonta;Holozoa;Metazoa (Animalia);Eumetazoa;Bilateria;Platyhelminthes;Catenulida;Catenulidae;Paracatenula galateia",
+#' "Eukaryota;SAR;Rhizaria;Cercozoa;Imbricatea;Silicofilosea;Euglyphida;Assulinidae;Assulina;Assulina muscorum",
+#' "Eukaryota;Opisthokonta;Nucletmycea;Fungi;Cryptomycota;LKM11;uncultured eukaryote",
+#' "Eukaryota;Opisthokonta;Nucletmycea;Fungi;Dikarya;Basidiomycota;Ustilaginomycotina;Exobasidiomycetes;Malasseziales;Incertae Sedis;Malassezia;Malassezia restricta CBS 7877",
+#' "Eukaryota;Opisthokonta;Nucletmycea;Fungi;Cryptomycota;LKM11;uncultured fungus",
+#' "Eukaryota;SAR;Alveolata;Ciliophora;Intramacronucleata;Conthreep;Oligohymenophorea;Peritrichia;Telotrochidium;uncultured eukaryote",
+#' "No blast hit", "Eukaryota;SAR;Alveolata;Ciliophora;Intramacronucleata;Armophorea;Armophorida;Metopus;Metopus striatus",
+#' "Eukaryota;Opisthokonta;Holozoa;Metazoa (Animalia);Eumetazoa;Bilateria;Rotifera;Monogononta;Ploimida;Lepadella patella",
+#' "Eukaryota;SAR;Rhizaria;Cercozoa;Novel Clade 10;uncultured eukaryote"
+#' )
+#' silva_tax_parse_batch(x, tax.db)
+#'
 silva_tax_parse_batch <- function(x, db){
-  # x = vector of character strings (taxonomy assigned by BLAST)
-  # db = data frame with SILVA taxonomy
+
+  require(plyr)
 
   # Prepare list of taxonomic assignments
-  res <- alply(.data = x, .margins = 1, .fun = silva_tax_parse)
+  res <- alply(.data = x, .margins = 1, .fun = silva_tax_parse, db = db)
 
   # Convert each vector to matrix
   res <- llply(.data = res, .fun = function(x){ t(as.matrix(x)) })
@@ -83,17 +97,3 @@ silva_tax_parse_batch <- function(x, db){
 
   return(res)
 }
-## Example
-# x <- c("Eukaryota;Opisthokonta;Holozoa;Metazoa (Animalia);Eumetazoa;Bilateria;Platyhelminthes;Catenulida;Catenulidae;Paracatenula galateia",
-# "Eukaryota;SAR;Rhizaria;Cercozoa;Imbricatea;Silicofilosea;Euglyphida;Assulinidae;Assulina;Assulina muscorum",
-# "Eukaryota;Opisthokonta;Nucletmycea;Fungi;Cryptomycota;LKM11;uncultured eukaryote",
-# "Eukaryota;Opisthokonta;Nucletmycea;Fungi;Dikarya;Basidiomycota;Ustilaginomycotina;Exobasidiomycetes;Malasseziales;Incertae Sedis;Malassezia;Malassezia restricta CBS 7877",
-# "Eukaryota;Opisthokonta;Nucletmycea;Fungi;Cryptomycota;LKM11;uncultured fungus",
-# "Eukaryota;SAR;Alveolata;Ciliophora;Intramacronucleata;Conthreep;Oligohymenophorea;Peritrichia;Telotrochidium;uncultured eukaryote",
-# "No blast hit", "Eukaryota;SAR;Alveolata;Ciliophora;Intramacronucleata;Armophorea;Armophorida;Metopus;Metopus striatus",
-# "Eukaryota;Opisthokonta;Holozoa;Metazoa (Animalia);Eumetazoa;Bilateria;Rotifera;Monogononta;Ploimida;Lepadella patella",
-# "Eukaryota;SAR;Rhizaria;Cercozoa;Novel Clade 10;uncultured eukaryote"
-# )
-# silva_tax_parse_batch(x, tax.db)
-
-
