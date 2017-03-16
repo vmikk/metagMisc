@@ -9,17 +9,17 @@
 #' @details This function will split the taxonomic annotation based on the SILVA database and assign a corresponding taxonomic rank to the obtained parts.
 #' @return Named charcter vector with taxonomic annotation (names = rank designations).
 #' @export
-#' @seealso \code{\link{silva_tax_parse_batch}}
+#' @seealso \code{\link{parse_silva_tax_batch}}
 #' @examples
 #' # Download taxonomic rank designations for all taxonomic paths used in the SILVA taxonomies
 #' tax.db <- read.delim("https://www.arb-silva.de/fileadmin/silva_databases/release_128/Exports/taxonomy/tax_slv_ssu_128.txt", header = F, stringsAsFactors = F)
 #' colnames(tax.db) <- c("path", "taxid", "rank", "remark", "release")
 #'
 #' x <- "Eukaryota;SAR;Alveolata;Ciliophora;Intramacronucleata;Conthreep;Oligohymenophorea;Peritrichia;Telotrochidium;uncultured eukaryote"
-#' silva_tax_parse(x, tax.db)
+#' parse_silva_tax(x, tax.db)
 #'
 # Function to parse taxonomy from SILVA db
-silva_tax_parse <- function(x, db){
+parse_silva_tax <- function(x, db){
 
   # Split the search string
   xs <- strsplit(x, split = ";")[[1]]
@@ -49,7 +49,7 @@ silva_tax_parse <- function(x, db){
 #'
 #' @return Data frame with OTUs or species as rows and their taxonomic ranks as columns.
 #' @export
-#' @seealso \code{\link{silva_tax_parse}}
+#' @seealso \code{\link{parse_silva_tax}}
 #' @examples
 #' # Download taxonomic rank designations for all taxonomic paths used in the SILVA taxonomies
 #' tax.db <- read.delim("https://www.arb-silva.de/fileadmin/silva_databases/release_128/Exports/taxonomy/tax_slv_ssu_128.txt", header = F, stringsAsFactors = F)
@@ -65,14 +65,14 @@ silva_tax_parse <- function(x, db){
 #' "Eukaryota;Opisthokonta;Holozoa;Metazoa (Animalia);Eumetazoa;Bilateria;Rotifera;Monogononta;Ploimida;Lepadella patella",
 #' "Eukaryota;SAR;Rhizaria;Cercozoa;Novel Clade 10;uncultured eukaryote"
 #' )
-#' silva_tax_parse_batch(x, tax.db)
+#' parse_silva_tax_batch(x, tax.db)
 #'
-silva_tax_parse_batch <- function(x, db){
+parse_silva_tax_batch <- function(x, db){
 
   require(plyr)
 
   # Prepare list of taxonomic assignments
-  res <- alply(.data = x, .margins = 1, .fun = silva_tax_parse, db = db)
+  res <- alply(.data = x, .margins = 1, .fun = parse_silva_tax, db = db)
 
   # Convert each vector to matrix
   res <- llply(.data = res, .fun = function(x){ t(as.matrix(x)) })
