@@ -8,7 +8,8 @@ The repository is currently in **ALPHA** state. Nothing is guaranteed.
 devtools::install_github("vmikk/metagMisc")
 ```
 
-####Dependencies####
+## Dependencies
+
 `source("http://bioconductor.org/biocLite.R")`
 * phyloseq: `biocLite("phyloseq")`
 * dada2: `biocLite("dada2")`
@@ -19,3 +20,6 @@ devtools::install_github("vmikk/metagMisc")
 * ggplot2
 * plyr
 * openssl
+
+# Acknowledgements
+The development of this software was supported by RFBR grant 16-04-01259.
