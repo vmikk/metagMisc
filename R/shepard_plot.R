@@ -1,4 +1,29 @@
 
+#' @title Plot Shepard diagram
+#' @description This function helps to estimate the representativeness of ordinations obtained using any reduced-space ordination method.
+#' @param dis Original dissimilarity matrix (class "dist")
+#' @param ord Ordination scores (class "matrix" or "data.frame") or (class "dist")
+#' @param k Number of dimensions (default, 2) that will be taken into account (only if the ordination scores were provided in 'ord')
+#'
+#' @details This function compares original dissimilarities among the objects with Euclidean distances in reduced space obtained with ordination (object scores or coordinates of the objects in the reduced space).
+#' If the points are close to diagonal then the projection in reduced space accounts for a high fraction of the variance.
+#'
+#' @return Invisible returns ggplot-object.
+#' @export
+#' @references Legendre P. & Legendre L. Numerical Ecology. 2012. 3rd Ed. - Chapter 9 (Ordination in reduced space).
+#' @seealso \code{\link{vegan::stressplot}}, \code{\link{MAAS::Shepard}}
+#' @examples
+#' library(vegan)
+#' data(dune)
+#' ds <- decostand(dune, method = "total", MARGIN = 1)  # standardize data to species relative abundance
+#' dd <- vegdist(ds, method = "bray")                   # compute dissimilarity between samples
+#' ord <- monoMDS(dd, k = 5)                            # NMDS (non-metric multidimensional scaling)
+#' dd.ord <- dist( scores(ord) )                        # Euclidean distance in reduced space
+#'
+#' shepard_plot(dis = dd, ord = dd.ord)               # Bray-Curtis vs distance in reduced space (k-dimensional)
+#' shepard_plot(dis = dd, ord = scores(ord), k = 2)   # Bray-Curtis vs distance in reduced space (only first 2 dimensions)
+#' shepard_plot(dis = dd, ord = scores(ord), k = 3)   # Bray-Curtis vs distance in reduced space (first 3 dimensions)
+#'
 shepard_plot <- function(dis, ord, k=2){
 
   require(ggplot2)
@@ -29,17 +54,3 @@ shepard_plot <- function(dis, ord, k=2){
   print(pp)
   invisible(pp)
 }
-
-
-## Example
-library(vegan)
-data(dune)
-ds <- decostand(dune, method = "total", MARGIN = 1)  # standardize data to species relative abundance
-dd <- vegdist(ds, method = "bray")                   # compute dissimilarity between samples
-ord <- monoMDS(dd, k = 5)                            # NMDS (non-metric multidimensional scaling)
-dd.ord <- dist( scores(ord) )                        # Euclidean distance in reduced space
-
-shepard_plot(dis = dd, ord = dd.ord)
-shepard_plot(dis = dd, ord = scores(ord), k = 2)
-shepard_plot(dis = dd, ord = scores(ord), k = 3)
-
