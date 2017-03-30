@@ -1,20 +1,31 @@
 
-# x = original data
-# dd = global distance matrix
-# group.var = name of the groupping variable
-# p.adj = Adjust P-values for Multiple Comparisons?
-# adj.meth = "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr"
+# x = Sample meta-data (data frame for the independent variables)
+# dd = Dissimilarity matrix between samples
+# group.var = Name of the independent variable to test (RHS in adonis formula)
+# permut = Number of permutations required
+# p.adj = Logical, adjust P-values for multiple comparisons
+# adj.meth = Correction method ("holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr")
+# all_results = Logical, return results of adonis and data subsets for each pairwise comparison
+# comparison_sep = Character string to separate the levels of independent variable the in the pairwise comparison names (default, ".")
 
 adonis_pairwise <- function(x, dd, group.var = "Fact", permut = 999,
-	p.adj=T, adj.meth="fdr", ...){
-	# expand.grid(levels(x[,1]), levels(x[,1]))
+	p.adj=T, adj.meth="fdr", all_results = T, comparison_sep = ".", ...){
+
+  require(vegan)
+
+  ## Test if the selected predictor is in the meta-data
+  if(!group.var %in% colnames(x)){
+    stop("Check the 'group.var' value: independent variable '", group.var, "' is missing in the sample meta-data.\n")
+  }
 
 	VV <- which(colnames(x) %in% group.var)
-	cc <- combn(levels(x[,VV]), 2)					# combinations to test
+
+	## Combinations to test
+	cc <- combn(levels(x[,VV]), 2)
 
 	dd <- as.matrix(dd)
 
-	# subset distance matrix
+	## Function to subset distance matrix
 	prep.dist <- function(x, dd, sub1, sub2){
 		subs <- which(x[,VV] == sub1 | x[,VV] == sub2)
 		gr <- x[,VV][subs]
@@ -24,7 +35,7 @@ adonis_pairwise <- function(x, dd, group.var = "Fact", permut = 999,
 		return(res)
 	}
 
-	# prepare data for pair-wise comparisons
+	## Prepare data for pairwise comparisons
 	dd.subs <- list()
 	dd.groups <- list()
 	for(i in 1:ncol(cc)){
@@ -34,20 +45,20 @@ adonis_pairwise <- function(x, dd, group.var = "Fact", permut = 999,
 		rm(tmp)
 	}
 
-	# pair-wise adonis
+	## Pairwise adonis
 	adon <- list()
 	for(i in 1:length(dd.subs)){
 		adon[[i]] <- adonis(dd.subs[[i]] ~ dd.groups[[i]], permutations=permut, ...)
 	}
 
-	# prepare names
+	## Prepare names of the pairwise comparisons
 	foo <- vector()
 	for(i in 1:ncol(cc)){
-		foo[i] <- paste(cc[,i], collapse = ".")
+		foo[i] <- paste(cc[,i], collapse = comparison_sep)
 	}
 	names(dd.subs) <- names(dd.groups) <- names(adon) <- foo
 
-	# extract results
+	## Extract results
 	adon.extract.p <- function(adon){ adon$aov.tab$Pr[1] }
 	adon.extract.F <- function(adon){ adon$aov.tab$F.Model[1] }
 	adon.extract.df <- function(adon){ paste(adon$aov.tab$Df[1:2], collapse=";") }
@@ -57,15 +68,22 @@ adonis_pairwise <- function(x, dd, group.var = "Fact", permut = 999,
 					p = unlist(lapply(adon, FUN = adon.extract.p)))
 	rownames(ad.t) <- NULL
 
+	## Adjust P-values
 	if(p.adj == TRUE){
 		ad.t$p.adj <- p.adjust(ad.t$p, method = adj.meth)
 	}
 
+	## Prepare the output
 	res <- list()
-		res$Adonis.tab <- ad.t
-		res$Adonis <- adon
-		res$Dist.subsets <- dd.subs
-		res$Groups <- dd.groups
+	res$Adonis.tab <- ad.t
+
+	## Add additional data to the results
+	if(all_results == TRUE){
+	  res$Adonis <- adon
+	  res$Dist.subsets <- dd.subs
+	  res$Groups <- dd.groups
+	}
+
 	return(res)
 }
 
