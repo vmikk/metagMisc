@@ -1,13 +1,31 @@
 
-# x = Sample meta-data (data frame for the independent variables)
-# dd = Dissimilarity matrix between samples
-# group.var = Name of the independent variable to test (RHS in adonis formula)
-# permut = Number of permutations required
-# p.adj = Logical, adjust P-values for multiple comparisons
-# adj.meth = Correction method ("holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr")
-# all_results = Logical, return results of adonis and data subsets for each pairwise comparison
-# comparison_sep = Character string to separate the levels of independent variable the in the pairwise comparison names (default, ".")
-
+#' @title Pairwise comparisons for permutational multivariate analysis of variance using distance matrices
+#'
+#' @param x Sample meta-data (data frame for the independent variables)
+#' @param dd Dissimilarity matrix between samples
+#' @param group.var Name of the independent variable to test (RHS in adonis formula)
+#' @param permut Number of permutations required
+#' @param p.adj Logical, adjust P-values for multiple comparisons
+#' @param adj.meth Correction method from \code{\link{p.adjust}} ("holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr")
+#' @param all_results Logical, return results of adonis and data subsets for each pairwise comparison
+#' @param comparison_sep Character string to separate the levels of independent variable the in the pairwise comparison names (default, ".")
+#' @param ... Additional arguments will be passed to \code{\link{adonis}}
+#'
+#' @return List with ......
+#' @export
+#' @seealso \code{\link{adonis}}
+#' @examples
+#' library(vegan)
+#' data(dune)
+#' data(dune.env)
+#'
+#' # Compare all Management levels
+#' adonis(dune ~ Management, data = dune.env)
+#'
+#' # Pairwise comparisons between Management levels
+#' ad <- adonis_pairwise(x = dune.env, dd = vegdist(dune), group.var = "Management")
+#' ad$Adonis.tab
+#'
 adonis_pairwise <- function(x, dd, group.var = "Fact", permut = 999,
 	p.adj=T, adj.meth="fdr", all_results = T, comparison_sep = ".", ...){
 
@@ -86,16 +104,3 @@ adonis_pairwise <- function(x, dd, group.var = "Fact", permut = 999,
 
 	return(res)
 }
-
-## Example
-library(vegan)
-data(dune)
-data(dune.env)
-
-# Compare all Management levels
-adonis(dune ~ Management, data = dune.env)
-
-# Pairwise comparisons between Management levels
-ad <- adonis_pairwise(x = dune.env, dd = vegdist(dune), group.var = "Management")
-ad$Adonis.tab
-
