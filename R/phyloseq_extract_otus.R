@@ -33,11 +33,21 @@ phyloseq_extract_shared_otus <- function(x, samp_names = sample_names(x)){
 
 
 
-
-## Extract non-shared OTUs
+#' @title Extract non-shared species (OTUs) between samples.
+#' @description This function will subset phyloseq object to the OTUs unique for each sample. By default all samples will be taken into account, otherwise it's possible to take a subset of samples.
+#'
+#' @param x Phyloseq object
+#' @param samp_names Character vector with sample names (default, all samples)
+#'
+#' @return Phyloseq object with the subset of data.
+#' @export
+#'
+#' @examples
+#' data(esophagus)
+#' phyloseq_extract_non_shared_otus(esophagus, samp_names = c("B", "C"))
+#' phyloseq_extract_non_shared_otus(esophagus, samp_names = sample_names(esophagus))
+#'
 phyloseq_extract_non_shared_otus <- function(x, samp_names = sample_names(x)){
-  # x = phyloseq object
-  # samp_names = character vector with sample names
 
   require(phyloseq)
 
