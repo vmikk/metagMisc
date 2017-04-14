@@ -30,3 +30,27 @@ phyloseq_extract_shared_otus <- function(x, samp_names = sample_names(x)){
 
   return(xx)
 }
+
+
+
+
+## Extract non-shared OTUs
+phyloseq_extract_non_shared_otus <- function(x, samp_names = sample_names(x)){
+  # x = phyloseq object
+  # samp_names = character vector with sample names
+
+  require(phyloseq)
+
+  # test if the sample names are valid
+  if( any(!samp_names %in% sample_names(x)) ){
+    stop("Check the sample names, not all of them are present in the phyloseq object.\n")
+  }
+
+  # extract samples
+  xx <- prune_samples(samples = samp_names, x = x)
+
+  # subset to OTUs that are present only in 1 sample
+  xx <- filter_taxa(xx, function(z){ sum(z >= 1) == 1 }, TRUE)
+
+  return(xx)
+}
