@@ -10,8 +10,16 @@
 #'
 #' @examples
 #' data(esophagus)
-#' phyloseq_extract_shared_otus(esophagus, samp_names = sample_names(esophagus))
-#' phyloseq_extract_shared_otus(esophagus, samp_names = c("B", "C"))
+#'
+#' # Extract OTUs that are present in all samples
+#' ps <- phyloseq_extract_shared_otus(esophagus, samp_names = sample_names(esophagus))
+#' ps
+#' otu_table(ps)
+#'
+#' # Extract shared OTUs between two samples
+#' ps2 <- phyloseq_extract_shared_otus(esophagus, samp_names = c("B", "C"))
+#' ps2
+#' otu_table(ps2)
 #'
 phyloseq_extract_shared_otus <- function(x, samp_names = sample_names(x)){
 
@@ -44,8 +52,16 @@ phyloseq_extract_shared_otus <- function(x, samp_names = sample_names(x)){
 #'
 #' @examples
 #' data(esophagus)
-#' phyloseq_extract_non_shared_otus(esophagus, samp_names = c("B", "C"))
-#' phyloseq_extract_non_shared_otus(esophagus, samp_names = sample_names(esophagus))
+#'
+#' # Extract unique (non-shared) OTUs for each sample in the entire dataset
+#' ps <- phyloseq_extract_non_shared_otus(esophagus, samp_names = sample_names(esophagus))
+#' ps
+#' otu_table(ps)
+#'
+#' # Extract OTUs that are unique between two samples
+#' ps2 <- phyloseq_extract_non_shared_otus(esophagus, samp_names = c("B", "C"))
+#' ps2
+#' otu_table(ps2)
 #'
 phyloseq_extract_non_shared_otus <- function(x, samp_names = sample_names(x)){
 
