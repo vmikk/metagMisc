@@ -32,10 +32,11 @@
 #' @examples
 #' parse_uc("usearch_OTUs.uc", map_only = F)
 #' parse_uc("usearch_OTUs.uc", map_only = T)
+#'
 parse_uc <- function(x, map_only = F){
 
       ## Read file
-    ii <- read.delim(FlNam$VSEARCH, header = F, stringsAsFactors = F)
+    ii <- read.delim(x, header = F, stringsAsFactors = F)
 
     ## Remove redundant S-records
     ii <- ii[-which(ii$V1 == "S"), ]
