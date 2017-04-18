@@ -39,7 +39,8 @@ parse_uc <- function(x, map_only = F){
     ii <- read.delim(x, header = F, stringsAsFactors = F)
 
     ## Remove redundant S-records
-    ii <- ii[-which(ii$V1 == "S"), ]
+    redund <- ii$V1 == "S"
+    if(any(redund)){ ii <- ii[-which(redund), ] }
 
     ## Split Query name
     ii$Query <- do.call(rbind, strsplit(x = ii$V9, split = ";"))[,1]
