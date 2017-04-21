@@ -1,7 +1,20 @@
 
-
-## Count number of OTUs by tax rank for each sample
-phyloseq_ntaxa_by_tax <- function(x, TaxRank = "Phylum", relative = F, add_meta_data = T){
+#' @title Count number of OTUs by taxonomic rank for each sample.
+#' @details This function will split phyloseq object by the specified taxonomic rank
+#' @param x Phyloseq object
+#' @param TaxRank Name of the taxonomic rank
+#' @param relative Logical, return relative number of OTUs
+#' @param add_meta_data Logical, add sample metadata to the resulting table
+#'
+#' @return Data frame with OTU counts (columns: Sample, TaxRank, N.OTU + optional sample metadata).
+#' @export
+#'
+#' @examples
+#' data(GlobalPatterns)
+#' phylum_counts <- phyloseq_ntaxa_by_tax(GlobalPatterns, TaxRank = "Phylum")
+#' head(phylum_counts)
+#'
+phyloseq_ntaxa_by_tax <- function(physeq, TaxRank = "Phylum", relative = F, add_meta_data = T){
 
     require(phyloseq)
     require(plyr)
@@ -34,7 +47,7 @@ phyloseq_ntaxa_by_tax <- function(x, TaxRank = "Phylum", relative = F, add_meta_
     ## Add meta-data
     if(add_meta_data == TRUE){
       ## Extract meta-data
-      metad <- data.frame(Sample = sample_names(x), sample_data(x))
+      metad <- data.frame(Sample = sample_names(physeq), sample_data(physeq))
 
       ## Extract column names
       # main_cols <- c("OTU", "Sample", "Abundance", rank_names(x))          # 'standard' columns
