@@ -1,8 +1,22 @@
 
-## Compare two physeq objects
+#' @title Compare two phyloseq objects.
+#'
+#' @param phy1 Phyloseq object
+#' @param phy2 Phyloseq object
+#' @param cols Character vector with column names for phy1 & phy2 in the resulting table.
+#'
+#' @return Data frame with number and percentage of OTUs.
+#' @export
+#'
+#' @examples
+#' data(esophagus)
+#'
+#' # Remove taxa that have less than 5 reads
+#' eso_trim <- prune_taxa(taxa_sums(esophagus) >= 5, esophagus)
+#'
+#' phyloseq_compare(esophagus, eso_trim, cols = c("Esophagus", "Trimmed esophagus"))
+#'
 phyloseq_compare <- function(phy1, phy2, cols = c("Before", "After")){
-  # phy1 & phy2 = phyloseq objects
-  # cols = column names for phy1 & phy2 in the resulting table
 
   # number of reads per OTU
   t1 <- taxa_sums(phy1)
