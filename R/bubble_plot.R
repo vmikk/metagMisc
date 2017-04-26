@@ -10,7 +10,7 @@
 #' @param add.dendro Logical, adds dendrogram for samples
 #' @param ...
 #'
-#' @return
+#' @return Invisibly returns a plot ('ggplot' class).
 #' @export
 #'
 #' @examples
@@ -39,6 +39,7 @@ bubble_plot <- function(x, transp=0.9, circ=16, add.dendro = FALSE, ...){
 			labs(x=NULL, y=NULL)
 
 		plot(p1)
+		res <- p1
 	}
 
 	if(add.dendro == TRUE){
@@ -80,6 +81,7 @@ bubble_plot <- function(x, transp=0.9, circ=16, add.dendro = FALSE, ...){
 		gp1$widths[2:5] <- as.list(maxWidth)
 		gp2$widths[2:5] <- as.list(maxWidth)
 
-		grid.arrange(gp2, gp1, ncol=1, heights=c(1/5, 4/5))
+		res <- grid.arrange(gp2, gp1, ncol=1, heights=c(1/5, 4/5))
 	}
+  invisible(res)
 }
