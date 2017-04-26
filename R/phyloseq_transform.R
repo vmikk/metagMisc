@@ -8,7 +8,6 @@
 
 
 #' @title Cumulative sum scaling (CSS) normalization of OTU abundance table.
-#' @description
 #'
 #' @param physeq Phyloseq object.
 #' @param norm Logical, return normalized counts.
