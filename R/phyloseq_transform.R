@@ -99,7 +99,7 @@ phyloseq_transform_vst_blind <- function(physeq, dropneg = F, dropmissing = T, .
 
 
 #' @title Regularized-log (rlog) transformation of OTU abundance table.
-#' @description
+#'
 #' @param physeq Phyloseq object.
 #' @param dropneg Logical, replace negative transformed values with 0.
 #' @param dropmissing Logical, remove missing data.
