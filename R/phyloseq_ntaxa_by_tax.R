@@ -1,7 +1,7 @@
 
 #' @title Count number of OTUs by taxonomic rank for each sample.
 #' @details This function will split phyloseq object by the specified taxonomic rank
-#' @param x Phyloseq object
+#' @param physeq Phyloseq object
 #' @param TaxRank Name of the taxonomic rank
 #' @param relative Logical, return relative number of OTUs
 #' @param add_meta_data Logical, add sample metadata to the resulting table
