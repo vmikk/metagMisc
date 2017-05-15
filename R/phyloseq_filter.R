@@ -80,12 +80,26 @@ phyloseq_filter_taxa_tot_fraction <- function(physeq, frac = 0.01){
 
 
 
-## Filter low-prevalence OTUs
-## Prevalence is the fraction of total samples in which an OTU is observed
+#' @title Filter low-prevalence OTUs.
+#' @description This function will remove taxa (OTUs) with low prevalence, where prevalence is the fraction of total samples in which an OTU is observed.
+#' @param physeq
+#' @param prev.trh Prevalence threshold (default, 0.05 = 5% of samples)
+#' @param abund.trh Abundance threshold (default, NULL)
+#' @details Abundance threshold defines if the OTU should be preserved if its abundance is larger than threshold (e.g., >= 50 reads).
+#' @return  Phyloseq object with a subset of taxa.
+#' @export
+#'
+#' @examples
+#' data(GlobalPatterns)
+#' GlobalPatterns  # 19216 taxa
+#'
+#' # OTUs that are found in at least 5% of samples
+#' phyloseq_filter_prevalence(GlobalPatterns, prev.trh = 0.05, abund.trh = NULL)  # 15389 taxa
+#'
+#' # The same, but if total OTU abundance is >= 10 reads it'll be preserved too
+#' phyloseq_filter_prevalence(GlobalPatterns, prev.trh = 0.05, abund.trh = 10)    # 15611 taxa
+#'
 phyloseq_filter_prevalence <- function(physeq, prev.trh = 0.05, abund.trh = NULL){
-  # prev.trh = prevalence threshold (default, 5% of samples)
-  # abund.trh = abundance threshold (default, NULL; but could be 10 reads)
-
 
   ## Compute prevalence of each species, store as data.frame
   prevalence <- function(physeq, add_tax = TRUE){
@@ -141,7 +155,3 @@ phyloseq_filter_prevalence <- function(physeq, prev.trh = 0.05, abund.trh = NULL
   res <- prune_taxa(keepTaxa, physeq)
   return(res)
 }
-
-phyloseq_filter_prevalence(physeq, prev.trh = 0.05, abund.trh = NULL)  # OTUs should be found in at least 5% of samples
-phyloseq_filter_prevalence(physeq, prev.trh = 0.05, abund.trh = 10)    # the same, but if OTU abundance is >= 10 reads it'll be preserved too
-
