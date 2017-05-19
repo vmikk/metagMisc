@@ -82,8 +82,8 @@ phyloseq_filter_taxa_tot_fraction <- function(physeq, frac = 0.01){
 
 #' @title Filter low-prevalence OTUs.
 #' @description This function will remove taxa (OTUs) with low prevalence, where prevalence is the fraction of total samples in which an OTU is observed.
-#' @param physeq
-#' @param prev.trh Prevalence threshold (default, 0.05 = 5% of samples)
+#' @param physeq Phyloseq object
+#' @param prev.trh Prevalence threshold (default, 0.05 = 5\% of samples)
 #' @param abund.trh Abundance threshold (default, NULL)
 #' @details Abundance threshold defines if the OTU should be preserved if its abundance is larger than threshold (e.g., >= 50 reads).
 #' @return  Phyloseq object with a subset of taxa.
