@@ -4,7 +4,7 @@
 
 Miscellaneous functions for metagenomic analysis.
 
-The repository is currently in **ALPHA** state. Nothing is guaranteed.
+The repository is currently in **ALPHA** state. Nothing is guaranteed and the material is subject to change without a notice (e.g., function names or arguments).
 
 # Installation
 ```
