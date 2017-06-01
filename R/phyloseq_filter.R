@@ -87,6 +87,7 @@ phyloseq_filter_taxa_tot_fraction <- function(physeq, frac = 0.01){
 #' @param abund.trh Abundance threshold (default, NULL)
 #' @details Abundance threshold defines if the OTU should be preserved if its abundance is larger than threshold (e.g., >= 50 reads).
 #' @return  Phyloseq object with a subset of taxa.
+#' @seealso \code{\link{phyloseq_prevalence_plot}}
 #' @export
 #'
 #' @examples
@@ -101,24 +102,6 @@ phyloseq_filter_taxa_tot_fraction <- function(physeq, frac = 0.01){
 #'
 phyloseq_filter_prevalence <- function(physeq, prev.trh = 0.05, abund.trh = NULL){
 
-  ## Compute prevalence of each species, store as data.frame
-  prevalence <- function(physeq, add_tax = TRUE){
-    prevdf <- apply(X = otu_table(physeq),
-                    MARGIN = ifelse(taxa_are_rows(physeq), yes = 1, no = 2),
-                    FUN = function(x){sum(x > 0)})
-
-    ## Add taxonomy and total read counts to this data.frame
-    prevdf <- data.frame(Prevalence = prevdf,
-                         TotalAbundance = taxa_sums(physeq))
-
-    ## Add taxonomy table
-    if(add_tax == TRUE && !is.null(tax_table(physeq, errorIfNULL = F))){
-      prevdf <- cbind(prevdf, tax_table(physeq))
-    }
-    return(prevdf)
-  }
-
-
   ## Check for the low-prevalence species (compute the total and average prevalences of the features in each phylum)
   prevdf_smr <- function(prevdf){
     ddply(prevdf, "Phylum", function(df1){ data.frame(Average = mean(df1$Prevalence), Total = sum(df1$Prevalence))})
@@ -126,21 +109,10 @@ phyloseq_filter_prevalence <- function(physeq, prev.trh = 0.05, abund.trh = NULL
   # prevdf_smr( prevalence(physeq) )
 
   ## Check the prevalence threshold
-  # prevalence_plot <- function(prevdf, physeq, trh = 0.05){
-  #   #  trh = prevalence threshold guess
-  #
-  #   ggplot(prevdf, aes(TotalAbundance, Prevalence / nsamples(physeq), color=phylum)) +
-  #     geom_hline(yintercept = trh, alpha = 0.5, linetype = 2) +
-  #     geom_point(size = 2, alpha = 0.7) +
-  #     scale_x_log10() +
-  #     xlab("Total Abundance") +
-  #     ylab("Prevalence [Frac. Samples]") +
-  #     facet_wrap(~ phylum) +
-  #     theme(legend.position="none")
-  # }
-  # prevalence_plot(prevdf, physeq)
+  # phyloseq_prevalence_plot(prevdf, physeq)
 
   ## Define prevalence threshold as % of total samples
+  ## This function is located in 'phyloseq_prevalence_plot.R' file
   prevalenceThreshold <- prev.trh * nsamples(physeq)
 
   ## Calculate prevalence (number of samples with OTU) and OTU total abundance
