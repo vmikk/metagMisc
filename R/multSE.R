@@ -26,7 +26,10 @@
 #######################################################################################
 
 
-MSE.d = function (D, group, nresamp = 1000, ...) {
+MSE.d <- function (D, group, nresamp = 1000, ...) {
+  
+  # Ensure distance matrix is in the form of a matrix (rather than a "distance" object)
+  D <- as.matrix(D)
 
   # Some necessary preliminary functions:
   MSE <- function(D, group) {
@@ -47,14 +50,11 @@ MSE.d = function (D, group, nresamp = 1000, ...) {
 
   # Getting parameters of the problem
   group <- factor(group)
-  ng <- length(levels(group))
-  n.i <- table(group)
-  nmax <- min(n.i)
-  N <- sum(n.i)
-  index <- 1:N
-
-  # Ensure distance matrix is in the form of a matrix (rather than a "distance" object)
-  D <- as.matrix(D)
+  ng <- length(levels(group))   # number of groups
+  n.i <- table(group)           # number of samples per group
+  nmax <- min(n.i)              # smallest sample size across all groups
+  N <- sum(n.i)                 # total number of samples
+  index <- 1:N                  # sample index
 
   # Setting up the vectors for the results
   # Note that these do not have to be separate whole matrices now.
@@ -68,19 +68,29 @@ MSE.d = function (D, group, nresamp = 1000, ...) {
         # Resampling loop for each sample size.
         for (nsub in 2:nmax) {
            for (iresamp in 1:nresamp) {
-              ivec.p <- sample(index[group == levels(group)[1]], size = nsub, replace = FALSE)
-              ivec.b <- sample(index[group == levels(group)[1]], size = nsub, replace = TRUE)
-              for (i in 2:ng) {
-                 ivec.p <- c(ivec.p, sample(index[group == levels(group)[i]], size = nsub, replace = FALSE))
-                 ivec.b <- c(ivec.b, sample(index[group == levels(group)[i]], size = nsub, replace = TRUE))
-              }
-              group.resamp <- factor(rep(1:ng, each = nsub))
-              D.perm <- D[ivec.p, ivec.p]
-              D.boot <- D[ivec.b, ivec.b]
-              multSE.store.p[iresamp, nsub] <- sqrt(MSE(D.perm, group.resamp)/nsub)
-              multSE.store.b[iresamp, nsub] <- sqrt(MSE(D.boot, group.resamp)/nsub)
+              ...
            }
         }
+
+
+  ## Double resampling function
+  resamp <- function(nsub){
+    ivec.p <- sample(index[group == levels(group)[1]], size = nsub, replace = FALSE)
+    ivec.b <- sample(index[group == levels(group)[1]], size = nsub, replace = TRUE)
+    for (i in 2:ng) {
+       ivec.p <- c(ivec.p, sample(index[group == levels(group)[i]], size = nsub, replace = FALSE))
+       ivec.b <- c(ivec.b, sample(index[group == levels(group)[i]], size = nsub, replace = TRUE))
+    }
+    group.resamp <- factor(rep(1:ng, each = nsub))
+    D.perm <- D[ivec.p, ivec.p]
+    D.boot <- D[ivec.b, ivec.b]
+    res <- data.frame(
+              multSE.store.p = sqrt(MSE(D.perm, group.resamp)/nsub),  # values under permutation resampling
+              multSE.store.b = sqrt(MSE(D.boot, group.resamp)/nsub)   # values under bootstrap resampling
+            )
+    return(res)
+  }
+
 
   # Means and quantiles
   means <- colMeans(multSE.store.p)
