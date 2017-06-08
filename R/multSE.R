@@ -16,6 +16,13 @@
 # 2. "upper" the upper 0.975 quantile for each sample size
 # 3. "lower" the lower 0.0.025 quantile for each sample size
 #
+# Citation:
+# Anderson M. J., Santana-Garcon J.
+# Measures of precision for dissimilarity-based multivariate analysis of ecological communities
+# Ecology Letters (2015) 18: 66-73
+# doi 10.1111/ele.12385
+# http://onlinelibrary.wiley.com/doi/10.1111/ele.12385/abstract
+#
 #######################################################################################
 
 
