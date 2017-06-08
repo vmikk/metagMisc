@@ -1,7 +1,19 @@
 
-
-## Split phyloseq object per groups within selected taxonomic rank
-# This function splits a phyloseq object by specified taxonomic rank, returning a list of objects whose components each correspond to a taxonomic rank.
+#' @title Split phyloseq object by taxonomic rank.
+#' @description This function splits a phyloseq object by a specified taxonomic rank, returning a list of objects whose components each correspond to a taxonomic rank.
+#' @param physeq Phyloseq object
+#' @param TaxRank Taxonomy rank name (e.g., "Phylum")
+#' @param drop_NA Logical, remove ranks with NAs
+#'
+#' @return List of phyloseq objects
+#' @export
+#'
+#' @examples
+#' data(GlobalPatterns)
+#' # Subset data
+#' GP <- subset_taxa(GlobalPatterns, Phylum %in% c("Acidobacteria", "Actinobacteria", "Firmicutes", "Verrucomicrobia"))
+#' phyloseq_sep_tax(GP, TaxRank = "Phylum")
+#'
 phyloseq_sep_tax <- function(physeq, TaxRank = "Phylum", drop_NA = FALSE){
   ## TO DO - change from for-loop to plyr
   ##       - verify that the taxonomic names are unique across higher ranks (e.g. no same class-names within different phylums)
