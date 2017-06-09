@@ -1,33 +1,18 @@
-#######################################################################################
-#
-# Function for calculating multivariate standard error as the
-# residual mean square error from a PERMANOVA for a one-way model, including double resampling.
-# (Note also that sample sizes may vary among groups).
 
-# The input will be a distance matrix among all samples, the grouping vector, and the number of
-# re-samples (nresamp).
-#
-# The routine then calculates the means using the permutation approach, while the
-# lower and upper quantiles are obtained using the bootstrapping approach
-# including an adjustment for the bias in the bootstrap.
-#
-# The output consists of three vectors in a matrix called "output":
-# 1. "means" = the means for each sample size
-# 2. "upper" the upper 0.975 quantile for each sample size
-# 3. "lower" the lower 0.0.025 quantile for each sample size
-#
-# Citation:
-# Anderson M. J., Santana-Garcon J.
-# Measures of precision for dissimilarity-based multivariate analysis of ecological communities
-# Ecology Letters (2015) 18: 66-73
-# doi 10.1111/ele.12385
-# http://onlinelibrary.wiley.com/doi/10.1111/ele.12385/abstract
-#
-#######################################################################################
+#' @title Estimate multivariate standard error.
+#' @description This function estimates a multivariate standard error as the residual mean square error from a PERMANOVA for a one-way model, including double resampling.
+#' @param D A distance matrix among all samples
+#' @param group The grouping vector
+#' @param nresamp The number of re-samples (default, 10 000)
+#' 
+#' @details The routine calculates the means using the permutation approach, while the lower and upper quantiles are obtained using the bootstrapping approach including an adjustment for the bias in the bootstrap.
+#' The main distinction from the original function (provied in the supplementary data in Anderson & Santana-Garcon, 2013) is that estimation is done not for increasing range of sample sizes, but only for one sample size common for all groups.
+#' @return Data frame with the multivariate standard error averaged over resampling interations.
+#' @references Anderson M.J., Santana-Garcon J. Measures of precision for dissimilarity-based multivariate analysis of ecological communities. Ecology Letters (2015) 18: 66-73. DOI 10.1111/ele.12385
+#' @examples
+#'
+multSE <- function(D, group, nresamp = 10000) {
 
-
-multSE <- function(D, group, nresamp = 1000, ...) {
-  
   require(plyr)
 
   # Ensure distance matrix is in the form of a matrix (rather than a "distance" object)
