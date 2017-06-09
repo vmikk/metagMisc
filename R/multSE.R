@@ -26,7 +26,7 @@
 #######################################################################################
 
 
-MSE.d <- function (D, group, nresamp = 1000, ...) {
+multSE <- function(D, group, nresamp = 1000, ...) {
   
   require(plyr)
 
@@ -94,6 +94,6 @@ MSE.d <- function (D, group, nresamp = 1000, ...) {
     Upper.CI = upper
     )
   rownames(res) <- NULL
-  
+
   return(res)
 }
