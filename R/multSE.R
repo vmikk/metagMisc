@@ -28,6 +28,8 @@
 
 MSE.d <- function (D, group, nresamp = 1000, ...) {
   
+  require(plyr)
+
   # Ensure distance matrix is in the form of a matrix (rather than a "distance" object)
   D <- as.matrix(D)
 
@@ -56,23 +58,6 @@ MSE.d <- function (D, group, nresamp = 1000, ...) {
   N <- sum(n.i)                 # total number of samples
   index <- 1:N                  # sample index
 
-  # Setting up the vectors for the results
-  # Note that these do not have to be separate whole matrices now.
-  means <- means.b <- lower <- upper <- rep(0,nmax)
-
-     # One matrix is used to store the values under permutation resampling for each sample size
-     multSE.store.p <- matrix(rep(0,nresamp*nmax), ncol = nmax, nrow = nresamp)
-     # One matrix is used to store the values under bootstrap resampling for each sample size
-     multSE.store.b <- matrix(rep(0,nresamp*nmax), ncol = nmax, nrow = nresamp)
-
-        # Resampling loop for each sample size.
-        for (nsub in 2:nmax) {
-           for (iresamp in 1:nresamp) {
-              ...
-           }
-        }
-
-
   ## Double resampling function
   resamp <- function(nsub){
     ivec.p <- sample(index[group == levels(group)[1]], size = nsub, replace = FALSE)
@@ -91,18 +76,24 @@ MSE.d <- function (D, group, nresamp = 1000, ...) {
     return(res)
   }
 
+  # Repeat resampling for the smallest sample size across all groups
+  permvals <- rdply(.n = nresamp, .expr = resamp(nmax), .progress = "text")
 
-  # Means and quantiles
-  means <- colMeans(multSE.store.p)
-  means.b <- colMeans(multSE.store.b)
-  upper <- apply(multSE.store.b, MARGIN = 2, quant.upper)
-  lower <- apply(multSE.store.b, MARGIN = 2, quant.lower)
+  # Estimate means and quantiles over resampling interations
+  means <- mean(permvals$multSE.store.p)
+  means.b <- mean(permvals$multSE.store.b)
+  bias <- means - means.b
+  lower <- quant.lower(permvals$multSE.store.b) + bias
+  upper <- quant.upper(permvals$multSE.store.b) + bias
 
   # Calculation of bias and completion of output
-  bias <-  means - means.b
-  lower <- lower + bias
-  upper <- upper + bias
-  output <- cbind(1:nmax, means, lower, upper)
-  colnames(output) <- c("n","mean", "lower.025", "upper.975")
-  return(as.data.frame(output))
+  res <- data.frame(
+    N = nmax,
+    Mean = means,
+    Lower.CI = lower,
+    Upper.CI = upper
+    )
+  rownames(res) <- NULL
+  
+  return(res)
 }
