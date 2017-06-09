@@ -33,6 +33,15 @@ multSE <- function(D, group, nresamp = 1000, ...) {
   # Ensure distance matrix is in the form of a matrix (rather than a "distance" object)
   D <- as.matrix(D)
 
+  # Remove groups with only a single replicate (adapted from https://github.com/jslefche/multSE/)
+  grp <- table(group)
+  if(min(grp) == 1){
+    groups_to_remove <- names(which(grp == 1))
+    D <- D[!group %in% groups_to_remove, !group %in% groups_to_remove]
+    group <- group[!group %in% groups_to_remove]
+    warning("Groups with 1 replicate have been removed from the analysis!")
+  }
+
   # Some necessary preliminary functions:
   MSE <- function(D, group) {
     D <- as.matrix(D)
