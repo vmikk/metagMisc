@@ -1,5 +1,16 @@
 
-
+#' @title Split phyloseq-class object by sample-level variable.
+#' @description This function splits a phyloseq object by sample meta-data, returning a list of objects whose components each correspond to a group of samples.
+#' @param physeq A phyloseq-class object
+#' @param variable Variable name (contained in \code{\link{sample_data}})
+#' @param drop_zeroes Logical, indicating weather OTUs with zero abundance withing a group of samples should be removed
+#' @return List with phyloseq objects.
+#' @export
+#'
+#' @examples
+#' data(GlobalPatterns)
+#' phyloseq_sep_variable(GlobalPatterns, variable = "SampleType")
+#'    
 phyloseq_sep_variable <- function(physeq, variable, drop_zeroes = T){
     require(phyloseq)
     require(plyr)
