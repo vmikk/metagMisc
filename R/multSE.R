@@ -3,6 +3,7 @@
 #' @description This function estimates a multivariate standard error as the residual mean square error from a PERMANOVA for a one-way model, including double resampling.
 #' @param D A distance matrix among all samples
 #' @param group The grouping vector
+#' @param nsamp Number of samples to take from each group (default, NULL - the smallest sample size across all groups will be automatically taken)
 #' @param nresamp The number of re-samples (default, 10 000)
 #' 
 #' @details The routine calculates the means using the permutation approach, while the lower and upper quantiles are obtained using the bootstrapping approach including an adjustment for the bias in the bootstrap.
@@ -11,7 +12,7 @@
 #' @references Anderson M.J., Santana-Garcon J. Measures of precision for dissimilarity-based multivariate analysis of ecological communities. Ecology Letters (2015) 18: 66-73. DOI 10.1111/ele.12385
 #' @examples
 #'
-multSE <- function(D, group, nresamp = 10000) {
+multSE <- function(D, group, nsamp = NULL, nresamp = 10000) {
 
   require(plyr)
 
@@ -24,7 +25,16 @@ multSE <- function(D, group, nresamp = 10000) {
     groups_to_remove <- names(which(grp == 1))
     D <- D[!group %in% groups_to_remove, !group %in% groups_to_remove]
     group <- group[!group %in% groups_to_remove]
-    warning("Groups with 1 replicate have been removed from the analysis!")
+    warning("Groups with 1 replicate have been removed from the analysis!\n")
+  }
+
+  # Check the specified number of samples
+  if(!is.null(nsamp)){
+    if(nsamp == 1){ stop("Number of samples (nsamp) should be > 1.\n") }
+
+    if(nsamp > min(table(group))){
+      stop("Choose the proper number of samples to take (nsamp): some groups does not have enough samples.\n")
+    }
   }
 
   # Some necessary preliminary functions:
@@ -70,8 +80,16 @@ multSE <- function(D, group, nresamp = 10000) {
     return(res)
   }
 
-  # Repeat resampling for the smallest sample size across all groups
-  permvals <- rdply(.n = nresamp, .expr = resamp(nmax), .progress = "text")
+  # Repeat resampling
+  if(is.null(nsamp)){
+    # For the smallest sample size across all groups
+    permvals <- rdply(.n = nresamp, .expr = resamp(nmax), .progress = "text")
+    N_for_table <- nmax
+  } else {
+    # For the specified sample size
+    permvals <- rdply(.n = nresamp, .expr = resamp(nsamp), .progress = "text")
+    N_for_table <- nsamp
+  }
 
   # Estimate means and quantiles over resampling interations
   means <- mean(permvals$multSE.store.p)
@@ -82,7 +100,7 @@ multSE <- function(D, group, nresamp = 10000) {
 
   # Calculation of bias and completion of output
   res <- data.frame(
-    N = nmax,
+    N = N_for_table,
     Mean = means,
     Lower.CI = lower,
     Upper.CI = upper
