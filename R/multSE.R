@@ -11,7 +11,19 @@
 #' @return Data frame with the multivariate standard error averaged over resampling interations.
 #' @references Anderson M.J., Santana-Garcon J. Measures of precision for dissimilarity-based multivariate analysis of ecological communities. Ecology Letters (2015) 18: 66-73. DOI 10.1111/ele.12385
 #' @examples
-#'
+#' library(vegan)
+#' 
+#' ## Download sample data (from jslefche/multSE)
+#' tf <- tempfile()
+#' download.file("https://raw.githubusercontent.com/jslefche/multSE/master/data/PoorKnights.csv", tf)
+#' pk <- read.csv(tf); rm(tf)
+#' 
+#' D <- vegdist(pk[,3:49] + 1)  # Create species-by-site distance matrix
+#' group <- factor(pk$Time)     # groupping factor
+#' 
+#' multSE(D, group, nresamp = 100)             # automatically find the smallest sample size across all groups
+#' multSE(D, group, nresamp = 100, nsamp = 10) # take 10 samples from each group
+#' 
 multSE <- function(D, group, nsamp = NULL, nresamp = 10000) {
 
   require(plyr)
