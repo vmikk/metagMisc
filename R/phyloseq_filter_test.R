@@ -133,6 +133,7 @@ phyloseq_filter_test <- function(physeq, group, dist_type = "bray", filter_by_gr
         } # end of NULL fff
         
         ## Merge groups by filtered combination
+        cat("..Merging filtered datasets\n")
         cmbs <- unique(unlist(lapply(filt_grp, names)))                           # all combination names
         RES <- list()
         for(i in cmbs){
