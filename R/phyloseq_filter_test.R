@@ -14,7 +14,7 @@ phyloseq_filter_test <- function(physeq, group, dist_type = "bray", filter_by_gr
         stop("Group is missing in the sample data of phyloseq-object.\n")
     }
 
-    if(!group %in% do.call(c, distanceMethodList)){
+    if(!dist_type %in% do.call(c, distanceMethodList)){
         stop("Unknow distance method is specified. Check 'distanceMethodList' for the supported methods.\n")
     }
 
