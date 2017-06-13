@@ -5,6 +5,20 @@ phyloseq_filter_test <- function(physeq, group, dist_type = "bray", filter_by_gr
     require(plyr)
     require(vegan)
 
+    ## Check the input
+    if(is.null(sample_data(physeq, errorIfNULL = T))){
+        stop("Sample data is missing in the phyloseq-object.\n")
+    }
+
+    if(!group %in% colnames(sample_data(GlobalPatterns))){
+        stop("Group is missing in the sample data of phyloseq-object.\n")
+    }
+
+    if(!group %in% do.call(c, distanceMethodList)){
+        stop("Unknow distance method is specified. Check 'distanceMethodList' for the supported methods.\n")
+    }
+
+
     ## Extract grouping variable
     grp <- as(object = sample_data(physeq), Class = "data.frame")[, group]
 
