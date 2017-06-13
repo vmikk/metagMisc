@@ -9,8 +9,13 @@
 #'
 #' @examples
 #' data(GlobalPatterns)
+#'
+#' # Split data by sample type (e.g., Soil, Ocean, etc.)
 #' phyloseq_sep_variable(GlobalPatterns, variable = "SampleType")
-#'    
+#'
+#' # Do not remove OTUs with total zero abundance within each sample type
+#' phyloseq_sep_variable(GlobalPatterns, variable = "SampleType", drop_zeroes = FALSE)
+#'
 phyloseq_sep_variable <- function(physeq, variable, drop_zeroes = T){
     require(phyloseq)
     require(plyr)
@@ -20,14 +25,21 @@ phyloseq_sep_variable <- function(physeq, variable, drop_zeroes = T){
         stop("Sample data is missing in the phyloseq-object.\n")
     }
 
-    if(nsamples(physeq) == 1){
-        cat("Warning: there is only one sample in the resulting list.\n")
+    ## Extract samle meta-data
+    mtd <- as(object = sample_data(physeq), Class = "data.frame")
+
+    if(!variable %in% colnames(mtd)){
+        stop("Grouping variable is missing from the sample data of phyloseq-object.\n")
     }
 
-    ## Extract sample meta-data
+    if(length(table(mtd[, variable])) == 1){
+        cat("Warning: there is only one group of samples in the resulting list.\n")
+    }
+
+    ## Add sample IDs to the meta-data
     smp <- data.frame(
         SID = sample_names(physeq),
-        as(object = sample_data(physeq), Class = "data.frame"),
+        mtd,
         stringsAsFactors = F)
 
     ## Exatract sample names by the specified variable
@@ -35,7 +47,7 @@ phyloseq_sep_variable <- function(physeq, variable, drop_zeroes = T){
 
     ## Extract samples by groupping variable
     res <- llply(.data = svv, .fun = function(z){ prune_samples(z, x = physeq) })
-    
+
     ## Remove taxa with zero abundance
     if(drop_zeroes == TRUE){
         res <- llply(.data = res, .fun = function(x){ prune_taxa(taxa_sums(x) > 0, x) })
