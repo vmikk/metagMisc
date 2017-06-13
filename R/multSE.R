@@ -5,6 +5,7 @@
 #' @param group The grouping vector
 #' @param nsamp Number of samples to take from each group (default, NULL - the smallest sample size across all groups will be automatically taken)
 #' @param nresamp The number of re-samples (default, 10 000)
+#' @param progress Display progess bar ("text" or "none")
 #' 
 #' @details The routine calculates the means using the permutation approach, while the lower and upper quantiles are obtained using the bootstrapping approach including an adjustment for the bias in the bootstrap.
 #' The main distinction from the original function (provied in the supplementary data in Anderson & Santana-Garcon, 2013) is that estimation is done not for increasing range of sample sizes, but only for one sample size common for all groups.
@@ -24,7 +25,7 @@
 #' multSE(D, group, nresamp = 100)             # automatically find the smallest sample size across all groups
 #' multSE(D, group, nresamp = 100, nsamp = 10) # take 10 samples from each group
 #' 
-multSE <- function(D, group, nsamp = NULL, nresamp = 10000) {
+multSE <- function(D, group, nsamp = NULL, nresamp = 10000, progress = "text") {
 
   require(plyr)
 
@@ -95,11 +96,11 @@ multSE <- function(D, group, nsamp = NULL, nresamp = 10000) {
   # Repeat resampling
   if(is.null(nsamp)){
     # For the smallest sample size across all groups
-    permvals <- rdply(.n = nresamp, .expr = resamp(nmax), .progress = "text")
+    permvals <- rdply(.n = nresamp, .expr = resamp(nmax), .progress = progress)
     N_for_table <- nmax
   } else {
     # For the specified sample size
-    permvals <- rdply(.n = nresamp, .expr = resamp(nsamp), .progress = "text")
+    permvals <- rdply(.n = nresamp, .expr = resamp(nsamp), .progress = progress)
     N_for_table <- nsamp
   }
 
