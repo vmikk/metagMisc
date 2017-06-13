@@ -10,7 +10,7 @@ phyloseq_filter_test <- function(physeq, group, dist_type = "bray", filter_by_gr
         stop("Sample data is missing in the phyloseq-object.\n")
     }
 
-    if(!group %in% colnames(sample_data(GlobalPatterns))){
+    if(!group %in% colnames(sample_data(physeq))){
         stop("Group is missing in the sample data of phyloseq-object.\n")
     }
 
