@@ -33,3 +33,6 @@ phyloseq_filter_prevalence(GlobalPatterns, prev.trh = 0.05, abund.trh = NULL)  #
 phyloseq_filter_prevalence(GlobalPatterns, prev.trh = 0.05, abund.trh = 10)    # 15611 taxa
 
 }
+\seealso{
+\code{\link{phyloseq_prevalence_plot}}
+}
