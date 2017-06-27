@@ -6,25 +6,25 @@
 #' @param nsamp Number of samples to take from each group (default, NULL - the smallest sample size across all groups will be automatically taken)
 #' @param nresamp The number of re-samples (default, 10 000)
 #' @param progress Display progess bar ("text" or "none")
-#' 
+#'
 #' @details The routine calculates the means using the permutation approach, while the lower and upper quantiles are obtained using the bootstrapping approach including an adjustment for the bias in the bootstrap.
 #' The main distinction from the original function (provied in the supplementary data in Anderson & Santana-Garcon, 2013) is that estimation is done not for increasing range of sample sizes, but only for one sample size common for all groups.
 #' @return Data frame with the multivariate standard error averaged over resampling interations.
 #' @references Anderson M.J., Santana-Garcon J. Measures of precision for dissimilarity-based multivariate analysis of ecological communities. Ecology Letters (2015) 18: 66-73. DOI 10.1111/ele.12385
 #' @examples
 #' library(vegan)
-#' 
+#'
 #' ## Download sample data (from jslefche/multSE)
 #' tf <- tempfile()
 #' download.file("https://raw.githubusercontent.com/jslefche/multSE/master/data/PoorKnights.csv", tf)
 #' pk <- read.csv(tf); rm(tf)
-#' 
+#'
 #' D <- vegdist(pk[,3:49] + 1)  # Create species-by-site distance matrix
 #' group <- factor(pk$Time)     # groupping factor
-#' 
+#'
 #' multSE(D, group, nresamp = 100)             # automatically find the smallest sample size across all groups
 #' multSE(D, group, nresamp = 100, nsamp = 10) # take 10 samples from each group
-#' 
+#'
 multSE <- function(D, group, nsamp = NULL, nresamp = 10000, progress = "text") {
 
   require(plyr)
@@ -114,9 +114,9 @@ multSE <- function(D, group, nsamp = NULL, nresamp = 10000, progress = "text") {
   # Calculation of bias and completion of output
   res <- data.frame(
     N = N_for_table,
-    Mean = means,
-    Lower.CI = lower,
-    Upper.CI = upper
+    MultSE.Mean = means,
+    MultSE.LowerCI = lower,
+    MultSE.UpperCI = upper
     )
   rownames(res) <- NULL
 
