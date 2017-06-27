@@ -89,22 +89,23 @@ phyloseq_filter_test <- function(physeq, group, dist_type = "bray", filter_by_gr
         return(rez)
     }
 
+
+    ## Remove phylogenetic tree to speed up filtering
+    if(!is.null(phy_tree(physeq, errorIfNULL = F))){
+        physeq_no_tree <- physeq
+        physeq_no_tree@phy_tree <- NULL
+    } else {
+        physeq_no_tree <- physeq
+    }
+
     ## Filter data for all groups together
     if(filter_by_group == FALSE){
         cat("..Data filtering\n")
-        RES <- batch_filter(physeq)
+        RES <- batch_filter(physeq_no_tree)
     }
 
     ## Independently filter data within each group
     if(filter_by_group == TRUE){
-
-        ## Remove phylogenetic tree to speed up filtering
-        if(!is.null(phy_tree(physeq, errorIfNULL = F))){
-            physeq_no_tree <- physeq
-            physeq_no_tree@phy_tree <- NULL
-        } else {
-            physeq_no_tree <- physeq
-        }
 
         ## Split data by grouping variable
         cat("..Splitting data by grouping variable\n")
@@ -151,13 +152,13 @@ phyloseq_filter_test <- function(physeq, group, dist_type = "bray", filter_by_gr
         }
         names(RES) <- cmbs
 
-        ## Add original phylogenetic tree (if present)
-        if(!is.null(phy_tree(physeq, errorIfNULL = F))){
-            RES <- llply(.data = RES, .fun = function(z){ phy_tree(z) <- phy_tree(physeq); return(z) })
-        }
-
-
     } # end of filter_by_group
+
+
+    ## Add original phylogenetic tree (if present)
+    if(!is.null(phy_tree(physeq, errorIfNULL = F))){
+        RES <- llply(.data = RES, .fun = function(z){ phy_tree(z) <- phy_tree(physeq); return(z) })
+    }
 
 
     ## Function to estimate multSE for phyloseq
