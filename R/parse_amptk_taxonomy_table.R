@@ -34,6 +34,7 @@ parse_taxonomy_amptk <- function(x){
 #' @seealso \code{\link{parse_taxonomy_amptk}} \code{\link{parse_taxonomy_qiime}}
 #' @export
 #' @examples
+#' ## Taxonomy with sequence ID
 #' tax <- c(
 #' "UDB011192;k:Fungi,p:Basidiomycota,c:Agaricomycetes,o:Russulales,f:Russulaceae,g:Russula,s:Russula chloroides",
 #' "SINTAX;k:Fungi,p:Chytridiomycota,c:Chytridiomycetes,o:Rhizophydiales",
@@ -45,15 +46,32 @@ parse_taxonomy_amptk <- function(x){
 #'
 #' parse_taxonomy_amptk_batch(tax)
 #'
-parse_taxonomy_amptk_batch <- function(x){
+#' ## Taxonomy without sequence ID
+#' tax2 <- c(
+#' "k:Fungi,p:Basidiomycota,c:Agaricomycetes,o:Russulales,f:Russulaceae,g:Russula,s:Russula chloroides",
+#' "k:Fungi,p:Chytridiomycota,c:Chytridiomycetes,o:Rhizophydiales",
+#' "k:Fungi,p:Basidiomycota,c:Agaricomycetes,o:Atheliales,f:Atheliaceae,g:Piloderma",
+#' "k:Fungi,p:Zygomycota,o:Mortierellales,f:Mortierellaceae,g:Mortierella",
+#' "k:Fungi,p:Basidiomycota,c:Agaricomycetes,o:Atheliales,f:Atheliaceae,g:Amphinema,s:Amphinema byssoides",
+#' "k:Fungi,p:Chytridiomycota,c:Chytridiomycetes,o:Spizellomycetales"
+#' )
+#'
+#' parse_taxonomy_amptk_batch(tax2, withID = FALSE)
+#'
+parse_taxonomy_amptk_batch <- function(x, withID = TRUE){
     require(plyr)
 
-    ## Split OTUId to SequenceId (e.g., JQ976006) or MethodId (UTAX,SINTAX) + Taxonomy
-    res <- strsplit(x, split = ";")
-    res <- do.call(rbind, res)
+    if(withID == TRUE){
+      ## Split OTUId to SequenceId (e.g., JQ976006) or MethodId (UTAX,SINTAX) + Taxonomy
+      res <- strsplit(x, split = ";")
+      res <- do.call(rbind, res)
 
-    # Prepare list of taxonomic assignments
-    res <- alply(.data = res[, 2], .margins = 1, .fun = parse_taxonomy_amptk)
+      # Prepare list of taxonomic assignments
+      res <- alply(.data = res[, 2], .margins = 1, .fun = parse_taxonomy_amptk)
+    } else {
+      # Prepare list of taxonomic assignments
+      res <- alply(.data = x, .margins = 1, .fun = parse_taxonomy_amptk)
+    }
 
     # Convert each vector to matrix
     res <- llply(.data = res, .fun = function(x){ t(as.matrix(x)) })
