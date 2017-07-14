@@ -14,6 +14,7 @@
 #'
 #' @return Data frame with samples as rows and features as columns.
 #' @export
+#' @references https://picrust.github.io/picrust/scripts/predict_metagenomes.html
 #'
 #' @examples
 #'
