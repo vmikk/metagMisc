@@ -23,7 +23,7 @@ predict_metagenomes <- function(otu_tab, func_tab, NSTI_present = TRUE, rel_abun
   # Subset OTUs for the features present in the functional table
   otu_vs_func <- otu_tab[, 1] %in% func_tab[, 1]
   if(any(!otu_vs_func)){
-    cat("Warning: OTUs that are no present in the table with functional features will be remved.\n")
+    cat("Warning: OTUs that are not present in the table with functional features will be removed.\n")
     otu_tab <- otu_tab[otu_vs_func, ]
   }
   otus <- as.matrix( otu_tab[, -1] )
