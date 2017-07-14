@@ -1,5 +1,22 @@
 
-## Count number of gene copies for each feature (e.g., KEGG) in each sample
+#' @title Produce the actual metagenome functional predictions.
+#'
+#' @param otu_tab Data frame with OTU abundances
+#' @param func_tab Data frame with precalculated function predictions on per OTU basis
+#' @param NSTI_present Logical; idnicating weather NSTI values are present in the last column of func_tab
+#' @param rel_abund Logical; if TRUE, OTU counts will be transformed to relative abundances
+#' @param add_sub_tabs Logical; if TRUE, subsetted OTU and functional tables will be added to the results
+#' @details
+#' This function is analogous to the 'predict_metagenomes.py' from PICRUSt.
+#' It will produce the actual metagenome functional predictions for a given OTU table and table with feature counts,
+#' e.g. count number of gene copies for each feature (e.g., KEGG) in each sample.
+#' Feature counts for each OTU will be multiplied by the abundance of that OTU in each each sample and summed across all OTUs.
+#'
+#' @return Data frame with samples as rows and features as columns.
+#' @export
+#'
+#' @examples
+#'
 predict_metagenomes <- function(otu_tab, func_tab, NSTI_present = TRUE, rel_abund = TRUE, add_sub_tabs = FALSE){
 
   # Subset OTUs for the features present in the functional table
