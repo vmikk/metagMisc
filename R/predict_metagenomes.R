@@ -1,8 +1,8 @@
 
 #' @title Produce the actual metagenome functional predictions.
 #'
-#' @param otu_tab Data frame with OTU abundances
-#' @param func_tab Data frame with precalculated function predictions on per OTU basis
+#' @param otu_tab Data frame with OTU abundances (rows = OTUs, columns = Samples, first column = OTU names)
+#' @param func_tab Data frame with precalculated function predictions on per OTU basis (rows = OTUs, columns = feature counts, first column = OTU names)
 #' @param NSTI_present Logical; idnicating weather NSTI values are present in the last column of func_tab
 #' @param rel_abund Logical; if TRUE, OTU counts will be transformed to relative abundances
 #' @param add_sub_tabs Logical; if TRUE, subsetted OTU and functional tables will be added to the results
