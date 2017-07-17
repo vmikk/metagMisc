@@ -17,6 +17,30 @@
 #' @references https://picrust.github.io/picrust/scripts/predict_metagenomes.html
 #'
 #' @examples
+#' ## Create dummy data
+#' set.seed(111)
+#' NSAMP=10    # number of samples
+#' NSPEC=30    # number of species/OTUs
+#' NGENES=8   # number of features
+#'
+#' dummy_name <- function(len = 5){ paste(sample(letters, size = len, replace = T), collapse = "") }
+#'
+#' # Table with precalculated number of gene copies per OTU
+#' func_tab <- data.frame(
+#'   OTU_ID = replicate(n = 100, expr = dummy_name()),
+#'   matrix(data = sample(1:100, size = 100*NGENES, replace = T), nrow = 100),
+#'   stringsAsFactors = F)
+#' colnames(func_tab)[-1] <- paste("Gene", 1:NGENES, sep="")
+#'
+#' # Table with OTU abundance
+#' otu_tab <- data.frame(
+#'   OTU = sample(func_tab$OTU_ID, size = NSPEC),
+#'   matrix(data = sample(0:200, size = NSPEC*NSAMP, replace = T), nrow = NSPEC),
+#'   stringsAsFactors = F)
+#' colnames(otu_tab)[-1] <- paste("Sample", 1:NSAMP, sep="")
+#'
+#' ## Predict metagenomes
+#' predict_metagenomes(otu_tab, func_tab, NSTI_present = FALSE, rel_abund = FALSE, add_sub_tabs = FALSE)
 #'
 predict_metagenomes <- function(otu_tab, func_tab, NSTI_present = TRUE, rel_abund = TRUE, add_sub_tabs = FALSE){
 
