@@ -10,12 +10,14 @@
 #' @param remove_zero_contributions Logical; if TRUE, OTUs with zero contribution will be removed from results
 #'
 #' @details
+#' This function is analogous to the `metagenome_contributions.py` from PICRUSt.
 #' Each line in the results relates how much a single OTU (third column) contributes to a single KO (first column) within a single sample (second column).
 #' The fifth column contains the actual relative abundance contributed by this OTU, and the other columns contain other information about the abundance of the OTU and the percentage contribution of this OTU.
 #' The last columns provide the taxonomy information for the OTU.
 #'
 #' @return Data frame
 #' @export
+#' @references https://picrust.github.io/picrust/scripts/metagenome_contributions.html
 #'
 #' @examples
 #'
