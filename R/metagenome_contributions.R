@@ -1,10 +1,24 @@
 
-## Connect the OTUs that are contributing to each features (e.g., KO) in each sample
-# Each line in this file relates how much a single OTU (third column)
-# contributes to a single KO (first column) within a single sample (second column).
-# The fifth column contains the actual relative abundance contributed by this OTU,
-# and the other columns contain other information about the abundance of the OTU and the percentage contribution of this OTU.
-# The last columns provide the taxonomy information for the OTU
+#' @title Partition metagenome functional contributions according to function, OTU, and sample
+#' @description This function partitions the predicted contribution to the metagenomes from each organism in the given OTU table for each function (e.g., KO) in each sample.
+#' @param otu_tab Data frame with OTU abundances (rows = OTUs, columns = Samples, first column = OTU names)
+#' @param func_tab Data frame with precalculated function predictions on per OTU basis (rows = OTUs, columns = feature counts, first column = OTU names)
+#' @param tax_tab (Optional) Data frame with OTU taxonomy (rows = OTUs, columns = taxonomy ranks, first column = OTU names). If provided, taxonomy ranks will be added to the resulting table for each OTU
+#' @param features Character vector with function names; if provided, results will be limited to only the specified functions
+#' @param NSTI_present Logical; idnicating weather NSTI values are present in the last column of func_tab
+#' @param rel_abund Logical; if TRUE, OTU counts will be transformed to relative abundances
+#' @param remove_zero_contributions Logical; if TRUE, OTUs with zero contribution will be removed from results
+#'
+#' @details
+#' Each line in the results relates how much a single OTU (third column) contributes to a single KO (first column) within a single sample (second column).
+#' The fifth column contains the actual relative abundance contributed by this OTU, and the other columns contain other information about the abundance of the OTU and the percentage contribution of this OTU.
+#' The last columns provide the taxonomy information for the OTU.
+#'
+#' @return Data frame
+#' @export
+#'
+#' @examples
+#'
 metagenome_contributions <- function(otu_tab, func_tab, tax_tab = NULL, features = NULL, NSTI_present = TRUE, rel_abund = TRUE, remove_zero_contributions = TRUE){
 
   require(vegan)
