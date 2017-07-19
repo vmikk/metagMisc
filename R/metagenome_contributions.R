@@ -1,5 +1,5 @@
 
-#' @title Partition metagenome functional contributions according to function, OTU, and sample
+#' @title Partition metagenome functional contributions according to function, OTU, and sample.
 #' @description This function partitions the predicted contribution to the metagenomes from each organism in the given OTU table for each function (e.g., KO) in each sample.
 #' @param otu_tab Data frame with OTU abundances (rows = OTUs, columns = Samples, first column = OTU names)
 #' @param func_tab Data frame with precalculated function predictions on per OTU basis (rows = OTUs, columns = feature counts, first column = OTU names)
@@ -20,6 +20,38 @@
 #' @references https://picrust.github.io/picrust/scripts/metagenome_contributions.html
 #'
 #' @examples
+#' ## Create dummy data
+#' set.seed(111)
+#' NSAMP=10    # number of samples
+#' NSPEC=30    # number of species/OTUs
+#' NGENES=20   # number of features
+#'
+#' dummy_name <- function(len = 5){ paste(sample(letters, size = len, replace = T), collapse = "") }
+#'
+#' # Table with gene counts per OTU
+#' func_tab <- data.frame(
+#'               OTU_ID = replicate(n = 100, expr = dummy_name()),
+#'               matrix(data = sample(0:100, size = 100*NGENES, replace = T), nrow = 100),
+#'               stringsAsFactors = F)
+#' colnames(func_tab)[-1] <- paste("F", 1:(ncol(func_tab)-1), sep="")
+#'
+#' # Table with OTU abundances
+#' otu_tab <- data.frame(
+#'               OTU = sample(func_tab$OTU_ID, size = NSPEC),
+#'               matrix(data = sample(1:10000, size = NSPEC*NSAMP, replace = T), nrow = NSPEC),
+#'               stringsAsFactors = F)
+#' colnames(otu_tab)[-1] <- paste("Samp", 1:(ncol(otu_tab)-1), sep="")
+#'
+#' # Table with OTU taxonomy annotation
+#' tax_tab <- data.frame(OTU_ID = func_tab$OTU_ID,
+#'               Kingdom = sort(sample(LETTERS[1:4], size = nrow(func_tab), replace = T)),
+#'               Phylum = sort(sample(LETTERS[5:20], size = nrow(func_tab), replace = T)),
+#'               stringsAsFactors = F)
+#'
+#' metag <- metagenome_contributions(otu_tab, func_tab, tax_tab,
+#'                      features = c("F1", "F2", "F3"), NSTI_present = F, rel_abund = FALSE,
+#'                      remove_zero_contributions = TRUE)
+#' head(metag)
 #'
 metagenome_contributions <- function(otu_tab, func_tab, tax_tab = NULL, features = NULL, NSTI_present = TRUE, rel_abund = TRUE, remove_zero_contributions = TRUE){
 
