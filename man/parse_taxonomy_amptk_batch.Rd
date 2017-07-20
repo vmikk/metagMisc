@@ -4,7 +4,7 @@
 \alias{parse_taxonomy_amptk_batch}
 \title{Parse multiple taxonomy strings from AMPtk.}
 \usage{
-parse_taxonomy_amptk_batch(x)
+parse_taxonomy_amptk_batch(x, withID = TRUE)
 }
 \arguments{
 \item{x}{Vector of character strings from AMPtk taxonomy}
@@ -17,6 +17,7 @@ This function splits AMPtk (ex-UFITS) result of taxonomic annotation by taxonomi
 The first part of taxonomy string is assumed to be an ID of the best hit (e.g., EF040844) or a taxonomic classificator (UTAX or SINTAX) followed by a semicolon.
 }
 \examples{
+## Taxonomy with sequence ID
 tax <- c(
 "UDB011192;k:Fungi,p:Basidiomycota,c:Agaricomycetes,o:Russulales,f:Russulaceae,g:Russula,s:Russula chloroides",
 "SINTAX;k:Fungi,p:Chytridiomycota,c:Chytridiomycetes,o:Rhizophydiales",
@@ -27,6 +28,18 @@ tax <- c(
 )
 
 parse_taxonomy_amptk_batch(tax)
+
+## Taxonomy without sequence ID
+tax2 <- c(
+"k:Fungi,p:Basidiomycota,c:Agaricomycetes,o:Russulales,f:Russulaceae,g:Russula,s:Russula chloroides",
+"k:Fungi,p:Chytridiomycota,c:Chytridiomycetes,o:Rhizophydiales",
+"k:Fungi,p:Basidiomycota,c:Agaricomycetes,o:Atheliales,f:Atheliaceae,g:Piloderma",
+"k:Fungi,p:Zygomycota,o:Mortierellales,f:Mortierellaceae,g:Mortierella",
+"k:Fungi,p:Basidiomycota,c:Agaricomycetes,o:Atheliales,f:Atheliaceae,g:Amphinema,s:Amphinema byssoides",
+"k:Fungi,p:Chytridiomycota,c:Chytridiomycetes,o:Spizellomycetales"
+)
+
+parse_taxonomy_amptk_batch(tax2, withID = FALSE)
 
 }
 \references{
