@@ -1,6 +1,6 @@
 
 # Pairwise dissimilarity boxplots
-phyloseq_pairwise_dissimilarity <- function(physeq, group = NULL, between_groups = TRUE, method = "bray", method_title = TRUE, notch = TRUE, ...){
+phyloseq_group_dissimilarity <- function(physeq, group = NULL, between_groups = TRUE, method = "bray", method_title = TRUE, notch = TRUE, ...){
 
   require(plyr)
 
