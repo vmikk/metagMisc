@@ -1,6 +1,6 @@
 
 # Pairwise dissimilarity boxplots
-phyloseq_group_dissimilarity <- function(physeq, group = NULL, between_groups = TRUE, method = "bray", method_title = TRUE, notch = TRUE, ...){
+phyloseq_group_dissimilarity <- function(physeq, group = NULL, between_groups = TRUE, method = "bray", method_title = FALSE, notch = TRUE, justDF = FALSE, ...){
 
   require(plyr)
 
@@ -90,7 +90,6 @@ phyloseq_group_dissimilarity <- function(physeq, group = NULL, between_groups = 
     ## Prepare plot
     pp <- ggplot(data = ddm, aes(x = Group, y = Dist, fill = Group)) +
             geom_boxplot(size = 0.8, notch = notch)
-
   } # end of two-groups case
 
 
@@ -109,12 +108,16 @@ phyloseq_group_dissimilarity <- function(physeq, group = NULL, between_groups = 
 
   } # end of one group
 
+  ## Rename axes
+  pp <- pp + xlab(group) +
+    ylab(paste("Pairwise dissimilarity (", method, ")", sep=""))
 
   ## Add method name to the plot
   if(method_title == TRUE){
     pp <- pp + ggtitle(method)
   }
 
-  return(pp)
+  if(justDF == FALSE){ return(pp) }   # return plot
+  if(justDF == TRUE) { return(ddm) }  # return data frame with pairwise distances
 }
 
