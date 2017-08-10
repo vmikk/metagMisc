@@ -1,7 +1,7 @@
 
 #' @title Split phyloseq object by taxonomic rank.
 #' @description This function splits a phyloseq object by a specified taxonomic rank, returning a list of objects whose components each correspond to a taxonomic rank.
-#' @param physeq Phyloseq object
+#' @param physeq A phyloseq-class object
 #' @param TaxRank Taxonomy rank name (e.g., "Phylum")
 #' @param drop_NA Logical, remove ranks with NAs
 #'

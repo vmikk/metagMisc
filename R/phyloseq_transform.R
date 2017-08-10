@@ -9,10 +9,10 @@
 
 #' @title Cumulative sum scaling (CSS) normalization of OTU abundance table.
 #'
-#' @param physeq Phyloseq object.
-#' @param norm Logical, return normalized counts.
-#' @param log Logical, apply a logarithmic transform (log2) to the normalized count data.
-#' @param ... Additional arguments will be passed to \code{\link{MRcounts}}.
+#' @param physeq A phyloseq-class object
+#' @param norm Logical, return normalized counts
+#' @param log Logical, apply a logarithmic transform (log2) to the normalized count data
+#' @param ... Additional arguments will be passed to \code{\link{MRcounts}}
 #'
 #' @details Median scaling factor across samples will be used as default.
 #' @return Phyloseq object with transformed counts in OTU table.
@@ -42,10 +42,10 @@ phyloseq_transform_css <- function(physeq, norm = TRUE, log = TRUE, ...){
 
 #' @title Variance stabilizing transformation (VST) of OTU abundance table.
 #'
-#' @param physeq Phyloseq object.
-#' @param dropneg Logical, replace negative transformed values with 0.
-#' @param dropmissing Logical, remove missing data.
-#@param ... Additional arguments will be passed to \code{\link{varianceStabilizingTransformation}.
+#' @param physeq A phyloseq-class object
+#' @param dropneg Logical, replace negative transformed values with 0
+#' @param dropmissing Logical, remove missing data
+#@param ... Additional arguments will be passed to \code{\link{varianceStabilizingTransformation}
 #'
 #' @details For downstream analysis it could be better to use sample covariate information (blind = FALSE in \code{\link{varianceStabilizingTransformation}}).
 #' @return Phyloseq object with transformed counts in OTU table.
@@ -100,10 +100,10 @@ phyloseq_transform_vst_blind <- function(physeq, dropneg = F, dropmissing = T, .
 
 #' @title Regularized-log (rlog) transformation of OTU abundance table.
 #'
-#' @param physeq Phyloseq object.
-#' @param dropneg Logical, replace negative transformed values with 0.
-#' @param dropmissing Logical, remove missing data.
-#' @param ... Additional arguments will be passed to \code{\link{rlogTransformation}}.
+#' @param physeq A phyloseq-class object
+#' @param dropneg Logical, replace negative transformed values with 0
+#' @param dropmissing Logical, remove missing data
+#' @param ... Additional arguments will be passed to \code{\link{rlogTransformation}}
 #'
 #' @details rlog transformation (this function) is preferable to the vst (\code{\link{phyloseq_transform_vst_blind}}) if the size factors vary widely.
 #' @return Phyloseq object with transformed counts in OTU table.
@@ -153,8 +153,8 @@ phyloseq_transform_rlog_blind <- function(physeq, dropneg = F, dropmissing = T, 
 
 #' @title Log-transformation of OTU abundance table.
 #'
-#' @param physeq Phyloseq object.
-#' @param ... Additional arguments (e.g., "logbase" for the logarithm base) will be passed to \code{\link{decostand}}.
+#' @param physeq A phyloseq-class object
+#' @param ... Additional arguments (e.g., "logbase" for the logarithm base) will be passed to \code{\link{decostand}}
 #'
 #' @details
 #' Logarithmic transformation as suggested by Anderson et al. (2006) will be applied to the OTU table in phyloseq-object. First, non-integer data will be divided by smallest positive value. Second, log(x) + 1 for x > 0.

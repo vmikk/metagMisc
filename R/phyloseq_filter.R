@@ -2,7 +2,7 @@
 
 #' @title Remove taxa with small mean relative abundance.
 #'
-#' @param physeq Phyloseq object
+#' @param physeq A phyloseq-class object
 #' @param frac The minimum cutoff for the relative OTU abundance
 #' @details This function searches for taxa with small mean relative abundance and removes them. Result will be returned with original counts in the abundance table.
 #' @return Phyloseq object with a subset of taxa.
@@ -53,7 +53,7 @@ phyloseq_filter_taxa_rel_abund <- function(physeq, frac = 1e-4){
 
 #' @title Remove taxa with abundance less then a certain fraction of total abundance.
 #'
-#' @param physeq Phyloseq object
+#' @param physeq A phyloseq-class object
 #' @param frac The minimum cutoff for the OTU abundance in the table. This number is a fraction, not a percent.
 #' @details
 #' If frac = 0.0001, this will retain all OTU's that have at least a 0.01% total abundance in the OTU table.
@@ -82,7 +82,7 @@ phyloseq_filter_taxa_tot_fraction <- function(physeq, frac = 0.01){
 
 #' @title Filter low-prevalence OTUs.
 #' @description This function will remove taxa (OTUs) with low prevalence, where prevalence is the fraction of total samples in which an OTU is observed.
-#' @param physeq Phyloseq object
+#' @param physeq A phyloseq-class object
 #' @param prev.trh Prevalence threshold (default, 0.05 = 5\% of samples)
 #' @param abund.trh Abundance threshold (default, NULL)
 #' @details Abundance threshold defines if the OTU should be preserved if its abundance is larger than threshold (e.g., >= 50 reads).

@@ -1,8 +1,8 @@
 
 #' @title Separate phyloseq-class object by sample.
 #' @description This function splits a phyloseq object by sample, returning a list of objects whose components each correspond to a separate sample.
-#' @param physeq A phyloseq-class object.
-#' @param drop_zeroes Logical, indicating weather OTUs with zero abundance or samples with zero total abundance should be removed.
+#' @param physeq A phyloseq-class object
+#' @param drop_zeroes Logical, indicating weather OTUs with zero abundance or samples with zero total abundance should be removed
 #' @return List with phyloseq objects.
 #' @export
 #'

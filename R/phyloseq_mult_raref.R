@@ -1,7 +1,7 @@
 
 #' @title Multiple rarefaction of phyloseq-object
 #' @description This function will resample an OTU table such that all samples have the same library size. Resampling will be performed multiple times.
-#' @param x Physeq object
+#' @param x A phyloseq-class object
 #' @param SampSize Rarefaction depth (number of reads to sample)
 #' @param MinSizeTreshold Remove samples with number of reads less then this treshold
 #' @param iter Number of rarefication iterations

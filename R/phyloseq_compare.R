@@ -1,8 +1,8 @@
 
 #' @title Compare two phyloseq objects.
 #'
-#' @param phy1 Phyloseq object
-#' @param phy2 Phyloseq object
+#' @param phy1 A phyloseq-class object
+#' @param phy2 A phyloseq-class object
 #' @param cols Character vector with column names for phy1 & phy2 in the resulting table.
 #'
 #' @return Data frame with number and percentage of OTUs.

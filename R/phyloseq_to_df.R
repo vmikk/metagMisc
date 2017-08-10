@@ -1,7 +1,7 @@
 
 #' @title Convert phyloseq object to data frame (for exporting).
 #'
-#' @param physeq Phyloseq object
+#' @param physeq A phyloseq-class object
 #' @param addtax Add taxonomy to the result table
 #' @param addtot Add total OTU abundance to the result table
 #' @param abund_sort Sort OTUs by total abundance

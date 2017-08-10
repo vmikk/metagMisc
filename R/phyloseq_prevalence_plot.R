@@ -1,7 +1,7 @@
 
 #' @title Prevalence plot (total OTU abundance vs OTU prevalence).
 #' @description This function will plot total OTU abundance vs the fraction of samples in which an OTU is observed.
-#' @param physeq Phyloseq object
+#' @param physeq A phyloseq-class object
 #' @param prev.trh Add horizontal line with prevalence threshold (default is NULL, but  0.05 = 5\% of samples)
 #' @param taxcolor Taxonomy rank for coloring the points (e.g. "Phylum")
 #' @param facet Logical, split to separate panels by taxonomy rank used for coloring the points
@@ -48,7 +48,7 @@ phyloseq_prevalence_plot <- function(physeq, prev.trh = NULL, taxcolor = NULL, f
 
 #' @title Compute prevalence of each species.
 #'
-#' @param physeq Phyloseq object
+#' @param physeq A phyloseq-class object
 #' @param add_tax Logical, add taxonomy to the results
 #'
 #' @return Data frame
