@@ -16,6 +16,14 @@
 #' @export
 #'
 #' @examples
+#' ## Load and subset data
+#' data(enterotype)
+#' ent <- subset_samples(enterotype, Enterotype %in% c("1", "2"))
+#'
+#' ## Dissimilarity boxplots
+#' phyloseq_group_dissimilarity(ent, group = "Enterotype")
+#' phyloseq_group_dissimilarity(ent, group = "Enterotype", between_groups = F)
+#' phyloseq_group_dissimilarity(ent, group = "Enterotype", method = "jaccard")
 #'
 phyloseq_group_dissimilarity <- function(physeq, group = NULL, between_groups = TRUE, method = "bray", method_title = FALSE, notch = TRUE, justDF = FALSE, ...){
 
