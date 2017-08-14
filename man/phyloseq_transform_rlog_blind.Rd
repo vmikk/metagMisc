@@ -7,13 +7,13 @@
 phyloseq_transform_rlog_blind(physeq, dropneg = F, dropmissing = T, ...)
 }
 \arguments{
-\item{physeq}{Phyloseq object.}
+\item{physeq}{A phyloseq-class object}
 
-\item{dropneg}{Logical, replace negative transformed values with 0.}
+\item{dropneg}{Logical, replace negative transformed values with 0}
 
-\item{dropmissing}{Logical, remove missing data.}
+\item{dropmissing}{Logical, remove missing data}
 
-\item{...}{Additional arguments will be passed to \code{\link{rlogTransformation}}.}
+\item{...}{Additional arguments will be passed to \code{\link{rlogTransformation}}}
 }
 \value{
 Phyloseq object with transformed counts in OTU table.

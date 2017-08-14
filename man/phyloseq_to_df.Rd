@@ -7,7 +7,7 @@
 phyloseq_to_df(physeq, addtax = T, addtot = F, abund_sort = T)
 }
 \arguments{
-\item{physeq}{Phyloseq object}
+\item{physeq}{A phyloseq-class object}
 
 \item{addtax}{Add taxonomy to the result table}
 

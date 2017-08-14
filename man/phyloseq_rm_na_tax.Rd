@@ -7,7 +7,7 @@
 phyloseq_rm_na_tax(physeq)
 }
 \arguments{
-\item{physeq}{A phyloseq-class object.}
+\item{physeq}{A phyloseq-class object}
 }
 \value{
 Phyloseq object.

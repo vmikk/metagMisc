@@ -8,7 +8,7 @@ phyloseq_prevalence_plot(physeq, prev.trh = NULL, taxcolor = NULL,
   facet = FALSE, point_alpha = 0.7, showplot = T)
 }
 \arguments{
-\item{physeq}{Phyloseq object}
+\item{physeq}{A phyloseq-class object}
 
 \item{prev.trh}{Add horizontal line with prevalence threshold (default is NULL, but  0.05 = 5\% of samples)}
 

@@ -7,7 +7,7 @@
 prevalence(physeq, add_tax = TRUE)
 }
 \arguments{
-\item{physeq}{Phyloseq object}
+\item{physeq}{A phyloseq-class object}
 
 \item{add_tax}{Logical, add taxonomy to the results}
 }

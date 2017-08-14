@@ -7,7 +7,7 @@
 phyloseq_filter_prevalence(physeq, prev.trh = 0.05, abund.trh = NULL)
 }
 \arguments{
-\item{physeq}{Phyloseq object}
+\item{physeq}{A phyloseq-class object}
 
 \item{prev.trh}{Prevalence threshold (default, 0.05 = 5\% of samples)}
 

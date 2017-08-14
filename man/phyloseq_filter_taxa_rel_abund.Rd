@@ -7,7 +7,7 @@
 phyloseq_filter_taxa_rel_abund(physeq, frac = 1e-04)
 }
 \arguments{
-\item{physeq}{Phyloseq object}
+\item{physeq}{A phyloseq-class object}
 
 \item{frac}{The minimum cutoff for the relative OTU abundance}
 }

@@ -7,13 +7,13 @@
 phyloseq_transform_css(physeq, norm = TRUE, log = TRUE, ...)
 }
 \arguments{
-\item{physeq}{Phyloseq object.}
+\item{physeq}{A phyloseq-class object}
 
-\item{norm}{Logical, return normalized counts.}
+\item{norm}{Logical, return normalized counts}
 
-\item{log}{Logical, apply a logarithmic transform (log2) to the normalized count data.}
+\item{log}{Logical, apply a logarithmic transform (log2) to the normalized count data}
 
-\item{...}{Additional arguments will be passed to \code{\link{MRcounts}}.}
+\item{...}{Additional arguments will be passed to \code{\link{MRcounts}}}
 }
 \value{
 Phyloseq object with transformed counts in OTU table.

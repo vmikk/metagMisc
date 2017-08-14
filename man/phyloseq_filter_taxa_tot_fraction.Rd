@@ -7,7 +7,7 @@
 phyloseq_filter_taxa_tot_fraction(physeq, frac = 0.01)
 }
 \arguments{
-\item{physeq}{Phyloseq object}
+\item{physeq}{A phyloseq-class object}
 
 \item{frac}{The minimum cutoff for the OTU abundance in the table. This number is a fraction, not a percent.}
 }

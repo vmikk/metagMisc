@@ -7,11 +7,11 @@
 phyloseq_transform_vst_blind(physeq, dropneg = F, dropmissing = T, ...)
 }
 \arguments{
-\item{physeq}{Phyloseq object.}
+\item{physeq}{A phyloseq-class object}
 
-\item{dropneg}{Logical, replace negative transformed values with 0.}
+\item{dropneg}{Logical, replace negative transformed values with 0}
 
-\item{dropmissing}{Logical, remove missing data.}
+\item{dropmissing}{Logical, remove missing data}
 }
 \value{
 Phyloseq object with transformed counts in OTU table.

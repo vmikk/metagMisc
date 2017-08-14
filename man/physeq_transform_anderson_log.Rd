@@ -7,9 +7,9 @@
 physeq_transform_anderson_log(physeq, ...)
 }
 \arguments{
-\item{physeq}{Phyloseq object.}
+\item{physeq}{A phyloseq-class object}
 
-\item{...}{Additional arguments (e.g., "logbase" for the logarithm base) will be passed to \code{\link{decostand}}.}
+\item{...}{Additional arguments (e.g., "logbase" for the logarithm base) will be passed to \code{\link{decostand}}}
 }
 \value{
 Phyloseq object with log-transformed counts in OTU table.

@@ -8,7 +8,7 @@ phyloseq_mult_raref(x, SampSize = NULL, MinSizeTreshold = NULL,
   iter = 1000, replace = F, ...)
 }
 \arguments{
-\item{x}{Physeq object}
+\item{x}{A phyloseq-class object}
 
 \item{SampSize}{Rarefaction depth (number of reads to sample)}
 

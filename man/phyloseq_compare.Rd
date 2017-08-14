@@ -7,9 +7,9 @@
 phyloseq_compare(phy1, phy2, cols = c("Before", "After"))
 }
 \arguments{
-\item{phy1}{Phyloseq object}
+\item{phy1}{A phyloseq-class object}
 
-\item{phy2}{Phyloseq object}
+\item{phy2}{A phyloseq-class object}
 
 \item{cols}{Character vector with column names for phy1 & phy2 in the resulting table.}
 }

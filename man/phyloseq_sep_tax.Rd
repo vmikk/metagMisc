@@ -7,7 +7,7 @@
 phyloseq_sep_tax(physeq, TaxRank = "Phylum", drop_NA = FALSE)
 }
 \arguments{
-\item{physeq}{Phyloseq object}
+\item{physeq}{A phyloseq-class object}
 
 \item{TaxRank}{Taxonomy rank name (e.g., "Phylum")}
 

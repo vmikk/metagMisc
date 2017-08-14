@@ -7,9 +7,9 @@
 phyloseq_sep_samp(physeq, drop_zeroes = T)
 }
 \arguments{
-\item{physeq}{A phyloseq-class object.}
+\item{physeq}{A phyloseq-class object}
 
-\item{drop_zeroes}{Logical, indicating weather OTUs with zero abundance or samples with zero total abundance should be removed.}
+\item{drop_zeroes}{Logical, indicating weather OTUs with zero abundance or samples with zero total abundance should be removed}
 }
 \value{
 List with phyloseq objects.

@@ -7,7 +7,7 @@
 phyloseq_extract_non_shared_otus(x, samp_names = sample_names(x))
 }
 \arguments{
-\item{x}{Phyloseq object}
+\item{x}{A phyloseq-class object}
 
 \item{samp_names}{Character vector with sample names (default, all samples)}
 }

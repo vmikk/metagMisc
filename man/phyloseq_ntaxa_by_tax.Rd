@@ -8,7 +8,7 @@ phyloseq_ntaxa_by_tax(physeq, TaxRank = "Phylum", relative = F,
   add_meta_data = T)
 }
 \arguments{
-\item{physeq}{Phyloseq object}
+\item{physeq}{A phyloseq-class object}
 
 \item{TaxRank}{Name of the taxonomic rank}
 
