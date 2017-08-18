@@ -66,27 +66,6 @@ phyloseq_group_dissimilarity <- function(physeq, group = NULL, between_groups = 
       ## Full pair-wise comparisons
       ddf <- phyloseq::distance(physeq, method = method, type = "samples", ...)
 
-      ## Convert distance matrix to pairwised list
-      dist2list <- function (dist, tri=TRUE) {
-        if (!class(dist) == "dist") { stop("Error: The input data must be a dist object.\n") }
-
-        dat <- as.data.frame(as.matrix(dist))
-        if (is.null(names(dat))) {
-            rownames(dat) <- paste(1:nrow(dat))
-        }
-        value <- stack(dat)$values
-        rnames <- rownames(dat)
-        namecol <- expand.grid(rnames, rnames)
-        colnames(namecol) <- c("col", "row")
-        res <- data.frame(namecol, value)
-
-        if(tri == TRUE){    # return only lower triangular part of dist
-          res <- res[-which(upper.tri(as.matrix(dist), diag = T)), ]
-        }
-
-        return(res)
-      } # end of dist2list
-
       ## Convert dist to pairwise dataframe
       ddl <- dist2list(ddf, tri=FALSE)     # !! take both symmetric comparisons !! (a-b & b-a)
 
