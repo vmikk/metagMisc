@@ -9,6 +9,14 @@
 #' @author The code is based on \code{\link[spaa]{dist2list}} by Jinlong Zhang.
 #'
 #' @examples
+#' # Generate dummy data
+#' datt <- dist(rnorm(10))
+#' attr(datt, "Labels") <- paste("obj", 1:10, sep="")
+#'
+#' # Convert dist to data frame
+#' head( dist2list(datt)  )
+#' dim( dist2list(datt, tri = T)  ) # only lower-triangular part of dist
+#' dim( dist2list(datt, tri = F)  ) # full distance matrix
 #'
 dist2list <- function (dist, tri=TRUE) {
   if (!class(dist) == "dist") { stop("Error: The input data must be a dist object.\n") }
