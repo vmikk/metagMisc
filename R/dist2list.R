@@ -1,5 +1,13 @@
 
-## Convert distance matrix to pairwised list
+#' @title Convert distance matrix to data frame
+#' @description This function takes a distance matrix (of class 'dist') and transforms it to a data.frame, where each row represents a single pairwise comparison.
+#' @param dist Distance matrix (object of class 'dist')
+#' @param tri Logical, if TRUE - only lower triangular part of dist will be returned
+#' @return Data frame
+#' @export
+#'
+#' @examples
+#'
 dist2list <- function (dist, tri=TRUE) {
   if (!class(dist) == "dist") { stop("Error: The input data must be a dist object.\n") }
 
