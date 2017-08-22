@@ -5,6 +5,8 @@
 #' @param tri Logical, if TRUE - only lower triangular part of dist will be returned
 #' @return Data frame
 #' @export
+#' @seealso \code{\link[spaa]{dist2list}} from spaa package.
+#' @author The code is based on \code{\link[spaa]{dist2list}} by Jinlong Zhang.
 #'
 #' @examples
 #'
