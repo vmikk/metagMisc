@@ -127,3 +127,18 @@ phyloseq_filter_prevalence <- function(physeq, prev.trh = 0.05, abund.trh = NULL
   res <- prune_taxa(keepTaxa, physeq)
   return(res)
 }
+
+
+
+## Sample-wise abundance trimming transformation (censores OTU abundance based on arbitrary threshold)
+phyloseq_filter_sample_wise_abund_trim <- function(physeq, minabund = 10, rm_zero_OTUs = TRUE){
+
+  ## Censore OTU abundance
+  res <- transform_sample_counts(physeq, function(OTU, ab = minabund){ ifelse(OTU <= ab,  0, OTU) })
+
+  ## Remove zero-OTUs
+  if(rm_zero_OTUs == TRUE){
+    res <- prune_taxa(taxa_sums(res) > 0, res)
+  }
+  return(res)
+}
