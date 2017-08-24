@@ -130,7 +130,17 @@ phyloseq_filter_prevalence <- function(physeq, prev.trh = 0.05, abund.trh = NULL
 
 
 
-## Sample-wise abundance trimming transformation (censores OTU abundance based on arbitrary threshold)
+#' @title Filter rare OTUs based on minimum abundance threshold.
+#' @description This function performs sample-wise OTU abundance trimming.
+#' @param physeq A phyloseq-class object
+#' @param minabund Abundance threshold (default, 10)
+#' @param rm_zero_OTUs Logical, remove OTUs with zero total abundance
+#' @details OTUs can be considered as rare if they comprise fewer than X (e.g., 10) sequences within a sample. This function is intented to censore OTU abundance (unsing an arbitrary threshold) on a sample-wise basis.
+#' @return Phyloseq object with a filtered data.
+#' @export
+#'
+#' @examples
+#'
 phyloseq_filter_sample_wise_abund_trim <- function(physeq, minabund = 10, rm_zero_OTUs = TRUE){
 
   ## Censore OTU abundance
