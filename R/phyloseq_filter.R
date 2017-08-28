@@ -140,6 +140,14 @@ phyloseq_filter_prevalence <- function(physeq, prev.trh = 0.05, abund.trh = NULL
 #' @export
 #'
 #' @examples
+#' # Load data
+#' data(GlobalPatterns)
+#'
+#' # Trim GlobalPatterns data (19216 taxa)
+#' GP <- phyloseq_filter_sample_wise_abund_trim(GlobalPatterns) # 10605 taxa
+#'
+#' # Compare raw and trimmed data
+#' phyloseq_compare(GlobalPatterns, GP, cols = c("GlobalPatterns", "Trimmed GlobalPatterns"))
 #'
 phyloseq_filter_sample_wise_abund_trim <- function(physeq, minabund = 10, rm_zero_OTUs = TRUE){
 
