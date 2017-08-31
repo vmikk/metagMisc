@@ -5,8 +5,8 @@ make_utax_taxonomy <- function(x){
 
   ## Default single letter codes specifying taxonomic levels
   taxranks <- data.frame(
-    Rank = c("Kingdom", "Domain", "Phylum", "Class", "Order", "Family", "Genus", "Species"), 
-    Abbr = c("k", "d", "p", "c", "o", "f", "g", "s"), 
+    Rank = c("Domain", "Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species"), 
+    Abbr = c("d", "k", "p", "c", "o", "f", "g", "s"), 
     stringsAsFactors = F)
 
   ## Remove non-taxonomic columns
