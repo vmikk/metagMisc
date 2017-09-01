@@ -1,12 +1,19 @@
 
-## Function to prepare tax string (for sequence header)
+#' @title Prepare taxonomy annotations in SINTAX or UTAX style.
+#' @description This function takes taxonomy table and returns character string in USEARCH-style that can be used with SINTAX or UTAX taxonomy classificators.
+#' @param x Data frame with one row (columns are ordered taxonomy levels)
+#' @details Missing values are allowed and should be coded as 'NA'.
+#' @return Character string.
+#' @export
+#' @seealso http://drive5.com/usearch/manual/tax_annot.html
+#' @examples
+#'
 make_utax_taxonomy <- function(x){
-  # x = data frame with one row
 
   ## Default single letter codes specifying taxonomic levels
   taxranks <- data.frame(
-    Rank = c("Domain", "Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species"), 
-    Abbr = c("d", "k", "p", "c", "o", "f", "g", "s"), 
+    Rank = c("Domain", "Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species"),
+    Abbr = c("d", "k", "p", "c", "o", "f", "g", "s"),
     stringsAsFactors = F)
 
   ## Remove non-taxonomic columns
