@@ -17,7 +17,7 @@ make_utax_taxonomy <- function(x){
     stringsAsFactors = F)
 
   ## Remove non-taxonomic columns
-  x <- x[, which(colnames(x) %in% taxclols)]
+  x <- x[, which(colnames(x) %in% taxranks$Rank)]
 
   ## Find missing taxonomy ranks (filled with NAs)
   missing_ranks <- is.na(x)
