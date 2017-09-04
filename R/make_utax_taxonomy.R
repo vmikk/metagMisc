@@ -7,6 +7,13 @@
 #' @export
 #' @seealso http://drive5.com/usearch/manual/tax_annot.html
 #' @examples
+#' # Create dummy data (for one species)
+#' datt <- data.frame(
+#'   Kingdom = "Fungi", Phylum = "Basidiomycota", Class = "Agaricomycetes",
+#'   Order = "Agaricales", Family = "Marasmiaceae", Genus = "Marasmius", Species = "Marasmius_alliaceus",
+#'   stringsAsFactors = F)
+#'
+#' make_utax_taxonomy(datt)
 #'
 make_utax_taxonomy <- function(x){
 
