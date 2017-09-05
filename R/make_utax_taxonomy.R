@@ -70,3 +70,13 @@ make_utax_taxonomy <- function(x){
 
   return(res)
 }
+
+
+## Function to prepare UTAX taxonomy annotations for multiple species
+make_utax_taxonomy_batch <- function(x, as_vector = T, ...){
+  require(plyr)
+  res <- adply(.data = x, .margins = 1, .fun = make_utax_taxonomy, .expand = F, .id = NULL, ...)
+  colnames(res) <- "Tax"
+  if(as_vector == TRUE){ res <- res[,1]  }
+  return(res)
+}
