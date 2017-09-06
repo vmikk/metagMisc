@@ -72,7 +72,15 @@ make_utax_taxonomy <- function(x){
 }
 
 
-## Function to prepare UTAX taxonomy annotations for multiple species
+#' @title Prepare taxonomy annotations in SINTAX or UTAX style for multiple species.
+#' @param x Data frame (columns are ordered taxonomy levels, rows are species or OTUs)
+#' @param as_vector Logical, if TRUE (default) result will be returned as vector. Otherwise, result is a data frame
+#' @param ... Additional arguments may be passed to \code{\link{make_utax_taxonomy}}
+#' @return Vector or a data frame with taxonomy strings in USEARCH format.
+#' @export
+#' @seealso http://drive5.com/usearch/manual/tax_annot.html
+#' @examples
+#'
 make_utax_taxonomy_batch <- function(x, as_vector = T, ...){
   require(plyr)
   res <- adply(.data = x, .margins = 1, .fun = make_utax_taxonomy, .expand = F, .id = NULL, ...)
