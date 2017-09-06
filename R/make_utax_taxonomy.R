@@ -80,6 +80,17 @@ make_utax_taxonomy <- function(x){
 #' @export
 #' @seealso http://drive5.com/usearch/manual/tax_annot.html
 #' @examples
+#' # Create dummy data (each row = species)
+#' datt <- data.frame(
+#'   Kingdom = rep(LETTERS[1:3], each = 12),
+#'   Phylum = rep(LETTERS[6:11], each = 6),
+#'   Class = rep(letters[1:12], each = 3),
+#'   Order = do.call(paste0, expand.grid(letters, letters, stringsAsFactors = F))[1:36],
+#'   stringsAsFactors = F
+#' )
+#'
+#' head(datt)  # Taxonomy table
+#' head(make_utax_taxonomy_batch(datt))  # Taxonomy strings for USEARCH classifiers
 #'
 make_utax_taxonomy_batch <- function(x, as_vector = T, ...){
   require(plyr)
