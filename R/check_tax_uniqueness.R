@@ -9,6 +9,15 @@
 #' @export
 #'
 #' @examples
+#' datt <- data.frame(
+#'   Kingdom = rep(LETTERS[1:2], each = 6),
+#'   Phylum = rep(LETTERS[3:6], each = 3),
+#'   Class = rep(letters[1:6], times = 2),
+#'   stringsAsFactors = F
+#'   )
+#'
+#' check_tax_uniqueness(datt, col = "Phylum") # All ranks of Phylum are unique
+#' check_tax_uniqueness(datt, col = "Class")  # Classes are duplicated
 #'
 check_tax_uniqueness <- function(x, col = "k", return_all = F, dropNA = T){
   # x = data frame
