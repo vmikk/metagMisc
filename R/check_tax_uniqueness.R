@@ -1,4 +1,15 @@
 
+#' @title Check taxonomy uniqueness.
+#' @description This function checks for the duplicate taxonomy names that can occur in different groups (e.g., the same genus names in different families).
+#' @param x Data frame with taxonomy (columns = taxonomy ranks, rows = species)
+#' @param col Column name (taxonomy rank) that should be checked for uniqueness
+#' @param return_all Logical; default, FALSE - only non-unique values will be returned
+#' @param dropNA Logical; default, TRUE - missing values within the selected column ('col') will be removed
+#' @return Data frame with counts of taxon occurence (by default, only non-unique values will be shown).
+#' @export
+#'
+#' @examples
+#'
 check_tax_uniqueness <- function(x, col = "k", return_all = F, dropNA = T){
   # x = data frame
   #NB! Columns should be ordered, missing values are coded with NA
