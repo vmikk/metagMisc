@@ -9,7 +9,7 @@ prepare_inext <- function(OTUs, correct_singletons = T){
 
     ## If input is phyloseq or otu_table - extract OTU abundances
     if(any(c("phyloseq", "otu_table") %in% class(OTUs))){
-      
+
       ## Check the orientation of the OTU table
       trows <- taxa_are_rows(OTUs)
 
@@ -17,7 +17,7 @@ prepare_inext <- function(OTUs, correct_singletons = T){
       if("phyloseq" %in% class(OTUs)){
         OTUs <- as.data.frame(otu_table(OTUs))
       }
-      if("otu_table" %in% class(OTUs)){ 
+      if("otu_table" %in% class(OTUs)){
         OTUs <- as.data.frame(OTUs)
       }
 
@@ -30,6 +30,13 @@ prepare_inext <- function(OTUs, correct_singletons = T){
     ## Convert data to data frame
     if(!class(OTUs) %in% "data.frame"){
       OTUs <- as.data.frame(OTUs)
+    }
+
+    ## Data validation
+    samp_sums <- colSums(OTUs, na.rm = TRUE)
+    if(any(samp_sums == 0)){
+      warning("Empty samples were removed from the data (samples with zero total abundance).\n")
+      OTUs <- OTUs[, -which(samp_sums == 0)]
     }
 
     ## Function to extract non-zero OTUs and sort OTU abundance
