@@ -45,6 +45,14 @@ prepare_inext <- function(OTUs, correct_singletons = T){
       stop("There are negative values in the abundance data.\n")
     }
 
+    # Check if OTU counts are integers
+    tmp_matr <- as.matrix(OTUs)
+    if(!identical(all.equal(as.integer(tmp_matr), as.vector(tmp_matr)), TRUE)){
+      warning("There are non-integer values in the data, results may be meaningless.\n")
+    }
+    rm(tmp_matr)
+
+
     ## Function to extract non-zero OTUs and sort OTU abundance
     extract_non_zero <- function(x) {
       rez <- sort(x[ which(x > 0) ], decreasing = T)
