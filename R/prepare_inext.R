@@ -33,10 +33,16 @@ prepare_inext <- function(OTUs, correct_singletons = T){
     }
 
     ## Data validation
+    # Check data for empty samples
     samp_sums <- colSums(OTUs, na.rm = TRUE)
     if(any(samp_sums == 0)){
       warning("Empty samples were removed from the data (samples with zero total abundance).\n")
       OTUs <- OTUs[, -which(samp_sums == 0)]
+    }
+
+    # Check data for negative entries
+    if(any(OTUs < 0, na.rm = TRUE)){
+      stop("There are negative values in the abundance data.\n")
     }
 
     ## Function to extract non-zero OTUs and sort OTU abundance
