@@ -1,6 +1,6 @@
 
-#' @title Prepare a list of (corrected) abundance vectors (iNext input).
-#' @description This function prepares input data for \code{\link{iNext}} function from iNext package (Hsieh et al., 2016)
+#' @title Prepare a list of (corrected) abundance vectors (iNEXT input).
+#' @description This function prepares input data for \code{\link{iNEXT}} function from iNEXT package (Hsieh et al., 2016)
 #' @param OTUs Data frame with OTU abundances (rows = species, cols = samples) or phyloseq/otu_table object
 #' @param correct_singletons Logical, if TRUE singleton counts will be corrected with modified Good–Turing frequency formula (Chiu, Chao 2016)
 #' @return List of abundance vectors (each element is a separate sample)
@@ -9,6 +9,21 @@
 #' Hsieh TC, Ma KH, Chao A (2016) iNEXT: an R package for rarefaction and extrapolation of species diversity (Hill numbers). Methods Ecol Evol, 7: 1451–1456. DOI 10.1111/2041-210X.12613
 #' Chiu C, Chao A (2016) Estimating and comparing microbial diversity in the presence of sequencing errors. PeerJ, 4: e1634. DOI 10.7717/peerj.1634
 #' @examples
+#' # Load packages
+#' if(!require(iNEXT)) { devtools::install_github("JohnsonHsieh/iNEXT"); library(iNEXT) }
+#'
+#' # Load data
+#' data(esophagus)
+#'
+#' # Prepare input data for iNEXT
+#' esophagus_inext <- prepare_inext(esophagus, correct_singletons = F)
+#' esophagus_inext
+#'
+#' # Estimate rarefied and extrapolated number of species (Hill number with order q=0)
+#' esophagus_q0 <- iNEXT(esophagus_inext)
+#'
+#' # Plot rarefaction curves
+#' plot(esophagus_q0)
 #'
 prepare_inext <- function(OTUs, correct_singletons = T){
 
