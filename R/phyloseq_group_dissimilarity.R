@@ -28,6 +28,7 @@
 phyloseq_group_dissimilarity <- function(physeq, group = NULL, between_groups = TRUE, method = "bray", method_title = FALSE, notch = TRUE, justDF = FALSE, ...){
 
   require(plyr)
+  if(justDF == FALSE){ require(ggplot2) }
 
   ## Check the input
   if(is.null(sample_data(physeq, errorIfNULL = T))){ stop("Error: Sample data is missing in the phyloseq-object.\n") }
