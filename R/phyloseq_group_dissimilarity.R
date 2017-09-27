@@ -43,7 +43,7 @@ phyloseq_group_dissimilarity <- function(physeq, group = NULL, between_groups = 
 
   ## Count number of groups
   tabb <- table(mtd[, group])
-  if(any(is.na(mtd[, group]))){ stop("Error: there are NA values in the groupping variable.\n") }
+  if(any(is.na(mtd[, group]))){ stop("Error: there are NA values in the grouping variable.\n") }
   if(length(tabb) == 1){ cat("Warning: there is only one group of samples in the resulting list.\n") }
   if(length(tabb) > 2) { stop("Error: number of sample groups should not exceed 2.\n") }
 
