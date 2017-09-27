@@ -45,10 +45,9 @@ phyloseq_group_dissimilarity <- function(physeq, group = NULL, between_groups = 
   tabb <- table(mtd[, group])
   if(any(is.na(mtd[, group]))){ stop("Error: there are NA values in the grouping variable.\n") }
   if(length(tabb) == 1){ cat("Warning: there is only one group of samples in the resulting list.\n") }
-  if(length(tabb) > 2) { stop("Error: number of sample groups should not exceed 2.\n") }
 
-  ## If two groups are provided
-  if(length(tabb) == 2){
+  ## If there are several groups
+  if(length(tabb) > 1){
 
     ## Split by groups
     physeq_split <- phyloseq_sep_variable(physeq, variable = group, drop_zeroes = T)
@@ -59,7 +58,6 @@ phyloseq_group_dissimilarity <- function(physeq, group = NULL, between_groups = 
 
     ## Convert dist to data frame
     ddm <- ldply(.data = dd, .fun = function(z){ data.frame(Dist = as.vector(z)) }, .id = "Group")
-
 
     ## Estimate between-group dissimilarities
     if(between_groups == TRUE){
@@ -84,8 +82,11 @@ phyloseq_group_dissimilarity <- function(physeq, group = NULL, between_groups = 
       ## Remove same-group-comparisons
       ddl <- ddl[which(!ddl$ColGroup == ddl$RowGroup), ]
 
+      ## Sort group names alphabetically for each comparison (to take symmetric comparisons into account)
+      grr <- t(apply(ddl[,c("ColGroup", "RowGroup")], 1, sort))
+
       ## Create comparison name (merge names of two groups)
-      ddl$Group <- paste(names(tabb), collapse = "-")
+      ddl$Group <- aaply(.data = grr, .margins = 1, .fun = paste, collapse = "-")
 
       ## Add to the main table
       ddm <- rbind(ddm, data.frame(Group = ddl$Group, Dist = ddl$value))
