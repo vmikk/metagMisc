@@ -7,7 +7,9 @@
 #' @export
 #' @references
 #' Hsieh TC, Ma KH, Chao A (2016) iNEXT: an R package for rarefaction and extrapolation of species diversity (Hill numbers). Methods Ecol Evol, 7: 1451–1456. DOI 10.1111/2041-210X.12613
+#'
 #' Chiu C, Chao A (2016) Estimating and comparing microbial diversity in the presence of sequencing errors. PeerJ, 4: e1634. DOI 10.7717/peerj.1634
+#'
 #' @examples
 #' # Load packages
 #' if(!require(iNEXT)) { devtools::install_github("JohnsonHsieh/iNEXT"); library(iNEXT) }
