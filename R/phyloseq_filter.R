@@ -85,7 +85,10 @@ phyloseq_filter_taxa_tot_fraction <- function(physeq, frac = 0.01){
 #' @param physeq A phyloseq-class object
 #' @param prev.trh Prevalence threshold (default, 0.05 = 5\% of samples)
 #' @param abund.trh Abundance threshold (default, NULL)
-#' @details Abundance threshold defines if the OTU should be preserved if its abundance is larger than threshold (e.g., >= 50 reads).
+#' @param threshold_condition Indicates type of prevalence and abundance conditions, can be "OR" (default) or "AND"
+#' @details
+#' Abundance threshold defines if the OTU should be preserved if its abundance is larger than threshold (e.g., >= 50 reads).
+#' Parameter "threshold_condition" indicates whether OTU should be kept if it occurs in many samples AND/OR it has high abundance.
 #' @return  Phyloseq object with a subset of taxa.
 #' @seealso \code{\link{phyloseq_prevalence_plot}}
 #' @export
@@ -100,7 +103,7 @@ phyloseq_filter_taxa_tot_fraction <- function(physeq, frac = 0.01){
 #' # The same, but if total OTU abundance is >= 10 reads it'll be preserved too
 #' phyloseq_filter_prevalence(GlobalPatterns, prev.trh = 0.05, abund.trh = 10)    # 15611 taxa
 #'
-phyloseq_filter_prevalence <- function(physeq, prev.trh = 0.05, abund.trh = NULL){
+phyloseq_filter_prevalence <- function(physeq, prev.trh = 0.05, abund.trh = NULL, threshold_condition = "OR"){
 
   ## Check for the low-prevalence species (compute the total and average prevalences of the features in each phylum)
   prevdf_smr <- function(prevdf){
@@ -120,7 +123,19 @@ phyloseq_filter_prevalence <- function(physeq, prev.trh = 0.05, abund.trh = NULL
 
   ## Which taxa to preserve
   if(is.null(abund.trh)) { tt <- prevdf$Prevalence >= prevalenceThreshold }
-  if(!is.null(abund.trh)){ tt <- (prevdf$Prevalence >= prevalenceThreshold | prevdf$TotalAbundance > abund.trh) }
+  if(!is.null(abund.trh)){
+    ## Keep OTU if it either occurs in many samples OR it has high abundance
+    if(threshold_condition == "OR"){
+      tt <- (prevdf$Prevalence >= prevalenceThreshold | prevdf$TotalAbundance > abund.trh)
+    }
+
+    ## Keep OTU if it occurs in many samples AND it has high abundance
+    if(threshold_condition == "AND"){
+      tt <- (prevdf$Prevalence >= prevalenceThreshold & prevdf$TotalAbundance > abund.trh)
+    }
+  }
+
+  ## Extract names for the taxa we whant to keep
   keepTaxa <- rownames(prevdf)[tt]
 
   ## Execute prevalence filter
