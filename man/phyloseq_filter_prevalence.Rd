@@ -4,7 +4,8 @@
 \alias{phyloseq_filter_prevalence}
 \title{Filter low-prevalence OTUs.}
 \usage{
-phyloseq_filter_prevalence(physeq, prev.trh = 0.05, abund.trh = NULL)
+phyloseq_filter_prevalence(physeq, prev.trh = 0.05, abund.trh = NULL,
+  threshold_condition = "OR")
 }
 \arguments{
 \item{physeq}{A phyloseq-class object}
@@ -12,6 +13,8 @@ phyloseq_filter_prevalence(physeq, prev.trh = 0.05, abund.trh = NULL)
 \item{prev.trh}{Prevalence threshold (default, 0.05 = 5\% of samples)}
 
 \item{abund.trh}{Abundance threshold (default, NULL)}
+
+\item{threshold_condition}{Indicates type of prevalence and abundance conditions, can be "OR" (default) or "AND"}
 }
 \value{
 Phyloseq object with a subset of taxa.
@@ -21,6 +24,7 @@ This function will remove taxa (OTUs) with low prevalence, where prevalence is t
 }
 \details{
 Abundance threshold defines if the OTU should be preserved if its abundance is larger than threshold (e.g., >= 50 reads).
+Parameter "threshold_condition" indicates whether OTU should be kept if it occurs in many samples AND/OR it has high abundance.
 }
 \examples{
 data(GlobalPatterns)
