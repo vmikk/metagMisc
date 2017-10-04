@@ -18,3 +18,25 @@ mult_dist_average <- function(dlist){
   return(res)
 }
 
+
+## Compute beta diversity for each rarefaction iteration
+mult_dissim <- function(x, method = "bray", avergage = T){
+  # x = result of phyloseq_mult_raref (list of phyloseq objects)
+
+  require(phyloseq)
+  require(plyr)
+
+  physeq_dissim <- llply(
+    .data = x, 
+    .fun = function(z, ...){ phyloseq::distance(physeq = z, type = "samples", ...) }, 
+    method = method, 
+    .progress = "text")
+
+  if(avergage == TRUE){
+    physeq_dissim_avg <- mult_dist_average(dlist = physeq_dissim)
+    return(physeq_dissim_avg)
+  } else {
+    return(physeq_dissim)
+  }
+}
+
