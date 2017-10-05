@@ -33,9 +33,33 @@ mult_dist_average <- function(dlist){
 }
 
 
-## Compute beta diversity for each rarefaction iteration
+#' @title Compute beta diversity for each rarefaction iteration.
+#'
+#' @param x List of phyloseq objects (result of \code{\link{phyloseq_mult_raref}})
+#' @param method A character string with the name of supported dissimilarity index (see \code{\link{distanceMethodList}})
+#' @param average Logical; if TRUE, dissimilarity averaged over rarefication iterations will be returned; if FALSE, list of dissimilarity matrices will be returned.
+#'
+#' @return List of 'dist'-matrices (if average = FALSE) or a single 'dist' (if average = TRUE).
+#' @export
+#'
+#' @examples
+#' # Load data
+#' data(esophagus)
+#' sample_sums(esophagus)  # samples has different number of sequences
+#'
+#' # Perform multiple rarefaction (sample 200 sequences from each sample, repeat the procedure 100 times)
+#' esor <- phyloseq_mult_raref(esophagus, SampSize = 200, iter = 100)
+#' sample_sums(esor[[1]])  # rarefied data
+#'
+#' # Estimate sample dissimilarity independently for each iteration
+#' eso_dis <- mult_dissim(esor, method = "unifrac", average = F)
+#' eso_dis[[1]]   # unweighted UniFrac distances for the first rarefaction iteration
+#'
+#' # Average sample dissimilarities over all rarefaction iterations
+#' eso_dis_avg <- mult_dissim(esor, method = "unifrac", average = T)
+#' eso_dis_avg    # mean unweighted UniFrac distances
+#'
 mult_dissim <- function(x, method = "bray", average = T){
-  # x = result of phyloseq_mult_raref (list of phyloseq objects)
 
   require(phyloseq)
   require(plyr)
