@@ -16,7 +16,7 @@
 #'
 #' phyloseq_compare(esophagus, eso_trim, cols = c("Esophagus", "Trimmed esophagus"))
 #'
-phyloseq_compare <- function(phy1, phy2, cols = c("Before", "After")){
+phyloseq_compare <- function(phy1, phy2, cols = c("Before", "After"), more_stats = F){
 
   # number of reads per OTU
   t1 <- taxa_sums(phy1)
@@ -42,6 +42,34 @@ phyloseq_compare <- function(phy1, phy2, cols = c("Before", "After")){
     stringsAsFactors = F)
 
   colnames(res) <- c("Parameter", cols)
+
+  ## Add additional abundance statistics
+  if(more_stats == TRUE){
+
+    ## Coefficient of quartile variation function
+    cqv <- function(x){
+      q1 <- quantile(x, probs = 0.25)
+      q3 <- quantile(x, probs = 0.75)
+      res <- (q3-q1)/(q3+q1)
+      return(res)
+    }
+
+    ## Additional statistics
+    adds <- rbind(
+      data.frame(V0 = "Median number of reads per OTU", V1 = median(t1), V2 = median(t2)),
+      data.frame(V0 = "Min total OTU abundance", V1 = min(t1), V2 = min(t2)),
+      data.frame(V0 = "Q1 of total OTU abundance", V1 = quantile(t1, probs = 0.25), V2 = quantile(t2, probs = 0.25)),
+      data.frame(V0 = "Q3 of total OTU abundance", V1 = quantile(t1, probs = 0.75), V2 = quantile(t2, probs = 0.75)),
+      data.frame(V0 = "Max total OTU abundance", V1 = max(t1), V2 = max(t2)),
+      data.frame(V0 = "Coefficient of quartile variation in OTU abundance", V1 = cqv(t1), V2 = cqv(t2)),
+      stringsAsFactors = F)
+
+    colnames(adds) <- c("Parameter", cols)
+
+    ## Add it to the main table
+    res <- rbind(res, adds, stringsAsFactors = F)
+    rownames(res) <- NULL
+  }
 
   return(res)
 }
