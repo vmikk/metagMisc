@@ -3,9 +3,14 @@
 #'
 #' @param phy1 A phyloseq-class object
 #' @param phy2 A phyloseq-class object
-#' @param cols Character vector with column names for phy1 & phy2 in the resulting table.
+#' @param cols Character vector with column names for phy1 & phy2 in the resulting table
+#' @param more_stats Logical; if TRUE, some additional OTU abundance statistics will be calculated
 #'
 #' @return Data frame with number and percentage of OTUs.
+#' @details 
+#' Optionally (if more_stats = TRUE), some additional OTU abundance statistics may be estimated (min, max, median, Q1, Q3, and CQV of OTU abundance). 
+#' Coefficient of quartile variation (a.k.a., Quartile coefficient of dispersion) is preferred to the 'classical' coefficient of variation for the analysis of samples from nonnormal distributions. 
+#' It is estimated by the following formula: (Q3-Q1)/(Q3+Q1), where Q1 is the population 25th percentile and Q3 is the population 75th percentile.
 #' @export
 #'
 #' @examples
@@ -15,6 +20,7 @@
 #' eso_trim <- prune_taxa(taxa_sums(esophagus) >= 5, esophagus)
 #'
 #' phyloseq_compare(esophagus, eso_trim, cols = c("Esophagus", "Trimmed esophagus"))
+#' phyloseq_compare(esophagus, eso_trim, cols = c("Esophagus", "Trimmed esophagus"), more_stats = T)
 #'
 phyloseq_compare <- function(phy1, phy2, cols = c("Before", "After"), more_stats = F){
 
