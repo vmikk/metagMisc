@@ -1,0 +1,85 @@
+
+
+dissimilarity_to_distance <- function(datt, dist_type = "bray", dst = NULL, ndim = 30, show_plot = T, ...){
+  # datt = initial data (species = columns, samples = rows)
+  # dist_type = "bray"
+  # dst = distance matrix if dist_type == "other"
+  # ndim = Number of dimensions
+  # ... passed to vegan::vegdist
+
+  require(vegan)
+  require(smacof)
+  # require(ggplot2)
+
+  ## Estimate dissimilarity
+  if(dist_type != "other"){
+    if(!is.null(dst)){ warning("Dissimilarity will be computed with ", dist_type, " method; user-provided matrix (dst) will be ignored.\n") }
+    dst <- vegdist(x = datt, method = dist_type, ...)
+  }
+  if(dist_type == "other"){
+    if(is.null(dst)){ stop("Error: dissimilarity matrix (dst) should be provided.\n") }
+    if(!is.null(dst)){ if(!class(dst) %in% "dist"){ stop("Error: provided dissimilarity (dst) should be of class dist.\n") } }
+  }
+
+  ## Determine weights to fit the original dissimilarities into Euclidean distances
+  # smacofConstraint automatically standardizes dissimilarities to have sum of squares n(n-1)/2
+  # The diagonal weights (given in comarca.Smacof$C) are fitted to these standardized dissimilarities
+  cstr <- smacofConstraint(
+          delta = as.matrix(dst),
+          constraint = "diagonal", 
+          external = datt, 
+          constraint.type = "ratio",
+          eps = 1E-8, ndim = ndim,
+          verbose = FALSE)
+
+  ## To get the weights C for the unstandardized dissimilarities a correction factor corfact is needed
+  n <- nrow(datt)
+  corfact <- (0.5 * sum(as.matrix(dst)^2)/(n*(n-1)/2))^0.5 
+  C <- cstr$C * corfact
+  
+  ## Weights
+  sp_weights <- abs(diag(C))      # the square roots of the w_j^2 in the article
+  sp_weights_2 <- sp_weights^2    # w_j^2
+
+  ## Prepare species weights for export
+  sp_weights_exp <- data.frame(
+    Species = colnames(datt),
+    Weight = sp_weights_2,
+    stringsAsFactors = F)
+
+  ## Estimate weighted Euclidean distances
+  WEdist <- dist(as.matrix(datt) %*% diag(sp_weights))
+  
+  ## Stress 1 measure = loss of the variance due to distance transformation (stress * 100 = %)
+  stress <- cstr$stress
+
+  ## The same as 
+  # D1 <- as.numeric(dst); D2 <- as.numeric(WEdist)
+  # sqrt(sum((D1-D2)^2) / sum((D1)^2))
+
+  ## Compare dissimilarities to weighted Euclidean distances
+  if(show_plot == TRUE){
+
+    require(ggplot2)
+
+    plt <- data.frame(Dissim = as.numeric(dst), Euclid = as.numeric(WEdist))
+    
+    dissim_plot <- ggplot(data = plt, aes(x = Dissim, y = Euclid)) + 
+      annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=Inf, color="grey", linetype = "longdash") +
+      geom_point() + 
+      labs(x = "Original dissimilarity", y="Weighted Euclidean distance") + 
+      ggtitle(paste("Loss of the variance due to distance transformation = ", round(stress * 100, 3), "%", sep=""))
+
+    print(dissim_plot)
+  }
+
+  ## Prepare output
+  RES <- list()
+  RES$WEdist <- WEdist                 # weighted Euclidean distance
+  RES$sp_weights <- sp_weights_exp     # species weights
+  RES$stress <- stress                 # stress value
+
+  if(show_plot == TRUE){ RES$dissim_plot <- dissim_plot }
+
+  return(RES)
+}
