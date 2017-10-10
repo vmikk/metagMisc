@@ -124,3 +124,40 @@ dissimilarity_to_distance <- function(datt, dist_type = "bray", dst = NULL, drop
 
   return(RES)
 }
+
+
+
+
+dissimilarity_to_distance_importance_plot <- function(x, scaled_weights = TRUE, mark_removed = TRUE){
+  # x = result of dissimilarity_to_distance
+
+  require(ggplot2)
+
+  ## Extract data
+  dtt <- x$sp_weights
+
+  ## Reorder according to a species importance
+  dtt <- dtt[order(dtt$Weight, decreasing = F), ]
+  dtt$Species <- factor(dtt$Species, levels=dtt$Species)
+
+  ## Prepare a plot
+  if(scaled_weights == FALSE){ xx <- "Weight" }
+  if(scaled_weights == TRUE) { xx <- "WeightScaled" }
+
+  if(mark_removed == FALSE){
+    plt <- ggplot(data = dtt, aes_string(x = xx, y = "Species"))
+  }
+  if(mark_removed == TRUE){
+    plt <- ggplot(data = dtt, aes_string(x = xx, y = "Species", shape = "Importance")) +
+             scale_shape_manual(
+               values = c(16, 8),
+               breaks = c("important", "not_important_removed"),
+               labels = c("important", "removed"))
+  }
+
+  plt <- plt +
+    geom_point(size = 2) +
+    labs(x = "Weight", y = "Species")
+
+  return(plt)
+}
