@@ -29,6 +29,12 @@
 #' @seealso \code{\link[smacof]{smacofConstraint}}), \code{\link[vegan]{vegdist}})
 #' @references Greenacre, M. (2017), Ordination with any dissimilarity measure: a weighted Euclidean solution. Ecology, 98: 2293–2300. doi:10.1002/ecy.1937
 #' @examples
+#' library(vegan); library(smacof)
+#' data(varespec)
+#'
+#' ## Estimate weighted Euclidean distance that optimally approximates Bray-Curtis dissimilarity
+#' bc_to_eucl <- dissimilarity_to_distance(varespec, dist_type = "bray")
+#' # ade4::is.euclid(bc_to_eucl$WEdist)
 #'
 dissimilarity_to_distance <- function(datt, dist_type = "bray", dst = NULL, drop_species = F, importance_percentile = 0.02, show_plot = T, ndim = NULL, ...){
 
