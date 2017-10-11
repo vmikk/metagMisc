@@ -1,6 +1,7 @@
 
 #' @title Transform (non-metric) dissimilarity matrix to a weighted Euclidean distance (metric).
 #' @description This function constructs a weighted Euclidean distance that optimally approximates the dissimilarities.
+#' Advantages of the Euclidean approach include the neat decomposition of variance and the ordination’s optimal biplot display (Greenacre, 2017).
 #' @param datt Data frame with species abundance (species = columns, samples = rows)
 #' @param dist_type Dissimilarity index (for the supported methods see \code{\link[vegan]{vegdist}}) or "other"
 #' @param dst Distance matrix (of class 'dist') if dist_type == "other"
