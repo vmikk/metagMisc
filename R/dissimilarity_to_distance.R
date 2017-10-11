@@ -7,6 +7,7 @@
 #' @param drop_species Logical; TRUE indicates removal of "unimportant" species which doesn't contribute to the sample differentiation
 #' @param importance_percentile Percentile value for importance below which species are considered unimportant
 #' @param show_plot Logical; if TRUE, plot of original dissimilarities vs. the obtained weighted Euclidean distances will be shown
+#' @param ndim Number of dimensions; NULL by default, number of dimesions will be automatically determined
 #' @param ... Additional arguments may be passed to \code{\link[vegan]{vegdist}})
 #' @details
 #' The code of the function is based on the work of Prof. Michael Greenacre (2017).
@@ -28,7 +29,7 @@
 #' @references Greenacre, M. (2017), Ordination with any dissimilarity measure: a weighted Euclidean solution. Ecology, 98: 2293–2300. doi:10.1002/ecy.1937
 #' @examples
 #'
-dissimilarity_to_distance <- function(datt, dist_type = "bray", dst = NULL, drop_species = F, importance_percentile = 0.02, show_plot = T, ...){
+dissimilarity_to_distance <- function(datt, dist_type = "bray", dst = NULL, drop_species = F, importance_percentile = 0.02, show_plot = T, ndim = NULL, ...){
 
   require(vegan)
   require(smacof)
@@ -45,6 +46,11 @@ dissimilarity_to_distance <- function(datt, dist_type = "bray", dst = NULL, drop
     if(drop_species == TRUE){ stop("Error: unimportant species removal is not implemented for a custom dissimilarity matrix.\n") }
   }
 
+  ## Estimate number of dimesions
+  if(is.null(ndim)){
+    ndim <- min(nrow(datt), ncol(datt)) - 1
+  }
+
   ## Determine weights to fit the original dissimilarities into Euclidean distances
   # smacofConstraint automatically standardizes dissimilarities to have sum of squares n(n-1)/2
   # The diagonal weights (given in cstr$C) are fitted to these standardized dissimilarities
@@ -53,7 +59,7 @@ dissimilarity_to_distance <- function(datt, dist_type = "bray", dst = NULL, drop
           constraint = "diagonal",
           external = datt,
           constraint.type = "ratio",
-          eps = 1E-8, ndim = ncol(datt),
+          eps = 1E-8, ndim = ndim,
           verbose = FALSE)
 
   ## To get the weights C for the unstandardized dissimilarities a correction factor corfact is needed
@@ -95,13 +101,16 @@ dissimilarity_to_distance <- function(datt, dist_type = "bray", dst = NULL, drop
     ## Re-estimate dissimilarity
     dst <- vegdist(x = datt, method = dist_type, ...)
 
+    ## Re-estimate the number of dimesions
+    ndim <- min(nrow(datt), ncol(datt)) - 1
+
     ## Re-estimate transformation parameters
     cstr <- smacofConstraint(
           delta = as.matrix(dst),
           constraint = "diagonal",
           external = datt,
           constraint.type = "ratio",
-          eps = 1E-8, ndim = ncol(datt),
+          eps = 1E-8, ndim = ndim,
           verbose = FALSE)
 
     ## Re-estimate the weights and correction factor
