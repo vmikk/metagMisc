@@ -1,12 +1,34 @@
 
-
+#' @title Transform (non-metric) dissimilarity matrix to a weighted Euclidean distance (metric).
+#' @description This function constructs a weighted Euclidean distance that optimally approximates the dissimilarities.
+#' @param datt Data frame with species abundance (species = columns, samples = rows)
+#' @param dist_type Dissimilarity index (for the supported methods see \code{\link[vegan]{vegdist}}) or "other"
+#' @param dst Distance matrix (of class 'dist') if dist_type == "other"
+#' @param drop_species Logical; TRUE indicates removal of "unimportant" species which doesn't contribute to the sample differentiation
+#' @param importance_percentile Percentile value for importance below which species are considered unimportant
+#' @param show_plot Logical; if TRUE, plot of original dissimilarities vs. the obtained weighted Euclidean distances will be shown
+#' @param ... Additional arguments may be passed to \code{\link[vegan]{vegdist}})
+#' @details
+#' The code of the function is based on the work of Prof. Michael Greenacre (2017).
+#'
+#' It is possible to eliminate species that have little or no value in measuring difference between the samples (with 'drop_species = TRUE').
+#' For this one need to specify a threshold value for species importance ('importance_percentile').
+#' By default, 'importance_percentile = 0.02', which indicates that all species with importance below the 2nd percentile of the species importance distribution will be removed.
+#'
+#' Pre-calculated distance matrix can be passed as input to this function with 'dst' argument ('dist_type' should be set to "other"). However, species removal ('drop_species') will be impossible in this case.
+#' @return Function 'dissimilarity_to_distance' returns a list with the following components:
+#' \itemize{
+#'   \item WEdist. Weighted Euclidean distance (class 'dist');
+#'   \item sp_weights. Data frame with species weights;
+#'   \item stress. Stress 1 measure which corresponds to the loss of the variance due to distance transformation (see \code{\link[smacof]{stress0}});
+#'   \item dissim_plot. (if 'show_plot = TRUE') gglot object with the corresponding plot.
+#' }
+#' @export
+#' @seealso \code{\link[smacof]{smacofConstraint}}), \code{\link[vegan]{vegdist}})
+#' @references Greenacre, M. (2017), Ordination with any dissimilarity measure: a weighted Euclidean solution. Ecology, 98: 2293–2300. doi:10.1002/ecy.1937
+#' @examples
+#'
 dissimilarity_to_distance <- function(datt, dist_type = "bray", dst = NULL, drop_species = F, importance_percentile = 0.02, show_plot = T, ...){
-  # datt = initial data (species = columns, samples = rows)
-  # dist_type = "bray"
-  # dst = distance matrix if dist_type == "other"
-  # drop_species = Logical, remove unimportant species
-  # importance_percentile
-  # ... passed to vegan::vegdist
 
   require(vegan)
   require(smacof)
@@ -28,17 +50,17 @@ dissimilarity_to_distance <- function(datt, dist_type = "bray", dst = NULL, drop
   # The diagonal weights (given in cstr$C) are fitted to these standardized dissimilarities
   cstr <- smacofConstraint(
           delta = as.matrix(dst),
-          constraint = "diagonal", 
-          external = datt, 
+          constraint = "diagonal",
+          external = datt,
           constraint.type = "ratio",
           eps = 1E-8, ndim = ncol(datt),
           verbose = FALSE)
 
   ## To get the weights C for the unstandardized dissimilarities a correction factor corfact is needed
   n <- nrow(datt)
-  corfact <- (0.5 * sum(as.matrix(dst)^2)/(n*(n-1)/2))^0.5 
+  corfact <- (0.5 * sum(as.matrix(dst)^2)/(n*(n-1)/2))^0.5
   C <- cstr$C * corfact
-  
+
   ## Weights
   sp_weights <- abs(diag(C))        # the square roots of the w_j^2 in the article
   # sp_weights_2 <- sp_weights^2    # w_j^2
@@ -76,25 +98,25 @@ dissimilarity_to_distance <- function(datt, dist_type = "bray", dst = NULL, drop
     ## Re-estimate transformation parameters
     cstr <- smacofConstraint(
           delta = as.matrix(dst),
-          constraint = "diagonal", 
-          external = datt, 
+          constraint = "diagonal",
+          external = datt,
           constraint.type = "ratio",
           eps = 1E-8, ndim = ncol(datt),
           verbose = FALSE)
 
     ## Re-estimate the weights and correction factor
-    corfact <- (0.5 * sum(as.matrix(dst)^2)/(n*(n-1)/2))^0.5 
+    corfact <- (0.5 * sum(as.matrix(dst)^2)/(n*(n-1)/2))^0.5
     C <- cstr$C * corfact
     sp_weights <- abs(diag(C))
   }
 
   ## Estimate weighted Euclidean distances
   WEdist <- dist(as.matrix(datt) %*% diag(sp_weights))
-  
+
   ## Stress 1 measure = loss of the variance due to distance transformation (stress * 100 = %)
   stress <- cstr$stress
 
-  ## The same as 
+  ## The same as
   # D1 <- as.numeric(dst); D2 <- as.numeric(WEdist)
   # sqrt(sum((D1-D2)^2) / sum((D1)^2))
 
@@ -104,11 +126,11 @@ dissimilarity_to_distance <- function(datt, dist_type = "bray", dst = NULL, drop
     require(ggplot2)
 
     plt <- data.frame(Dissim = as.numeric(dst), Euclid = as.numeric(WEdist))
-    
-    dissim_plot <- ggplot(data = plt, aes(x = Dissim, y = Euclid)) + 
+
+    dissim_plot <- ggplot(data = plt, aes(x = Dissim, y = Euclid)) +
       annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=Inf, color="grey", linetype = "longdash") +
-      geom_point() + 
-      labs(x = "Original dissimilarity", y="Weighted Euclidean distance") + 
+      geom_point() +
+      labs(x = "Original dissimilarity", y="Weighted Euclidean distance") +
       ggtitle(paste("Loss of the variance due to distance transformation = ", round(stress * 100, 3), "%", sep=""))
 
     print(dissim_plot)
@@ -124,7 +146,6 @@ dissimilarity_to_distance <- function(datt, dist_type = "bray", dst = NULL, drop
 
   return(RES)
 }
-
 
 
 
