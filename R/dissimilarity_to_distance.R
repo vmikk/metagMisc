@@ -175,6 +175,14 @@ dissimilarity_to_distance <- function(datt, dist_type = "bray", dst = NULL, drop
 #' @export
 #' @seealso \code{\link{dissimilarity_to_distance}}
 #' @examples
+#' library(vegan); library(smacof)
+#' data(varespec)
+#'
+#' # Estimate weighted Euclidean distance
+#' bc_to_eucl <- dissimilarity_to_distance(varespec, dist_type = "bray", drop_species = T, importance_percentile = 0.05, show_plot = F)
+#'
+#' # Plot species weigths
+#' dissimilarity_to_distance_importance_plot(bc_to_eucl)
 #'
 dissimilarity_to_distance_importance_plot <- function(x, scaled_weights = TRUE, mark_removed = TRUE){
 
