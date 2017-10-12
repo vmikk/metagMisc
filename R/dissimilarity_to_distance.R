@@ -26,7 +26,7 @@
 #'   \item dissim_plot. (if 'show_plot = TRUE') gglot object with the corresponding plot.
 #' }
 #' @export
-#' @seealso \code{\link[smacof]{smacofConstraint}}), \code{\link[vegan]{vegdist}})
+#' @seealso \code{\link[smacof]{smacofConstraint}}, \code{\link[vegan]{vegdist}}, \code{\link{dissimilarity_to_distance_importance_plot}}
 #' @references Greenacre, M. (2017), Ordination with any dissimilarity measure: a weighted Euclidean solution. Ecology, 98: 2293–2300. doi:10.1002/ecy.1937
 #' @examples
 #' library(vegan); library(smacof)
