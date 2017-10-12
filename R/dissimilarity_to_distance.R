@@ -165,8 +165,18 @@ dissimilarity_to_distance <- function(datt, dist_type = "bray", dst = NULL, drop
 
 
 
+#' @title Display species importance plot based on a weighted Euclidean distance transformation of dissimilarities.
+#' @details Species importance measures the contribution of individual species to the overall dissimilarity between the samples.
+#' @param x Result of \code{\link{dissimilarity_to_distance}} function
+#' @param scaled_weights Logical; if TRUE, scaled weights will be plotted
+#' @param mark_removed Logical; if TRUE, species that were removed from distance will be highlighted with a separate symbol on a plot
+#'
+#' @return ggplot-object.
+#' @export
+#' @seealso \code{\link{dissimilarity_to_distance}}
+#' @examples
+#'
 dissimilarity_to_distance_importance_plot <- function(x, scaled_weights = TRUE, mark_removed = TRUE){
-  # x = result of dissimilarity_to_distance
 
   require(ggplot2)
 
