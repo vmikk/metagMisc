@@ -198,3 +198,74 @@ dissimilarity_to_distance_importance_plot <- function(x, scaled_weights = TRUE, 
 
   return(plt)
 }
+
+
+## Internal function to characterize ordination solution from its eigenvalues
+.eigen_stats <- function(eig, colname = "Value"){
+  # eig = vector of eigenvalues
+  # colname = name of the column with resulting values
+
+  ## Number of positive eigenvalues
+  positives <- which(eig > 0)
+
+  ## Variance of the Euclidean part
+  tot_eucl <- (100 * sum(eig[positives]) / sum(abs(eig)))
+
+  ## Percentages of first two eigenvalues relative to Euclidean part
+  rel_eucl <- (100 * eig[1:2] / sum(eig[positives]))
+
+  ## Percentages of first two eigenvalues relative to sum of all eigenvalues (McArdle, Anderson, 2001)
+  rel_all <-  (100 * eig[1:2] / sum(eig))
+
+  ## Prepare output table
+  res <- rbind(
+    data.frame(
+      Parameter = "Number of eigenvalues",
+      Value = length(eig),
+      stringsAsFactors = F),
+    data.frame(
+      Parameter = "Number of positive eigenvalues",
+      Value = length(positives),
+      stringsAsFactors = F),
+    data.frame(
+      Parameter = "Number of negative eigenvalues",
+      Value = length(eig) - length(positives),
+      stringsAsFactors = F),
+    data.frame(
+      Parameter = "Percentage of Euclidean variance",
+      Value = tot_eucl,
+      stringsAsFactors = F),
+    data.frame(
+      Parameter = "Percentage of Non-Euclidean variance",
+      Value = 100 - tot_eucl,
+      stringsAsFactors = F),
+    data.frame(
+      Parameter = "First eigenvalue relative to Euclidean part, %",
+      Value = rel_eucl[1],
+      stringsAsFactors = F),
+    data.frame(
+      Parameter = "Second eigenvalue relative to Euclidean part, %",
+      Value = rel_eucl[2],
+      stringsAsFactors = F),
+    data.frame(
+      Parameter = "First two eigenvalues relative to Euclidean part, %",
+      Value = sum(rel_eucl),
+      stringsAsFactors = F),
+    data.frame(
+      Parameter = "First eigenvalue relative to sum of all eigenvalues, %",
+      Value = rel_all[1],
+      stringsAsFactors = F),
+    data.frame(
+      Parameter = "Second eigenvalue relative to sum of all eigenvalues, %",
+      Value = rel_all[2],
+      stringsAsFactors = F),
+    data.frame(
+      Parameter = "First two eigenvalues relative to sum of all eigenvalues, %",
+      Value = sum(rel_all),
+      stringsAsFactors = F)
+  )
+
+  colnames(res)[2] <- colname
+
+  return(res)
+}
