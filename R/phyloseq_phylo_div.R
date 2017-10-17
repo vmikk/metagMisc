@@ -45,10 +45,10 @@ phyloseq_phylo_div <- function(physeq, measures=c("PD", "MPD", "MNTD"), ...){
     res <- c(res, list(PD = pd.query(tree = phy_tree(physeq), matrix = comm, ...) ))
   }
   if("MPD" %in% measures){
-    res <- c(res, list(PD = mpd.query(tree = phy_tree(physeq), matrix = comm, ...) ))
+    res <- c(res, list(MPD = mpd.query(tree = phy_tree(physeq), matrix = comm, ...) ))
   }
   if("MNTD" %in% measures){
-    res <- c(res, list(PD = mntd.query(tree = phy_tree(physeq), matrix = comm, ...) ))
+    res <- c(res, list(MNTD = mntd.query(tree = phy_tree(physeq), matrix = comm, ...) ))
   }
 
   ## Combine results
