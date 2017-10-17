@@ -15,7 +15,7 @@ prepare_inext(OTUs, correct_singletons = T)
 List of abundance vectors (each element is a separate sample)
 }
 \description{
-This function prepares input data for \code{\link{iNEXT}} function from iNEXT package (Hsieh et al., 2016)
+This function prepares input data for \code{\link[iNEXT]{iNEXT}} function from iNEXT package (Hsieh et al., 2016)
 }
 \examples{
 # Load packages
