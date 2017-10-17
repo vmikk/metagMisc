@@ -1,8 +1,27 @@
 
-## Estimate phylogenetic diversity (PD), mean pairwise distance (MPD), and mean nearest taxon distance (MNTD)
+#' @title Estimate phylogenetic diversity (PD), mean pairwise distance (MPD), and mean nearest taxon distance (MNTD).
+#' @description Currently only non-abundance-weighted estimates are implemented.
+#' @param physeq A phyloseq-class object (phylogenetic tree is required)
+#' @param measures Character vector with diversity indices names ("PD", "MPD", "MNTD")
+#' @param ... Additional arguments (standardize, null.model, abundance.weights) may be passed to \code{\link[PhyloMeasures]{pd.query}}
+#' @details Implementation of the phylogenetic diversity measures is based on the \code{\link[PhyloMeasures]{PhyloMeasures}} package which is much faster than corresponding functions from \code{\link[picante]{picante}} package.
+#'
+#' MNTD index sometimes is also reffered as MNND (mean nearest neighbour distance).
+#' @return A data.frame of the diversity estimates.
+#' @export
+#' @seealso
+#' \code{\link[PhyloMeasures]{mpd.query}}, \code{\link[PhyloMeasures]{mntd.query}}, and \code{\link[PhyloMeasures]{pd.query}} from \code{\link[PhyloMeasures]{PhyloMeasures}} package;
+#' \code{\link[picante]{mpd}}, \code{\link[picante]{mntd}}, and \code{\link[picante]{pd}} from \code{\link[picante]{picante}} package;
+#' \code{\link[phyloseq]{estimate_richness}}, \code{\link[phyloseq]{phy_tree}}
+#' @references
+#' Faith D.P. (1992) Conservation evaluation and phylogenetic diversity. Biological Conservation, 61, 1-10.
+#'
+#' Webb C., Ackerly D., McPeek M., and Donoghue M. (2002) Phylogenies and community ecology. Annual Review of Ecology and Systematics, 33, 475-505.
+#' @examples
+#'
 phyloseq_phylo_div <- function(physeq, measures=c("PD", "MPD", "MNTD"), ...){
   # measures = vector with diversity indices names
-  # ... = other arguments (standardize, null.model, abundance.weights) may be passed to PhyloMeasures::pd.query
+  # ... =
 
   require(PhyloMeasures)
 
