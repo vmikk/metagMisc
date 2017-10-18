@@ -1,5 +1,18 @@
 
-## Convert UC file (clustering output from USEARCH and VSEARCH) to Sumaclust OTU observation map
+#' @title Convert UC file (clustering output from USEARCH and VSEARCH) to Sumaclust OTU observation map
+#' @param x File name in UC-format (typically with .uc extension)
+#' @param output_file Optional, character string with the name of the output file
+#' @return This function invisibly returns a list, where each slot corresponds to a single OTU.
+#' Each slot is a charater vector that contains sequence names that belongs to this OTU.
+#' The first element of a vector is a name of the representative sequence of this OTU (OTU centoid)
+#' which occurs twice in this vector (i.e., there are two identical sequence IDs in a vector
+#' for OTUs that are represented by only one sequence).
+#'
+#' @export
+#' @seealso \code{\link{parse_uc}}
+#' @references https://git.metabarcoding.org/obitools/sumaclust/wikis/home
+#' @examples
+#'
 uc_to_sumaclust <- function(x, output_file = NULL){
 
   require(plyr)
