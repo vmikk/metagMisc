@@ -1,0 +1,156 @@
+
+## Estimate standardized effect sizes of phylogenetic diversity metrics (PD, MPD, MNTD)
+phyloseq_phylo_ses <- function(physeq, measures=c("PD", "MPD", "MNTD"), null_model, nsim = 1000, swapiter = 1000, verbose=TRUE, ...){
+  # null.model = c("taxa.labels", "richness", "frequency", "sample.pool", "phylogeny.pool", "independentswap", "trialswap"),
+  # nsim = number of randomizations for null-distribution generation
+  # swapiter = number of iterations for independentswap or trialswap algorithms
+
+  require(plyr)
+  require(reshape2)
+  require(picante)         # for null models
+  require(PhyloMeasures)   # for phylogenetic diversity
+
+  ## Data validation
+  if( is.null(phy_tree(physeq, errorIfNULL=F)) ){ stop("Phylogenetic tree is missing in physeq.\n") }
+
+  ## Print when analysis started
+  if(verbose == TRUE){
+    progr <- "text"
+    cat("SES analysis started at ", format(Sys.time(), "%X"), "\n")
+  } else {
+    progr <- "none"
+  }
+
+  ## Check the orientation of the OTU table
+  trows <- taxa_are_rows(physeq)
+
+  ## Extact OTU table
+  comm <- as(object = otu_table(physeq), Class = "matrix")
+
+  ## Transpose OTU table (species should be columns for picante::randomizeMatrix)
+  if(trows == TRUE){ comm <- t(comm) }
+
+  ## Scale OTU abundance to presence/absence
+  comm <- ifelse(comm > 0, 1, 0)
+
+  ## Extact phylogenetic tree
+  phy <- phy_tree(physeq)
+
+
+  ## Function to estimate diversity with PhyloMeasures
+  pdiv <- function(comm, phy, pdiv_measures){
+
+    rez <- vector("list")  # initialize results
+
+    if("PD" %in% pdiv_measures){
+      rez <- c(rez, list(PD = pd.query(tree = phy, matrix = comm) ))
+    }
+    if("MPD" %in% pdiv_measures){
+      rez <- c(rez, list(MPD = mpd.query(tree = phy, matrix = comm) ))
+    }
+    if("MNTD" %in% pdiv_measures){
+      rez <- c(rez, list(MNTD = mntd.query(tree = phy, matrix = comm) ))
+    }
+
+    rez <- do.call("cbind", rez)
+    rez <- data.frame(SampleID = rownames(comm), rez)
+    return(rez)
+  }
+
+  ## Observed diversity
+  div.obs <- pdiv(comm, phy, pdiv_measures = measures)
+
+  ## Function to randomize the observed  data
+  null_mod_fun <- function(comm, phy, model, iter = swapiter){
+    # model = models from picante::randomizeMatrix
+    # iter = number of iterations for independentswap or trialswap algorithms
+
+    if(model == "taxa.labels"){
+      res_comm <- comm
+      res_phy <- picante::tipShuffle(phy)
+    }
+
+    if(model %in% c("richness", "sample.pool")){  # same models?
+      res_comm <- randomizeMatrix(comm, null.model="richness")
+      res_phy <- phy
+    }
+
+    if(model == "frequency"){
+      res_comm <- randomizeMatrix(comm, null.model="frequency")
+      res_phy <- phy
+    }
+
+    if(model == "frequency"){
+      res_comm <- randomizeMatrix(comm, null.model="frequency")
+      res_phy <- phy
+    }
+
+    if(model == "phylogeny.pool"){
+      res_comm <- randomizeMatrix(comm, null.model="richness")
+      res_phy <- picante::tipShuffle(phy)
+    }
+
+    if(model == "independentswap"){
+      res_comm <- randomizeMatrix(comm, null.model="independentswap", iterations = iter)
+      res_phy <- phy
+    }
+
+    if(model == "trialswap"){
+      res_comm <- randomizeMatrix(comm, null.model="trialswap", iterations = iter)
+      res_phy <- phy
+    }
+
+    ## Return list with comm and phy
+    rez <- list()
+    rez$comm <- res_comm
+    rez$phy <- res_phy
+    return(rez)
+  }
+
+  ## Simulate multiple randomized communities
+  ## TO DO ------- add parallel option here
+  if(verbose == T){ cat("..Randomizing data with '", null_model, "' algorithm\n", sep = "") }
+  nmods <- rlply(.n = nsim, .expr = null_mod_fun(comm, phy, model = null_model), .progress = progr)
+
+  ## Esimate diversity metrics for each of the randomized communities
+  ## TO DO ------- add parallel option here
+  if(verbose == T){ cat("..Estimating phylogenetic diversity for the randomized data\n") }
+  div.rnd <- ldply(
+    .data = nmods,
+    .fun = function(z, ...){ pdiv(comm = z$comm, phy = z$phy, ...) },
+    pdiv_measures = measures,
+    .progress = progr)
+
+  ## Summarize null-distribution for each community (mean, SD and rank)
+  if(verbose == T){ cat("..Estimating effect size\n") }
+  rnd_mean <- ddply(.data=div.rnd, .variables="SampleID", .fun=numcolwise(mean, na.rm = T))
+  rnd_sd <- ddply(.data=div.rnd, .variables="SampleID", .fun=numcolwise(sd, na.rm = T))
+  rnd_rank <- ddply(.data = rbind(div.obs, div.rnd), .variables = "SampleID", numcolwise(.fun = function(z){ rank(z)[1] }))
+
+  ## Rename columns
+  colnames(rnd_mean)[-1] <- paste(colnames(rnd_mean)[-1], ".rand.mean", sep="")
+  colnames(rnd_sd)[-1] <- paste(colnames(rnd_sd)[-1], ".rand.sd", sep="")
+  colnames(rnd_rank)[-1] <- paste(colnames(rnd_rank)[-1], ".rank", sep="")
+
+  ## Reorder observed diversity estimates to match the randomized order
+  div.obs <- div.obs[match(x = div.obs$SampleID, table = rnd_mean$SampleID), ]
+
+  ## Merge results
+  res <- cbind(div.obs, rnd_mean[-1], rnd_sd[-1], rnd_rank[-1])
+
+  ## Estimate Z-score and P-value
+  if("PD" %in% measures){
+    res$PD.z <- with(res, (PD - PD.rand.mean)/PD.rand.sd )
+    res$PD.p <- with(res, PD.rank / (nsim + 1) )
+  }
+  if("MPD" %in% measures){
+    res$MPD.z <- with(res, (MPD - MPD.rand.mean)/MPD.rand.sd )
+    res$MPD.p <- with(res, MPD.rank / (nsim + 1) )
+  }
+  if("MNTD" %in% measures){
+    res$MNTD.z <- with(res, (MNTD - MNTD.rand.mean)/MNTD.rand.sd )
+    res$MNTD.p <- with(res, MNTD.rank / (nsim + 1) )
+  }
+
+  return(res)
+}
