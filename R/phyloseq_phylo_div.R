@@ -7,21 +7,29 @@
 #' @details Implementation of the phylogenetic diversity measures is based on the \code{\link[PhyloMeasures]{PhyloMeasures}} package which is much faster than corresponding functions from \code{\link[picante]{picante}} package.
 #'
 #' MNTD index sometimes is also reffered as MNND (mean nearest neighbour distance).
+#' 
+#' Diversity values could be standardized to the mean and expectation of the metric (SES, standardized effect size) by passing additional argument ('standardize = T') to the function. 
+#' Standardization leads to some of the most commonly used measures, including NRI (net relatedness index, the standardized version of MPD), NTI (nearest taxon index, derived from MNTD) and PDI (phylogenetic diversity index, derived from PD). 
+#' These metrics describe how diffrent the observed species assemblages is from other possible assemblages of the same size. 
+#' With this standardization, values of 0 are consistent with random phylogenetic structure, while phylogenetic clustering is associated with negative values, and phylogenetic overdispersion with positive values. 
+#' The default null model preserves only the species richness of samples (abundance is not maintained), which leads to the taxon shuff approach ("taxa.labels" null model from picante). 
+#' Note that standardization is performed by evaluating analytical expressions for the mean and variance of the basic measures, rather than by the slow and inexact randomization techniques (as in \code{\link[metagMisc]{phyloseq_phylo_ses}}). 
 #' @return A data.frame of the diversity estimates.
 #' @export
 #' @seealso
+#' \code{\link[metagMisc]{phyloseq_phylo_ses}}, 
 #' \code{\link[PhyloMeasures]{mpd.query}}, \code{\link[PhyloMeasures]{mntd.query}}, and \code{\link[PhyloMeasures]{pd.query}} from \code{\link[PhyloMeasures]{PhyloMeasures}} package;
 #' \code{\link[picante]{mpd}}, \code{\link[picante]{mntd}}, and \code{\link[picante]{pd}} from \code{\link[picante]{picante}} package;
 #' \code{\link[phyloseq]{estimate_richness}}, \code{\link[phyloseq]{phy_tree}}
 #' @references
-#' Faith D.P. (1992) Conservation evaluation and phylogenetic diversity. Biological Conservation, 61, 1-10.
-#'
+#' Tsirogiannis C., Sandel B. (2016) PhyloMeasures: a package for computing phylogenetic biodiversity measures and their statistical moments. Ecography, 39, 709–714. doi:10.1111/ecog.01814
+#' 
 #' Webb C., Ackerly D., McPeek M., and Donoghue M. (2002) Phylogenies and community ecology. Annual Review of Ecology and Systematics, 33, 475-505.
+#'
+#' Faith D.P. (1992) Conservation evaluation and phylogenetic diversity. Biological Conservation, 61, 1-10.
 #' @examples
 #'
 phyloseq_phylo_div <- function(physeq, measures=c("PD", "MPD", "MNTD"), ...){
-  # measures = vector with diversity indices names
-  # ... =
 
   require(PhyloMeasures)
 
