@@ -162,5 +162,11 @@ phyloseq_phylo_ses <- function(physeq, measures=c("PD", "MPD", "MNTD"), null_mod
     res$MNTD.p <- with(res, MNTD.rank / (nsim + 1) )
   }
 
+  ## Ending progress message
+  if(verbose == TRUE){
+    cat("..Done\n")
+    cat("Analysis finished at ", format(Sys.time(), "%X"), "\n")
+  }
+
   return(res)
 }
