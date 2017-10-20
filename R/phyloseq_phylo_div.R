@@ -2,13 +2,13 @@
 #' @title Estimate phylogenetic diversity (PD), mean pairwise distance (MPD), and mean nearest taxon distance (MNTD).
 #' @description Currently only non-abundance-weighted estimates are implemented.
 #' @param physeq A phyloseq-class object (phylogenetic tree is required)
-#' @param measures Character vector with diversity indices names ("PD", "MPD", "MNTD")
+#' @param measures Character vector with diversity indices names ("PD", "MPD", "MNTD", "SES.PD", "SES.MPD", "SES.MNTD")
 #' @param ... Additional arguments (standardize, null.model, abundance.weights) may be passed to \code{\link[PhyloMeasures]{pd.query}}
 #' @details Implementation of the phylogenetic diversity measures is based on the \code{\link[PhyloMeasures]{PhyloMeasures}} package which is much faster than corresponding functions from \code{\link[picante]{picante}} package.
 #'
 #' MNTD index sometimes is also reffered as MNND (mean nearest neighbour distance).
 #' 
-#' Diversity values could be standardized to the mean and expectation of the metric (SES, standardized effect size) by passing additional argument ('standardize = T') to the function. 
+#' Diversity values could be standardized to the mean and expectation of the metric (SES, standardized effect size) by passing additional argument ('standardize = T') to the function or directly calling esimation of this measures ('measures = c("SES.PD", "SES.MPD", "SES.MNTD")').
 #' Standardization leads to some of the most commonly used measures, including NRI (net relatedness index, the standardized version of MPD), NTI (nearest taxon index, derived from MNTD) and PDI (phylogenetic diversity index, derived from PD). 
 #' These metrics describe how diffrent the observed species assemblages is from other possible assemblages of the same size. 
 #' With this standardization, values of 0 are consistent with random phylogenetic structure, while phylogenetic clustering is associated with negative values, and phylogenetic overdispersion with positive values. 
@@ -29,7 +29,7 @@
 #' Faith D.P. (1992) Conservation evaluation and phylogenetic diversity. Biological Conservation, 61, 1-10.
 #' @examples
 #'
-phyloseq_phylo_div <- function(physeq, measures=c("PD", "MPD", "MNTD"), ...){
+phyloseq_phylo_div <- function(physeq, measures=c("PD", "MPD", "MNTD", "SES.PD", "SES.MPD", "SES.MNTD"), ...){
 
   require(PhyloMeasures)
 
@@ -49,6 +49,7 @@ phyloseq_phylo_div <- function(physeq, measures=c("PD", "MPD", "MNTD"), ...){
   ## Calculate diversity metrics for each community
   res <- vector("list")  # initialize results
 
+  ## Basic metrics
   if("PD" %in% measures){
     res <- c(res, list(PD = pd.query(tree = phy_tree(physeq), matrix = comm, ...) ))
   }
@@ -58,6 +59,18 @@ phyloseq_phylo_div <- function(physeq, measures=c("PD", "MPD", "MNTD"), ...){
   if("MNTD" %in% measures){
     res <- c(res, list(MNTD = mntd.query(tree = phy_tree(physeq), matrix = comm, ...) ))
   }
+
+  ## Standardized effect sizes
+  if("SES.PD" %in% measures){
+    res <- c(res, list(SES.PD = pd.query(tree = phy_tree(physeq), matrix = comm, standardize = T, ...) ))
+  }
+  if("SES.MPD" %in% measures){
+    res <- c(res, list(SES.MPD = mpd.query(tree = phy_tree(physeq), matrix = comm, standardize = T, ...) ))
+  }
+  if("SES.MNTD" %in% measures){
+    res <- c(res, list(SES.MNTD = mntd.query(tree = phy_tree(physeq), matrix = comm, standardize = T, ...) ))
+  }
+
 
   ## Combine results
   res <- do.call("cbind", res)
