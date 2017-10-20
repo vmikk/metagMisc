@@ -1,12 +1,22 @@
 
-## Estimate standardized effect sizes of phylogenetic diversity metrics (PD, MPD, MNTD)
+#' @title Estimate standardized effect sizes (SES) of phylogenetic diversity metrics (PD, MPD, MNTD)
+#' @description Currently only non-abundance-weighted estimates are implemented.
+#' @param physeq A phyloseq-class object (phylogenetic tree is required)
+#' @param measures Character vector with diversity indices names ("PD", "MPD", "MNTD")
+#' @param null_model Character string indicating which null model to use (for the supported list of models see \code{\link[picante]{ses.pd}})
+#' @param nsim Number of randomizations for null-distribution generation
+#' @param swapiter Number of iterations for independentswap or trialswap algorithms
+#' @param verbose Logical; if TRUE, progress messages from the function will be printed
+#' @param ...
+#' @details Values of SES above zero indicate that the species pool of a habitat is more diverse than the regional species pool.
+#' @return Data frame.
+#' @export
+#' @seealso \code{\link{phyloseq_phylo_div}}, \code{\link{phyloseq_randomize}}, \code{\link[picante]{randomizeMatrix}}, \code{\link[picante]{ses.pd}}, \code{\link[picante]{ses.mpd}}, \code{\link[picante]{ses.mntd}}
+#' @examples
+#'
 phyloseq_phylo_ses <- function(physeq, measures=c("PD", "MPD", "MNTD"), null_model, nsim = 1000, swapiter = 1000, verbose=TRUE, ...){
-  # null.model = c("taxa.labels", "richness", "frequency", "sample.pool", "phylogeny.pool", "independentswap", "trialswap"),
-  # nsim = number of randomizations for null-distribution generation
-  # swapiter = number of iterations for independentswap or trialswap algorithms
 
   require(plyr)
-  require(reshape2)
   require(picante)         # for null models
   require(PhyloMeasures)   # for phylogenetic diversity
 
