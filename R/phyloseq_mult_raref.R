@@ -25,6 +25,9 @@
 #' sample_sums(esophagus)
 #' sample_sums(eso_raref_t[[1]])
 #'
+#' # Do not remove OTUs from the dataset that are no longer observed in any sample (have a count of zero in every sample)
+#' phyloseq_mult_raref(esophagus, trimOTUs = F, replace = T, MinSizeTreshold = 210, SampSize = 210, iter = 10)
+#'
 phyloseq_mult_raref <- function(x, SampSize = NULL, MinSizeTreshold = NULL, iter = 1000, replace = F, ...){
 
   require(plyr)
