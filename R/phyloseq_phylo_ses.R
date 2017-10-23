@@ -1,13 +1,17 @@
 
-#' @title Estimate standardized effect sizes (SES) of phylogenetic diversity metrics (PD, MPD, MNTD)
-#' @description Currently only non-abundance-weighted estimates are implemented.
+#' @title Estimate standardized effect sizes (SES) of phylogenetic diversity metrics (PD, MPD, MNTD) using randomization-based approach.
+#' @description This function utilizes randomization-based approach to computet SES values
+#' (in contrast to the exact standardisation approach used in \code{\link{phyloseq_phylo_div}} with 'standardize' option),
+#' which could be more computation intensive. However, there is more freedom in defining the null-model.
+#'
+#' Currently only non-abundance-weighted estimates are implemented.
 #' @param physeq A phyloseq-class object (phylogenetic tree is required)
 #' @param measures Character vector with diversity indices names ("PD", "MPD", "MNTD")
 #' @param null_model Character string indicating which null model to use (for the supported list of models see \code{\link[picante]{ses.pd}})
 #' @param nsim Number of randomizations for null-distribution generation
 #' @param swapiter Number of iterations for independentswap or trialswap algorithms
 #' @param verbose Logical; if TRUE, progress messages from the function will be printed
-#' @param ...
+# @param ...
 #' @details Values of SES above zero indicate that the species pool of a habitat is more diverse than the regional species pool.
 #' @return Data frame.
 #' @export
