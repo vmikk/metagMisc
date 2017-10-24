@@ -7,9 +7,9 @@
 #' @param more_stats Logical; if TRUE, some additional OTU abundance statistics will be calculated
 #'
 #' @return Data frame with number and percentage of OTUs.
-#' @details 
-#' Optionally (if more_stats = TRUE), some additional OTU abundance statistics may be estimated (min, max, median, Q1, Q3, and CQV of OTU abundance). 
-#' Coefficient of quartile variation (a.k.a., Quartile coefficient of dispersion) is preferred to the 'classical' coefficient of variation for the analysis of samples from nonnormal distributions. 
+#' @details
+#' Optionally (if more_stats = TRUE), some additional OTU abundance statistics may be estimated (min, max, median, Q1, Q3, and CQV of OTU abundance).
+#' Coefficient of quartile variation (a.k.a., Quartile coefficient of dispersion) is preferred to the 'classical' coefficient of variation for the analysis of samples from nonnormal distributions.
 #' It is estimated by the following formula: (Q3-Q1)/(Q3+Q1), where Q1 is the population 25th percentile and Q3 is the population 75th percentile.
 #' @export
 #'
@@ -40,6 +40,7 @@ phyloseq_compare <- function(phy1, phy2, cols = c("Before", "After"), more_stats
 
   ## Prepare resulting table
   res <- rbind(
+    data.frame(V0 = "Number of samples", V1 = nsamples(phy1), V2 = nsamples(phy2)),
     data.frame(V0 = "Number of OTUs", V1 = ntaxa(phy1), V2 = ntaxa(phy2)),
     data.frame(V0 = "Percentage of OTUs", V1 = po1, V2 = po2),
     data.frame(V0 = "Total number of reads", V1 = sum(t1), V2 = sum(t2)),
