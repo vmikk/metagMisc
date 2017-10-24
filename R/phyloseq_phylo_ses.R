@@ -18,7 +18,8 @@
 #' @seealso \code{\link{phyloseq_phylo_div}}, \code{\link{phyloseq_randomize}}, \code{\link[picante]{randomizeMatrix}}, \code{\link[picante]{ses.pd}}, \code{\link[picante]{ses.mpd}}, \code{\link[picante]{ses.mntd}}
 #' @examples
 #'
-phyloseq_phylo_ses <- function(physeq, measures=c("PD", "MPD", "MNTD"), null_model, nsim = 1000, swapiter = 1000, verbose=TRUE, ...){
+phyloseq_phylo_ses <- function(physeq, measures=c("PD", "MPD", "MNTD", "VPD"), 
+  null_model, nsim = 1000, swapiter = 1000, verbose=TRUE, ...){
 
   require(plyr)
   require(picante)         # for null models
@@ -64,6 +65,9 @@ phyloseq_phylo_ses <- function(physeq, measures=c("PD", "MPD", "MNTD"), null_mod
     }
     if("MNTD" %in% pdiv_measures){
       rez <- c(rez, list(MNTD = mntd.query(tree = phy, matrix = comm) ))
+    }
+    if("VPD" %in% pdiv_measures){
+      rez <- c(rez, list(VPD = vpd(samp = comm, dis = phy) ))
     }
 
     rez <- do.call("cbind", rez)
@@ -165,6 +169,10 @@ phyloseq_phylo_ses <- function(physeq, measures=c("PD", "MPD", "MNTD"), null_mod
     res$MNTD.z <- with(res, (MNTD - MNTD.rand.mean)/MNTD.rand.sd )
     res$MNTD.p <- with(res, MNTD.rank / (nsim + 1) )
   }
+  if("VPD" %in% measures){
+    res$VPD.z <- with(res, (VPD - VPD.rand.mean)/VPD.rand.sd )
+    res$VPD.p <- with(res, VPD.rank / (nsim + 1) )
+  }
 
   ## Ending progress message
   if(verbose == TRUE){
@@ -174,3 +182,81 @@ phyloseq_phylo_ses <- function(physeq, measures=c("PD", "MPD", "MNTD"), null_mod
 
   return(res)
 }
+
+
+
+## Internal function to estimate variance of pairwise distances separating taxa in a community
+## Based on picante::mpd
+vpd <- function(samp, dis, abundance.weighted=FALSE){
+  # x = community data matrix (species as columns)
+  # y = interspecific distance matrix (matrix or dist class) or phylogenetic tree of class phylo
+
+  ## Convert phylogenetic tree to the pairwise distances
+  if(class(dis) %in% "phylo"){ dis <- ape::cophenetic.phylo(dis) }
+  if(class(dis) %in% "dist"){ dis <- as.matrix(dis) }
+
+  N <- dim(samp)[1]
+  res <- numeric(N)
+  for(i in 1:N){
+
+    ## Subset data
+    sppInSample <- names(samp[i, samp[i, ] > 0])
+    
+    if(length(sppInSample) > 1){
+      sample.dis <- dis[sppInSample, sppInSample]
+      
+      if(abundance.weighted == TRUE){
+        sample.weights <- t(as.matrix(samp[i, sppInSample, drop=FALSE])) %*% as.matrix(samp[i, sppInSample, drop=FALSE])
+        res[i] <- weighted.var(sample.dis, sample.weights)
+      } else {
+        res[i] <- var(sample.dis[lower.tri(sample.dis)])
+      }
+    }
+    else{
+      res[i] <- NA
+    }
+  }
+  return(res)
+}
+# data(phylocom)
+# vpd(phylocom$sample, phylocom$phylo, abundance.weighted=FALSE)
+# vpd(phylocom$sample, phylocom$phylo, abundance.weighted=TRUE)
+
+
+## Internal function to estimate weighted variance
+weighted.var <- function(x, w = NULL, normwt = FALSE, na.rm = FALSE){
+  # x = numeric vector
+  # w = numeric vector of weights or NULL
+  # normwt = Logical, to make weights sum to length(x) after deletion of NAs
+  # na.rm = Logical, remove NAs
+
+  ## If no weights are provied - just return ordinary variance
+  if(is.null(w)){ return(var(x, na.rm = na.rm)) }
+
+  ## Validate data
+  if(length(x) != length(w)){ stop("Error: 'x' and 'w' must have the same length.\n")}
+
+  ## Remove missing values
+  if(na.rm == TRUE){
+    nas <- is.na(x)
+    if(any(nas)){
+      w <- w[which(nas)]
+      x <- x[which(nas)]
+    }
+  }
+  
+  ## Normalize weights
+  if(normwt == TRUE){ w <- w * length(x) / sum(w) }
+
+  sumw <- sum(w)
+  wtm <- sum(w * x) / sumw    ## Weighted mean
+
+  res <- sum(w *(x-wtm)^2)*(sumw / (sumw^2-sum(w^2)))
+  # res <- (sum(w*x^2) * sumw - sum(w*x)^2) / (sumw^2 - sum(w^2))
+  # res <- sum(w*((x - wtm)^2)) / (sumw - 1)
+
+  return(res)
+}
+# x <- runif(500); wts <- sample(1:6, 500, TRUE)
+# weighted.var(x, wts)
+
