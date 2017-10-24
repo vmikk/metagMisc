@@ -1,8 +1,10 @@
 
-#' @title Estimate standardized effect sizes (SES) of phylogenetic diversity metrics (PD, MPD, MNTD) using randomization-based approach.
+#' @title Estimate standardized effect sizes (SES) of phylogenetic diversity metrics (PD, MPD, MNTD, VPD) using randomization-based approach.
 #' @description This function utilizes randomization-based approach to computet SES values
-#' (in contrast to the exact standardisation approach used in \code{\link{phyloseq_phylo_div}} with 'standardize' option),
-#' which could be more computation intensive. However, there is more freedom in defining the null-model.
+#' (in contrast to the exact standardisation approach used in \code{\link{phyloseq_phylo_div}} with 'standardize' option), 
+#' which could be more computation intensive. Note that despite more freedom in defining the null-model with randomization-based approach 
+#' it is debatable that this method can provide a reasonable approximation by selecting only a limited number of possible combinations 
+#' (especially for large phylogenetic trees).
 #'
 #' Currently only non-abundance-weighted estimates are implemented.
 #' @param physeq A phyloseq-class object (phylogenetic tree is required)
