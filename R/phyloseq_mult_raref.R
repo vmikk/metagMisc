@@ -5,7 +5,8 @@
 #' @param SampSize Rarefaction depth (number of reads to sample)
 #' @param MinSizeTreshold Remove samples with number of reads less then this treshold
 #' @param iter Number of rarefication iterations
-#' @param replace Logical, whether to sample with replacement (TRUE) or without replacement (FALSE, default).
+#' @param replace Logical, whether to sample with replacement (TRUE) or without replacement (FALSE, default)
+#' @param seeds Integer vector used for the reproducible random subsampling (should be of the same length as the number of iterations)
 #' @param ... Additional arguments will be passed to \code{\link{rarefy_even_depth}}
 #'
 #' @details
@@ -28,20 +29,30 @@
 #' # Do not remove OTUs from the dataset that are no longer observed in any sample (have a count of zero in every sample)
 #' phyloseq_mult_raref(esophagus, trimOTUs = F, replace = T, MinSizeTreshold = 210, SampSize = 210, iter = 10)
 #'
-phyloseq_mult_raref <- function(x, SampSize = NULL, MinSizeTreshold = NULL, iter = 1000, replace = F, ...){
+phyloseq_mult_raref <- function(x, SampSize = NULL, MinSizeTreshold = NULL, iter = 1000, replace = F, seeds = NULL, ...){
 
   require(plyr)
   require(phyloseq)
 
-  # Filter samples by number of reads
+  ## Sanity check for the random number generator
+  if(!is.null(seeds)){
+    if(length(seeds) != iter){ stop("Error: lenght of 'seeds' should be the same as the number of iterations.\n") }
+    if(length(seeds) != length(unique(seeds))){ warning("Warning: Provided seeds are not unique which leads to the identical results of random sampling.\n") }
+    if(!isTRUE(all(seeds == floor(seeds)))){ stop("Error: Seeds must only contain integer values.\n") }
+  }
+
+  ## Filter samples by number of reads
   if(!is.null(MinSizeTreshold)){ x <- prune_samples(sample_sums(x) >= MinSizeTreshold, x) }
 
-  # Define rarefication depth
+  ## Define rarefication depth
   if(is.null(SampSize)){ SampSize <- 0.9*min(sample_sums(x)) }
 
-  # rarefy without replacement
+  ## Prepare seed values
+  if(is.null(seeds)){ seeds <- 1:iter }
+
+  ## Rarefy
   res <- mlply(
-    .data = 1:iter,
+    .data = seeds,
     .fun = function(z){ rarefy_even_depth(x, rngseed=z, sample.size=SampSize, replace=replace, verbose = F, ...) },
     .progress = "text")
 
