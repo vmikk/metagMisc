@@ -56,5 +56,9 @@ phyloseq_mult_raref <- function(x, SampSize = NULL, MinSizeTreshold = NULL, iter
     .fun = function(z){ rarefy_even_depth(x, rngseed=z, sample.size=SampSize, replace=replace, verbose = F, ...) },
     .progress = "text")
 
+  ## Add rarefaction parameters as attributes to the resulting list
+  attr(res, which = "RarefactionDepth") <- SampSize
+  attr(res, which = "RarefactionReplacement") <- replace
+
   return(res)
 }
