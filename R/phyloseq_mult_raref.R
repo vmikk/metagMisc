@@ -45,7 +45,7 @@ phyloseq_mult_raref <- function(x, SampSize = NULL, MinSizeTreshold = NULL, iter
   if(!is.null(MinSizeTreshold)){ x <- prune_samples(sample_sums(x) >= MinSizeTreshold, x) }
 
   ## Define rarefication depth
-  if(is.null(SampSize)){ SampSize <- 0.9*min(sample_sums(x)) }
+  if(is.null(SampSize)){ SampSize <- round( 0.9*min(sample_sums(x)) ) }
 
   ## Prepare seed values
   if(is.null(seeds)){ seeds <- 1:iter }
