@@ -42,6 +42,10 @@ phyloseq_phylo_div <- function(physeq, measures=c("PD", "MPD", "MNTD", "SES.PD",
 
   require(PhyloMeasures)
 
+  ## Data validation
+  if(!class(physeq) %in% "phyloseq"){ stop("Error: Input should be of class 'phyloseq'.\n") }
+  if( is.null(phy_tree(physeq, errorIfNULL=FALSE)) ){ stop("Error: Phylogenetic tree is missing in physeq.\n") }
+
   ## Prepare community matrix = matrix with binary (0/1) values, where each row represents a tip set
   ## Each column name in the matrix must match a tip label on the input tree
 
