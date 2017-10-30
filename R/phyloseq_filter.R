@@ -86,6 +86,7 @@ phyloseq_filter_taxa_tot_fraction <- function(physeq, frac = 0.01){
 #' @param prev.trh Prevalence threshold (default, 0.05 = 5\% of samples)
 #' @param abund.trh Abundance threshold (default, NULL)
 #' @param threshold_condition Indicates type of prevalence and abundance conditions, can be "OR" (default) or "AND"
+#' @param abund.type Character string indicating which type of OTU abundance to take into account for filtering ("total", "mean", or "median")
 #' @details
 #' Abundance threshold defines if the OTU should be preserved if its abundance is larger than threshold (e.g., >= 50 reads).
 #' Parameter "threshold_condition" indicates whether OTU should be kept if it occurs in many samples AND/OR it has high abundance.
@@ -103,7 +104,7 @@ phyloseq_filter_taxa_tot_fraction <- function(physeq, frac = 0.01){
 #' # The same, but if total OTU abundance is >= 10 reads it'll be preserved too
 #' phyloseq_filter_prevalence(GlobalPatterns, prev.trh = 0.05, abund.trh = 10)    # 15611 taxa
 #'
-phyloseq_filter_prevalence <- function(physeq, prev.trh = 0.05, abund.trh = NULL, threshold_condition = "OR"){
+phyloseq_filter_prevalence <- function(physeq, prev.trh = 0.05, abund.trh = NULL, threshold_condition = "OR", abund.type = "total"){
 
   ## Check for the low-prevalence species (compute the total and average prevalences of the features in each phylum)
   prevdf_smr <- function(prevdf){
@@ -121,17 +122,22 @@ phyloseq_filter_prevalence <- function(physeq, prev.trh = 0.05, abund.trh = NULL
   ## Calculate prevalence (number of samples with OTU) and OTU total abundance
   prevdf <- prevalence(physeq)
 
+  ## Get the abundance type
+  if(abund.type == "total") { prevdf$AbundFilt <- prevdf$TotalAbundance }
+  if(abund.type == "mean")  { prevdf$AbundFilt <- prevdf$MeanAbundance }
+  if(abund.type == "median"){ prevdf$AbundFilt <- prevdf$MedianAbundance }
+
   ## Which taxa to preserve
   if(is.null(abund.trh)) { tt <- prevdf$Prevalence >= prevalenceThreshold }
   if(!is.null(abund.trh)){
     ## Keep OTU if it either occurs in many samples OR it has high abundance
     if(threshold_condition == "OR"){
-      tt <- (prevdf$Prevalence >= prevalenceThreshold | prevdf$TotalAbundance > abund.trh)
+      tt <- (prevdf$Prevalence >= prevalenceThreshold | prevdf$AbundFilt >= abund.trh)
     }
 
     ## Keep OTU if it occurs in many samples AND it has high abundance
     if(threshold_condition == "AND"){
-      tt <- (prevdf$Prevalence >= prevalenceThreshold & prevdf$TotalAbundance > abund.trh)
+      tt <- (prevdf$Prevalence >= prevalenceThreshold & prevdf$AbundFilt >= abund.trh)
     }
   }
 
