@@ -1,9 +1,9 @@
 
 #' @title Estimate standardized effect sizes (SES) of phylogenetic diversity metrics (PD, MPD, MNTD, VPD) using randomization-based approach.
 #' @description This function utilizes randomization-based approach to computet SES values
-#' (in contrast to the exact standardisation approach used in \code{\link{phyloseq_phylo_div}} with 'standardize' option), 
-#' which could be more computation intensive. Note that despite more freedom in defining the null-model with randomization-based approach 
-#' it is debatable that this method can provide a reasonable approximation by selecting only a limited number of possible combinations 
+#' (in contrast to the exact standardisation approach used in \code{\link{phyloseq_phylo_div}} with 'standardize' option),
+#' which could be more computation intensive. Note that despite more freedom in defining the null-model with randomization-based approach
+#' it is debatable that this method can provide a reasonable approximation by selecting only a limited number of possible combinations
 #' (especially for large phylogenetic trees).
 #'
 #' Currently only non-abundance-weighted estimates are implemented.
@@ -19,8 +19,21 @@
 #' @export
 #' @seealso \code{\link{phyloseq_phylo_div}}, \code{\link{phyloseq_randomize}}, \code{\link[picante]{randomizeMatrix}}, \code{\link[picante]{ses.pd}}, \code{\link[picante]{ses.mpd}}, \code{\link[picante]{ses.mntd}}
 #' @examples
+#' # Load data
+#' data(esophagus)
 #'
-phyloseq_phylo_ses <- function(physeq, measures=c("PD", "MPD", "MNTD", "VPD"), 
+#' # Estimate phylogenetic diversity index (PDI)
+#' phyloseq_phylo_ses(esophagus, measures = "PD", null_model = "taxa.labels", nsim = 100, verbose = F)
+#'
+#' # Estimate phylogenetic diversity, mean pairwise distance,
+#' # mean nearest taxon distance and variance of phylogenetic distances;
+#' # use independent swap algorithm to generate the null distribution
+#' phyloseq_phylo_ses(esophagus,
+#'                    measures = c("PD", "MPD", "MNTD", "VPD"),
+#'                    null_model = "independentswap",
+#'                    nsim = 200, swapiter = 200)  # NB. increase the number of iterations!
+#'
+phyloseq_phylo_ses <- function(physeq, measures=c("PD", "MPD", "MNTD", "VPD"),
   null_model, nsim = 1000, swapiter = 1000, verbose=TRUE, ...){
 
   require(plyr)
@@ -203,10 +216,10 @@ vpd <- function(samp, dis, abundance.weighted=FALSE){
 
     ## Subset data
     sppInSample <- names(samp[i, samp[i, ] > 0])
-    
+
     if(length(sppInSample) > 1){
       sample.dis <- dis[sppInSample, sppInSample]
-      
+
       if(abundance.weighted == TRUE){
         sample.weights <- t(as.matrix(samp[i, sppInSample, drop=FALSE])) %*% as.matrix(samp[i, sppInSample, drop=FALSE])
         res[i] <- weighted.var(sample.dis, sample.weights)
@@ -246,7 +259,7 @@ weighted.var <- function(x, w = NULL, normwt = FALSE, na.rm = FALSE){
       x <- x[which(nas)]
     }
   }
-  
+
   ## Normalize weights
   if(normwt == TRUE){ w <- w * length(x) / sum(w) }
 
