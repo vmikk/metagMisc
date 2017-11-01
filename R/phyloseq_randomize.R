@@ -1,5 +1,16 @@
 
-## Randomize abundance table and phylogeny in phyloseq objects (for null model testing and simulation)
+#' @title Randomize abundance table and phylogeny in phyloseq objects (for null model testing and simulation).
+#'
+#' @param physeq A phyloseq-class object
+#' @param null_model Character string defining the null model (for the description of supported models see \code{\link[picante]{randomizeMatrix}})
+#' @param verbose Logical; if TRUE, additional information messages will be displayed
+#' @param ... Additional arguments may be passed to \code{\link[picante]{randomizeMatrix}}
+#' @details Currently only null models from picante package are implemented.
+#' @return A phyloseq-class object with randomized abundance table and/or phylogeny.
+#' @export
+#' @seealso \code{\link[picante]{randomizeMatrix}}, \code{\link[vegan]{commsim}}
+#' @examples
+#'
 phyloseq_randomize <- function(physeq, null_model = "phylogeny.pool", verbose = T, ...){
   # c("taxa.labels", "richness", "frequency", "sample.pool", "phylogeny.pool", "independentswap", "trialswap")
 
