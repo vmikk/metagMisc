@@ -4,17 +4,25 @@
 \alias{phyloseq_compare}
 \title{Compare two phyloseq objects.}
 \usage{
-phyloseq_compare(phy1, phy2, cols = c("Before", "After"))
+phyloseq_compare(physeq, ..., cols = NULL, more_stats = FALSE,
+  long = FALSE)
 }
 \arguments{
+\item{cols}{Character vector with column names for phy1 & phy2 in the resulting table}
+
+\item{more_stats}{Logical; if TRUE, some additional OTU abundance statistics will be calculated}
+
 \item{phy1}{A phyloseq-class object}
 
 \item{phy2}{A phyloseq-class object}
-
-\item{cols}{Character vector with column names for phy1 & phy2 in the resulting table.}
 }
 \value{
 Data frame with number and percentage of OTUs.
+}
+\details{
+Optionally (if more_stats = TRUE), some additional OTU abundance statistics may be estimated (min, max, median, Q1, Q3, and CQV of OTU abundance).
+Coefficient of quartile variation (a.k.a., Quartile coefficient of dispersion) is preferred to the 'classical' coefficient of variation for the analysis of samples from nonnormal distributions.
+It is estimated by the following formula: (Q3-Q1)/(Q3+Q1), where Q1 is the population 25th percentile and Q3 is the population 75th percentile.
 }
 \examples{
 data(esophagus)
@@ -23,5 +31,6 @@ data(esophagus)
 eso_trim <- prune_taxa(taxa_sums(esophagus) >= 5, esophagus)
 
 phyloseq_compare(esophagus, eso_trim, cols = c("Esophagus", "Trimmed esophagus"))
+phyloseq_compare(esophagus, eso_trim, cols = c("Esophagus", "Trimmed esophagus"), more_stats = T)
 
 }
