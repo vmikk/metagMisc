@@ -5,7 +5,7 @@
 \title{Filter low-prevalence OTUs.}
 \usage{
 phyloseq_filter_prevalence(physeq, prev.trh = 0.05, abund.trh = NULL,
-  threshold_condition = "OR")
+  threshold_condition = "OR", abund.type = "total")
 }
 \arguments{
 \item{physeq}{A phyloseq-class object}
@@ -15,6 +15,8 @@ phyloseq_filter_prevalence(physeq, prev.trh = 0.05, abund.trh = NULL,
 \item{abund.trh}{Abundance threshold (default, NULL)}
 
 \item{threshold_condition}{Indicates type of prevalence and abundance conditions, can be "OR" (default) or "AND"}
+
+\item{abund.type}{Character string indicating which type of OTU abundance to take into account for filtering ("total", "mean", or "median")}
 }
 \value{
 Phyloseq object with a subset of taxa.
