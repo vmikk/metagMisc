@@ -22,61 +22,116 @@
 #' phyloseq_compare(esophagus, eso_trim, cols = c("Esophagus", "Trimmed esophagus"))
 #' phyloseq_compare(esophagus, eso_trim, cols = c("Esophagus", "Trimmed esophagus"), more_stats = T)
 #'
-phyloseq_compare <- function(phy1, phy2, cols = c("Before", "After"), more_stats = F){
+phyloseq_compare <- function(physeq, ..., cols = NULL, more_stats = FALSE, long = FALSE){
 
-  # number of reads per OTU
-  t1 <- taxa_sums(phy1)
-  t2 <- taxa_sums(phy2)
+  require(plyr)
+  require(reshape2)
 
-  # percentage of reads
-  if(sum(t1) > sum(t2)){ pr1 <- 100; pr2 <- (sum(t2)*100)/(sum(t1)) }
-  if(sum(t1) < sum(t2)){ pr2 <- 100; pr1 <- (sum(t1)*100)/(sum(t2)) }
-  if(sum(t1) == sum(t2)){ pr1 <- 100; pr2 <- 100 }
-
-  # percentage of OTUs
-  if(ntaxa(phy1) > ntaxa(phy2)){ po1 <- 100; po2 <- (ntaxa(phy2)*100)/(ntaxa(phy1)) }
-  if(ntaxa(phy1) < ntaxa(phy2)){ po2 <- 100; po1 <- (ntaxa(phy1)*100)/(ntaxa(phy2)) }
-  if(ntaxa(phy1) == ntaxa(phy2)){ po1 <- 100; po2 <- 100 }
-
-  ## Prepare resulting table
-  res <- rbind(
-    data.frame(V0 = "Number of samples", V1 = nsamples(phy1), V2 = nsamples(phy2)),
-    data.frame(V0 = "Number of OTUs", V1 = ntaxa(phy1), V2 = ntaxa(phy2)),
-    data.frame(V0 = "Percentage of OTUs", V1 = po1, V2 = po2),
-    data.frame(V0 = "Total number of reads", V1 = sum(t1), V2 = sum(t2)),
-    data.frame(V0 = "Percentage of reads", V1 = pr1, V2 = pr2),
-    data.frame(V0 = "Average number of reads per OTU", V1 = mean(t1), V2 = mean(t2)),
-    stringsAsFactors = F)
-
-  colnames(res) <- c("Parameter", cols)
-
-  ## Add additional abundance statistics
-  if(more_stats == TRUE){
-
-    ## Coefficient of quartile variation function
-    cqv <- function(x){
-      q1 <- quantile(x, probs = 0.25)
-      q3 <- quantile(x, probs = 0.75)
-      res <- (q3-q1)/(q3+q1)
-      return(res)
-    }
-
-    ## Additional statistics
-    adds <- rbind(
-      data.frame(V0 = "Median number of reads per OTU", V1 = median(t1), V2 = median(t2)),
-      data.frame(V0 = "Min total OTU abundance", V1 = min(t1), V2 = min(t2)),
-      data.frame(V0 = "Q1 of total OTU abundance", V1 = quantile(t1, probs = 0.25), V2 = quantile(t2, probs = 0.25)),
-      data.frame(V0 = "Q3 of total OTU abundance", V1 = quantile(t1, probs = 0.75), V2 = quantile(t2, probs = 0.75)),
-      data.frame(V0 = "Max total OTU abundance", V1 = max(t1), V2 = max(t2)),
-      data.frame(V0 = "Coefficient of quartile variation in OTU abundance", V1 = cqv(t1), V2 = cqv(t2)),
-      stringsAsFactors = F)
-
-    colnames(adds) <- c("Parameter", cols)
-
-    ## Add it to the main table
-    res <- rbind(res, adds, stringsAsFactors = F)
-    rownames(res) <- NULL
+  ## Merge phyloseq objects into a list
+  if(!missing(...)){
+    lls <- list(physeq, ...)
+  } else {   # if only one phyloseq was provided
+    lls <- list(physeq)
   }
 
-  return(res)
+  ## Add names to each phyloseq object from the input
+  if(is.null(cols)){
+    names(lls) <- paste("Phys", 1:length(lls), sep="")
+  } else {
+    names(lls) <- cols
+  }
+
+  ## Summary function
+  smr <- function(x, more_stats = FALSE){
+    # x = single phyloseq object
+
+    ## Number of reads per OTU
+    treads <- taxa_sums(x)
+
+    ## Number of reads per sample
+    sreads <- sample_sums(x)
+
+    ## Prepare resulting table
+    res <- rbind(
+      data.frame(V0 = "Number of samples", V1 = nsamples(x)),
+      data.frame(V0 = "Number of OTUs", V1 = ntaxa(x)),
+      data.frame(V0 = "Total number of reads", V1 = sum(treads)),
+      data.frame(V0 = "Average number of reads per OTU", V1 = mean(treads)),
+      data.frame(V0 = "Average number of reads per sample", V1 = mean(sreads)),
+      stringsAsFactors = F)
+
+    colnames(res) <- c("Parameter", "Phy")
+
+    ## Add additional abundance statistics
+    if(more_stats == TRUE){
+
+      ## Coefficient of quartile variation function
+      cqv <- function(x){
+        q1 <- quantile(x, probs = 0.25)
+        q3 <- quantile(x, probs = 0.75)
+        rez <- (q3-q1)/(q3+q1)
+        return(rez)
+      }
+
+      ## Additional statistics
+      adds <- rbind(
+        ## OTU-wise stats
+        data.frame(V0 = "Median number of reads per OTU", V1 = median(treads)),
+        data.frame(V0 = "Min total OTU abundance", V1 = min(treads)),
+        data.frame(V0 = "Q1 of total OTU abundance", V1 = quantile(treads, probs = 0.25)),
+        data.frame(V0 = "Q3 of total OTU abundance", V1 = quantile(treads, probs = 0.75)),
+        data.frame(V0 = "Max total OTU abundance", V1 = max(treads)),
+        data.frame(V0 = "Coefficient of quartile variation in OTU abundance", V1 = cqv(treads)),
+
+        ## Sample-wise stats
+        data.frame(V0 = "Median number of reads per sample", V1 = median(sreads)),
+        data.frame(V0 = "Min total sample abundance", V1 = min(sreads)),
+        data.frame(V0 = "Q1 of total sample abundance", V1 = quantile(sreads, probs = 0.25)),
+        data.frame(V0 = "Q3 of total sample abundance", V1 = quantile(sreads, probs = 0.75)),
+        data.frame(V0 = "Max total sample abundance", V1 = max(sreads)),
+        data.frame(V0 = "Coefficient of quartile variation in sample abundance", V1 = cqv(sreads)),
+
+        stringsAsFactors = F)
+
+      colnames(adds) <- c("Parameter", "Phy")
+
+      ## Add it to the main table
+      res <- rbind(res, adds, stringsAsFactors = F)
+      rownames(res) <- NULL
+    } ## End of additional stats
+
+    return(res)
+  } ## End of summary function
+
+  ## Apply summary function for each phyloseq object
+  RES <- ldply(.data = lls, .fun = smr, .id = "Phyloseq", more_stats = more_stats)
+
+  ## Reshape data to a wide format
+  if(long == FALSE){
+  
+    ## Reshape
+    RES <- reshape2::dcast(data = RES, Parameter ~ Phyloseq, value.var = "Phy")
+
+    ## If there are multiple phyloseq objects - estimate percentages
+    if(length(lls) > 1){
+      
+      ## Function to estimate percentage relative to the maximum value
+      perc <- function(z){ 100 * z / max(z) }
+
+      pct <- apply(
+        X = rbind(
+          RES[which(RES$Parameter == "Total number of reads"), -1],
+          RES[which(RES$Parameter == "Number of OTUs"), -1]),
+        MARGIN = 1, FUN = perc)
+
+      pct <- data.frame(
+        Parameter = c("Percentage of reads", "Percentage of OTUs"),
+        t(pct))
+
+      RES <- rbind(RES, pct)
+    } ## End of percentages
+  
+  } ## End of long
+
+  return(RES)
 }
