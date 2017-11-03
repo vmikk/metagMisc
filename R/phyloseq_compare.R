@@ -1,10 +1,11 @@
 
 #' @title Compare two phyloseq objects.
 #'
-#' @param phy1 A phyloseq-class object
-#' @param phy2 A phyloseq-class object
+#' @param physeq A phyloseq-class object
+#' @param ... Optionally more phyloseq objects
 #' @param cols Character vector with column names for phy1 & phy2 in the resulting table
 #' @param more_stats Logical; if TRUE, some additional OTU abundance statistics will be calculated
+#' @param long Logical; if TRUE, results will be returned in a long format
 #'
 #' @return Data frame with number and percentage of OTUs.
 #' @details
