@@ -11,7 +11,29 @@
 #'
 #' @examples
 #'
-add_metadata <- function(x, metad, xid, mid, drop_mid = T){
+add_metadata <- function(x, metad, xid = NULL, mid = NULL, drop_mid = T){
+
+  ## Data validation
+  if(is.null(xid) | is.null(mid)){ stop("Error: row identifiers should be provided.\n") }
+  if(!length(xid) == 1){ stop("Error: row identifiers should be provided as a single character string, e.g. 'SampleID'.\n") }
+  if(!length(mid) == 1){ stop("Error: row identifiers should be provided as a single character string, e.g. 'SampleID'.\n") }
+
+  ## Extract metadata from phyloseq object
+  if(class(metad) %in% "phyloseq"){
+    if(is.null(sample_data(metad, errorIfNULL = F))){
+      stop("Error: sample_data is missing from the phyloseq object 'metad'.\n")
+    } else {
+      metad <- as(object = sample_data(metad), Class = "data.frame")
+    }
+  }
+
+  ## Data validation
+  if(!xid %in% colnames(x)){ stop("Error: '", xid, "' column is missing in the main data.\n", sep="") }
+  if(!mid %in% colnames(metad)){ stop("Error: '", mid, "' column is missing in the metadata.\n", sep="") }
+
+  if(nrow(x) != length(unique(x[, xid]))){ stop("Error: Row identifiers are not unique in 'x'.\n") }
+  if(nrow(metad) != length(unique(metad[, mid]))){ stop("Error: Row identifiers are not unique in 'metad'.\n") }
+
 
   ## Match metadata to the main data
   mm <- match(x = x[, xid], table = metad[, mid])
