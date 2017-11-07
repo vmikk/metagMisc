@@ -5,7 +5,7 @@
 \title{Multiple rarefaction of phyloseq-object}
 \usage{
 phyloseq_mult_raref(x, SampSize = NULL, MinSizeTreshold = NULL,
-  iter = 1000, replace = F, ...)
+  iter = 1000, replace = F, multithread = F, seeds = NULL, ...)
 }
 \arguments{
 \item{x}{A phyloseq-class object}
@@ -16,7 +16,11 @@ phyloseq_mult_raref(x, SampSize = NULL, MinSizeTreshold = NULL,
 
 \item{iter}{Number of rarefication iterations}
 
-\item{replace}{Logical, whether to sample with replacement (TRUE) or without replacement (FALSE, default).}
+\item{replace}{Logical, whether to sample with replacement (TRUE) or without replacement (FALSE, default)}
+
+\item{multithread}{Logical or integer; if TRUE, attempts to run the function on multiple cores; integer defines the number of cores to use (if it is set to TRUE, all cores will be used)}
+
+\item{seeds}{Integer vector used for the reproducible random subsampling (should be of the same length as the number of iterations)}
 
 \item{...}{Additional arguments will be passed to \code{\link{rarefy_even_depth}}}
 }
@@ -38,6 +42,9 @@ eso_raref <- phyloseq_mult_raref(esophagus, iter = 10)
 eso_raref_t <- phyloseq_mult_raref(esophagus, replace = T, MinSizeTreshold = 210, SampSize = 210, iter = 10)
 sample_sums(esophagus)
 sample_sums(eso_raref_t[[1]])
+
+# Do not remove OTUs from the dataset that are no longer observed in any sample (have a count of zero in every sample)
+phyloseq_mult_raref(esophagus, trimOTUs = F, replace = T, MinSizeTreshold = 210, SampSize = 210, iter = 10)
 
 }
 \seealso{
