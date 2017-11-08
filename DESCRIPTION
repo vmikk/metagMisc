@@ -1,6 +1,6 @@
 Package: metagMisc
 Title: Miscellaneous functions for metagenomic analysis
-Version: 0.0.2
+Version: 0.0.3
 Authors@R: person("Vladimir", "Mikryukov", email = "vmikryukov@gmail.com", role = c("aut", "cre"))
 Description: metagMisc package contains miscellaneous functions for metagenomic analysis, including data transformations, several parsers (for USERCH UC-format; BLAST, SINA and STAMPA outputs, etc.), taxonomy handlers (SILVA, QIIME, AMPTk), phyloseq-shortcuts (multiple rarefaction, phyloseq splitting and exporting), and DADA2-shortcuts (error rate estimation on the subset of data, export of denoised amplicons in fasta).
 Depends: R (>= 3.3.1)
