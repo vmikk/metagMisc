@@ -2,7 +2,7 @@
 #' @title Estimate species occurrence (within groups of samples)
 #'
 #' @param physeq A phyloseq-class object
-#' @param variable Variable name which defines groups of samples (contained in \code{\link{sample_data}}) or NULL (no sample groups)
+#' @param variable Character string defining a variable name of the sample groups (this variable should be present in \code{\link[phyloseq]{sample_data}}) or NULL (no sample groups)
 #' @param taxa_frequency Logical; if TRUE (default), relative frequency of species occurence within a sample group will be returned; if FALSE, number of samples within each sample group will be returned for each taxa
 #' @param drop_zeroes Logical; if TRUE, taxa with total zero abundance will be removed
 #' @param justdf Logical; if TRUE, return only a data frame with taxa occurrences; if FALSE (default), modified phyloseq object will be returned
@@ -13,7 +13,7 @@
 #'
 #' @examples
 #'
-phyloseq_samples_to_occurrence <- function(physeq, variable = NULL,
+phyloseq_otu_occurrence <- function(physeq, variable = NULL,
   taxa_frequency = TRUE, drop_zeroes = FALSE, justdf = FALSE, long = FALSE){
 
   require(plyr)
