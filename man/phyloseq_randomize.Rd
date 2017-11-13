@@ -22,6 +22,14 @@ A phyloseq-class object with randomized abundance table and/or phylogeny.
 Currently only null models from picante package are implemented.
 }
 \examples{
+# Load data
+data("esophagus")
+
+## Randomize phyloseq object
+# Shuffle tips of the phylogenetic tree
+phyloseq_randomize(esophagus, null_model = "phylogeny.pool")
+# Randomize community data matrix with the independent swap algorithm (Gotelli 2000) maintaining species occurrence frequency and sample species richness
+phyloseq_randomize(esophagus, null_model = "independentswap")
 
 }
 \seealso{
