@@ -10,6 +10,14 @@
 #' @export
 #' @seealso \code{\link[picante]{randomizeMatrix}}, \code{\link[vegan]{commsim}}
 #' @examples
+#' # Load data
+#' data("esophagus")
+#'
+#' ## Randomize phyloseq object
+#' # Shuffle tips of the phylogenetic tree
+#' phyloseq_randomize(esophagus, null_model = "phylogeny.pool")
+#' # Randomize community data matrix with the independent swap algorithm (Gotelli 2000) maintaining species occurrence frequency and sample species richness
+#' phyloseq_randomize(esophagus, null_model = "independentswap")
 #'
 phyloseq_randomize <- function(physeq, null_model = "phylogeny.pool", verbose = T, ...){
   # c("taxa.labels", "richness", "frequency", "sample.pool", "phylogeny.pool", "independentswap", "trialswap")
