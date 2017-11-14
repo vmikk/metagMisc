@@ -8,13 +8,15 @@ phyloseq_compare(physeq, ..., cols = NULL, more_stats = FALSE,
   long = FALSE)
 }
 \arguments{
+\item{physeq}{A phyloseq-class object}
+
+\item{...}{Optionally more phyloseq objects}
+
 \item{cols}{Character vector with column names for phy1 & phy2 in the resulting table}
 
 \item{more_stats}{Logical; if TRUE, some additional OTU abundance statistics will be calculated}
 
-\item{phy1}{A phyloseq-class object}
-
-\item{phy2}{A phyloseq-class object}
+\item{long}{Logical; if TRUE, results will be returned in a long format}
 }
 \value{
 Data frame with number and percentage of OTUs.
