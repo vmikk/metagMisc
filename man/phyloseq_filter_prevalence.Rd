@@ -36,7 +36,10 @@ GlobalPatterns  # 19216 taxa
 phyloseq_filter_prevalence(GlobalPatterns, prev.trh = 0.05, abund.trh = NULL)  # 15389 taxa
 
 # The same, but if total OTU abundance is >= 10 reads it'll be preserved too
-phyloseq_filter_prevalence(GlobalPatterns, prev.trh = 0.05, abund.trh = 10)    # 15611 taxa
+phyloseq_filter_prevalence(GlobalPatterns, prev.trh = 0.05, abund.trh = 10, threshold_condition = "OR")  # 15639 taxa
+
+# Include only taxa with more than 10 reads (on average) in at least 10\% samples
+phyloseq_filter_prevalence(GlobalPatterns, prev.trh = 0.1, abund.trh = 10, abund.type = "mean", threshold_condition = "AND")  # 4250 taxa
 
 }
 \seealso{
