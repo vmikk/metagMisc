@@ -10,6 +10,21 @@
 #' @export
 #'
 #' @examples
+#' # Load data
+#' data(GlobalPatterns)
+#'
+#' # As an example, estimate richness
+#' div <- estimate_richness(GlobalPatterns, measures = c("Observed", "Shannon"))
+#' div <- dfRowName(div, name = "SampleID")
+#'
+#' # Take metadata from phyloseq object
+#' div1 <- add_metadata(div, metad = GlobalPatterns, xid = "SampleID", mid = "X.SampleID")
+#' head(div1)
+#'
+#' # Or metadata from data frame
+#' metad <- as(sample_data(GlobalPatterns), "data.frame")
+#' div2 <- add_metadata(div, metad = metad, xid = "SampleID", mid = "X.SampleID")
+#' head(div2)
 #'
 add_metadata <- function(x, metad, xid = NULL, mid = NULL, drop_mid = T){
 
