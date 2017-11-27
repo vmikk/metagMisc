@@ -12,6 +12,16 @@
 #' @seealso \code{\link{parse_uc}}
 #' @references https://git.metabarcoding.org/obitools/sumaclust/wikis/home
 #' @examples
+#' ## OTU clustering with Sumaclust
+#' ## OTU observation map is written to 'sumaclust_map.txt'
+#' # sumaclust -g -f -t 0.97 -O sumaclust_map.txt input_seqs.fasta
+#'
+#' ## OTU clustering with VSEARCH
+#' ## Results are in USEARCH cluster format (UC) in 'vsearch_clusters.uc' file
+#' # vsearch --cluster_fast input_seqs.fasta --id 0.97 --uc vsearch_clusters.uc
+#'
+#' ## Convert VSEARCH clustering results (in UC-format) to Sumaclust OTU observation map
+#' # uc_to_sumaclust("vsearch_clusters.uc", output_file = "vsearch_to_sumaclust.txt")
 #'
 uc_to_sumaclust <- function(x, output_file = NULL){
 
