@@ -12,6 +12,29 @@
 #' @export
 #'
 #' @examples
+#' # Load data
+#' data("GlobalPatterns")
+#'
+#' ## Return phyloseq-object with sample groups instead of samples
+#' # With absolute counts (e.g., number of samples with the species)
+#' gpa <- phyloseq_samples_to_occurrence(GlobalPatterns, variable = "SampleType", taxa_frequency = F)
+#' gpa
+#' head( otu_table(gpa) )
+#'
+#' # With relative frequency of species occurence within a sample group
+#' gpr <- phyloseq_samples_to_occurrence(GlobalPatterns, variable = "SampleType", taxa_frequency = T)
+#' gpr
+#' head( otu_table(gpr) )
+#'
+#'
+#' ## Return just a data frame with taxa occurrences
+#' # In wide format (sample groups as columns)
+#' gpw <- phyloseq_samples_to_occurrence(GlobalPatterns, variable = "SampleType", taxa_frequency = T, drop_zeroes = F, justdf = T, long = F)
+#' head(gpw)
+#'
+#' # In long format (with a single column with sample type)
+#' gpl <- phyloseq_samples_to_occurrence(GlobalPatterns, variable = "SampleType", taxa_frequency = T, drop_zeroes = F, justdf = T, long = T)
+#' head(gpl)
 #'
 phyloseq_otu_occurrence <- function(physeq, variable = NULL,
   taxa_frequency = TRUE, drop_zeroes = FALSE, justdf = FALSE, long = FALSE){
