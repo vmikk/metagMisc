@@ -1,5 +1,14 @@
 
-## Standardize OTU abundance (with vegan)
+#' @title Standardize OTU abundance table
+#' @description Standardize phyloseq OTU table with with methods from \code{\link[vegan]{decostand}} from vegan package.
+#' @param physeq A phyloseq-class object
+#' @param method Standardization method (see \code{\link[vegan]{decostand}} for available options)
+#' @param ... Additional parameters may be passed to vegan \code{\link[vegan]{decostand}} function
+#' @return phyloseq object with standardized OTU table.
+#' @export
+#'
+#' @examples
+#'
 phyloseq_standardize_otu_abundance <- function(physeq, method="total", ...){
 
   ## Check the orientation of the OTU table
