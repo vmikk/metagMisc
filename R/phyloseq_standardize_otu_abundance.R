@@ -9,6 +9,25 @@
 #' @export
 #'
 #' @examples
+#' # Load data
+#' data("esophagus")
+#'
+#' # Total-sum scaling (TSS) normalization
+#' phyloseq_standardize_otu_abundance(esophagus, method = "total")
+#' # the same as
+#' transform_sample_counts(esophagus, function(OTU) OTU/sum(OTU) )
+#' identical(
+#'   phyloseq_standardize_otu_abundance(esophagus, method = "total"),
+#'   transform_sample_counts(esophagus, function(OTU) OTU/sum(OTU)) )
+#'
+#' # Presence-absence scaling (0/1)
+#' phyloseq_standardize_otu_abundance(esophagus, method = "pa")
+#'
+#' # Logarithmic transformation as in Anderson et al., 2006
+#' phyloseq_standardize_otu_abundance(esophagus, method = "log")
+#'
+#' # Hellinger standardization
+#' phyloseq_standardize_otu_abundance(esophagus, method = "hellinger")
 #'
 phyloseq_standardize_otu_abundance <- function(physeq, method="total", ...){
 
