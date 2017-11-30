@@ -5,6 +5,7 @@
 #' @param method Standardization method (see \code{\link[vegan]{decostand}} for available options)
 #' @param ... Additional parameters may be passed to vegan \code{\link[vegan]{decostand}} function
 #' @return phyloseq object with standardized OTU table.
+#' @seealso \code{\link[vegan]{decostand}}, \code{\link{phyloseq_transform_css}}, \code{\link{phyloseq_transform_vst_blind}}, \code{\link{phyloseq_transform_rlog_blind}}, \code{\link{physeq_transform_anderson_log}}
 #' @export
 #'
 #' @examples
