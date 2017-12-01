@@ -33,8 +33,8 @@
 #'                    null_model = "independentswap",
 #'                    nsim = 200, swapiter = 200)  # NB. increase the number of iterations!
 #'
-phyloseq_phylo_ses <- function(physeq, measures=c("PD", "MPD", "MNTD", "VPD"),
-  null_model, nsim = 1000, swapiter = 1000, verbose=TRUE, ...){
+phyloseq_phylo_ses <- function(physeq, measures = c("PD", "MPD", "MNTD", "VPD"),
+  null_model, package = "picante", abundance_weighted = FALSE, nsim = 1000, swapiter = 1000, verbose = TRUE, ...){
 
   require(plyr)
   require(picante)         # for null models
@@ -61,28 +61,52 @@ phyloseq_phylo_ses <- function(physeq, measures=c("PD", "MPD", "MNTD", "VPD"),
   if(trows == TRUE){ comm <- t(comm) }
 
   ## Scale OTU abundance to presence/absence
-  comm <- ifelse(comm > 0, 1, 0)
+  if(abundance_weighted == FALSE){
+    comm <- ifelse(comm > 0, 1, 0)
+  }
 
   ## Extact phylogenetic tree
   phy <- phy_tree(physeq)
 
 
-  ## Function to estimate diversity with PhyloMeasures
-  pdiv <- function(comm, phy, pdiv_measures){
+  ## Function to estimate diversity with PhyloMeasures or picante
+  pdiv <- function(comm, phy, pdiv_measures, method = "picante", abund_wei){
 
-    rez <- vector("list")  # initialize results
+    ## Get pairwise distances from a phylogenetic tree
+    if(method == "picante"){ dis <- ape::cophenetic.phylo(phy) }
 
-    if("PD" %in% pdiv_measures){
-      rez <- c(rez, list(PD = pd.query(tree = phy, matrix = comm) ))
+    ## Initialize results
+    rez <- vector("list")
+
+    ## Estimate diversity with PhyloMeasures
+    if(method == "PhyloMeasures"){
+      if("PD" %in% pdiv_measures){
+        rez <- c(rez, list(PD = PhyloMeasures::pd.query(tree = phy, matrix = comm) ))
+      }
+      if("MPD" %in% pdiv_measures){
+        rez <- c(rez, list(MPD = PhyloMeasures::mpd.query(tree = phy, matrix = comm) ))
+      }
+      if("MNTD" %in% pdiv_measures){
+        rez <- c(rez, list(MNTD = PhyloMeasures::mntd.query(tree = phy, matrix = comm) ))
+      }
     }
-    if("MPD" %in% pdiv_measures){
-      rez <- c(rez, list(MPD = mpd.query(tree = phy, matrix = comm) ))
+
+    ## Estimate diversity with picante
+    if(method == "picante"){
+      if("PD" %in% pdiv_measures){
+        rez <- c(rez, list(PD = picante::pd(samp = comm, tree = phy)$PD ))
+      }
+      if("MPD" %in% pdiv_measures){
+        rez <- c(rez, list(MPD = picante::mpd(samp = comm, dis = dis, abundance.weighted = abund_wei) ))
+      }
+      if("MNTD" %in% pdiv_measures){
+        rez <- c(rez, list(MNTD = picante::mntd(samp = comm, dis = dis, abundance.weighted = abund_wei) ))
+      }
     }
-    if("MNTD" %in% pdiv_measures){
-      rez <- c(rez, list(MNTD = mntd.query(tree = phy, matrix = comm) ))
-    }
+
+    ## Estimate VPD with internal function
     if("VPD" %in% pdiv_measures){
-      rez <- c(rez, list(VPD = vpd(samp = comm, dis = phy) ))
+      rez <- c(rez, list(VPD = vpd(samp = comm, dis = phy, abundance.weighted = abund_wei) ))
     }
 
     rez <- do.call("cbind", rez)
@@ -91,7 +115,7 @@ phyloseq_phylo_ses <- function(physeq, measures=c("PD", "MPD", "MNTD", "VPD"),
   }
 
   ## Observed diversity
-  div.obs <- pdiv(comm, phy, pdiv_measures = measures)
+  div.obs <- pdiv(comm, phy, pdiv_measures = measures, method = package, abund_wei = abundance_weighted)
 
   ## Function to randomize the observed  data
   null_mod_fun <- function(comm, phy, model, iter = swapiter){
@@ -152,6 +176,8 @@ phyloseq_phylo_ses <- function(physeq, measures=c("PD", "MPD", "MNTD", "VPD"),
     .data = nmods,
     .fun = function(z, ...){ pdiv(comm = z$comm, phy = z$phy, ...) },
     pdiv_measures = measures,
+    method = package, 
+    abund_wei = abundance_weighted,
     .progress = progr)
 
   ## Summarize null-distribution for each community (mean, SD and rank)
