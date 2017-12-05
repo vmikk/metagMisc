@@ -56,8 +56,8 @@ phyloseq_filter_taxa_rel_abund <- function(physeq, frac = 1e-4){
 #' @param physeq A phyloseq-class object
 #' @param frac The minimum cutoff for the OTU abundance in the table. This number is a fraction, not a percent.
 #' @details
-#' If frac = 0.0001, this will retain all OTU's that have at least a 0.01% total abundance in the OTU table.
-#' If you wanted to retain OTUs with at least 1% total abundance, you must specify, 0.01.
+#' If frac = 0.0001, this will retain all OTU's that have at least a 0.01\% total abundance in the OTU table.
+#' If you wanted to retain OTUs with at least 1\% total abundance, you must specify, 0.01.
 #'
 #' @return Phyloseq object with a subset of taxa.
 #' @export
