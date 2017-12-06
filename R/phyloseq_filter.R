@@ -14,13 +14,14 @@
 #' phyloseq_filter_taxa_rel_abund(esophagus, frac = 0.1)
 #'
 phyloseq_filter_taxa_rel_abund <- function(physeq, frac = 1e-4){
-  require(phyloseq)
+
+  # require(phyloseq)
 
   ## Transform OTU counts to relative abundance
-  rel <- transform_sample_counts(physeq, function(x) x / sum(x) )
+  rel <- phyloseq::transform_sample_counts(physeq, function(x) x / sum(x) )
 
   ## Filter OTUs
-  rel.subs <- filter_taxa(rel, function(x){ mean(x) > frac }, prune = FALSE)
+  rel.subs <- phyloseq::filter_taxa(rel, function(x){ mean(x) > frac }, prune = FALSE)
 
   ## if prune = TRUE
   # tn <- taxa_names(rel.subs)              # OTUs to preserve
@@ -30,7 +31,7 @@ phyloseq_filter_taxa_rel_abund <- function(physeq, frac = 1e-4){
   tr <- names(rel.subs)[ which(rel.subs == FALSE) ]
 
   ## If all taxa should be removed
-  if(length(tr) == ntaxa(physeq)){
+  if(length(tr) == phyloseq::ntaxa(physeq)){
     stop("Error: all taxa will be removed with the specified 'frac' cutoff.\n")
   }
 
@@ -42,7 +43,7 @@ phyloseq_filter_taxa_rel_abund <- function(physeq, frac = 1e-4){
 
   ## Keep taxa which satisfies the truncation threshold
   if(length(tr) > 0){
-    res <- prune_taxa(taxa = rel.subs, physeq)
+    res <- phyloseq::prune_taxa(taxa = rel.subs, physeq)
   }
 
   return(res)
@@ -67,13 +68,14 @@ phyloseq_filter_taxa_rel_abund <- function(physeq, frac = 1e-4){
 #' phyloseq_filter_taxa_tot_fraction(esophagus, frac = 0.01)
 #'
 phyloseq_filter_taxa_tot_fraction <- function(physeq, frac = 0.01){
-  require(phyloseq)
+
+  # require(phyloseq)
 
   ## Estimate total abundance of OTUs
-  tot <- sum(taxa_sums(physeq))
+  tot <- sum(phyloseq::taxa_sums(physeq))
 
   ## Remove OTUs
-  res <- filter_taxa(physeq, function(x){ ( sum(x)/tot ) > frac }, prune = TRUE)
+  res <- phyloseq::filter_taxa(physeq, function(x){ ( sum(x)/tot ) > frac }, prune = TRUE)
   return(res)
 }
 
@@ -148,7 +150,7 @@ phyloseq_filter_prevalence <- function(physeq, prev.trh = 0.05, abund.trh = NULL
   keepTaxa <- rownames(prevdf)[tt]
 
   ## Execute prevalence filter
-  res <- prune_taxa(keepTaxa, physeq)
+  res <- phyloseq::prune_taxa(keepTaxa, physeq)
   return(res)
 }
 
@@ -176,11 +178,11 @@ phyloseq_filter_prevalence <- function(physeq, prev.trh = 0.05, abund.trh = NULL
 phyloseq_filter_sample_wise_abund_trim <- function(physeq, minabund = 10, rm_zero_OTUs = TRUE){
 
   ## Censore OTU abundance
-  res <- transform_sample_counts(physeq, function(OTU, ab = minabund){ ifelse(OTU <= ab,  0, OTU) })
+  res <- phyloseq::transform_sample_counts(physeq, function(OTU, ab = minabund){ ifelse(OTU <= ab,  0, OTU) })
 
   ## Remove zero-OTUs
   if(rm_zero_OTUs == TRUE){
-    res <- prune_taxa(taxa_sums(res) > 0, res)
+    res <- phyloseq::prune_taxa(taxa_sums(res) > 0, res)
   }
   return(res)
 }
