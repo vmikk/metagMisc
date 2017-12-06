@@ -1,8 +1,40 @@
 
-
-## Average relative OTU abundances
+#' @title Average relative OTU abundances.
+#' @description This function implements OTU abundance averaging following CoDa (Compositional Data Analysis) workflow.
+#' @param physeq A phyloseq-class object
+#' @param zero_impute Character ("CZM", "GBM","SQ","BL") or logical; indicating weather to perform replacement of 0 abundance values with an estimate of the probability that the zero is not 0
+#' @param group Variable name in \code{\link[phyloseq]{sample_data}}) which defines sample groups for averaging (default is NULL)
+#' @param drop_group_zero Logical; indicating weather OTUs with zero abundance withing a group of samples should be removed
+#' @param progress Name of the progress bar to use ("none" or "text"; see \code{\link[plyr]{create_progress_bar}})
+#' @param ... Additional arguments may be passed to \code{\link[zCompositions]{cmultRepl}}
+#' @details
+#' Typical OTU abundance tables in metagenomic analysis usually has different
+#' sampling effort for different samples (which is an artifact of the sequencing procedure).
+#' The total number of reads is meaningless and distance between OTU compositions is
+#' on the relative scale (e.g., OTUs with 1 and 2 reads in one sample are so far as OTUs
+#' with 10 and 20 reads in the other samples). Therefore such OTU tables represents
+#' closed compositions and requires a special treatment within Aitchison geometry framework.
+#'
+#' Zero OTU abundance could be due to the insufficient number of reads. However,
+#' it is possible to replace the zero counts with an expected value.
+#' Bayesian-multiplicative (BM) replacement of count zeros is implemented in
+#' \code{\link[zCompositions]{cmultRepl}} function of zCompositions package.
+#' Sevral methods are supported: geometric Bayesian multiplicative (zero_impute = "GBM"),
+#' count zero multiplicative (zero_impute = "CZM", default), Bayes-Laplace BM (zero_impute = "BL"),
+#' or square root BM (zero_impute = "SQ").
+#' In case of structural zeroes in OTU abundance table (e.g., absence of OTU
+#' within a group assumes that it is not observed due to some biological pattern
+#' and is not caused by a detection limit) "drop_group_zero" argument may be set
+#' to "TRUE" to avoid zero replacement.
+#'
+#' @return phyloseq object with OTU relative abundance averaged over samples (all together or within a group).
+#' @export
+#' @seealso \code{\link[zCompositions]{cmultRepl}}, \code{\link[compositions]{acomp}}
+#'
+#' @examples
+#'
 phyloseq_average <- function(physeq, zero_impute = "CZM", group = NULL, drop_group_zero = FALSE, progress = "text", ...){
-  
+
   require(compositions)   # for Aitchison CoDa approach
   require(zCompositions)  # for Bayesian-multiplicative replacement
   require(plyr)
@@ -43,7 +75,7 @@ phyloseq_average <- function(physeq, zero_impute = "CZM", group = NULL, drop_gro
     ## Replace 0 values with an estimate of the probability that the zero is not 0
     if(zeroimp == TRUE){
       otus <- try(
-        cmultRepl(otus, label=0, method=meth, output="prop", suppress.print = TRUE)  # output="counts"  [zCompositions]
+        cmultRepl(otus, label=0, method=meth, output="prop", suppress.print = TRUE, ...)  # output="counts"  [zCompositions]
         )
       # Methods:
       #   CZM = multiplicative simple replacement
@@ -82,7 +114,7 @@ phyloseq_average <- function(physeq, zero_impute = "CZM", group = NULL, drop_gro
     if(is.null(zero_impute)){
       res <- single_group_avg(physeq, zeroimp = FALSE)
     }
-    
+
     ## With zero imputation
     if(!is.null(zero_impute)){
       res <- single_group_avg(physeq, zeroimp = TRUE, meth = zero_impute)
