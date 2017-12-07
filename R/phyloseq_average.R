@@ -30,7 +30,8 @@
 #' @return phyloseq object with OTU relative abundance averaged over samples (all together or within a group).
 #' @export
 #' @seealso \code{\link[zCompositions]{cmultRepl}}, \code{\link[compositions]{acomp}}
-#'
+#' @references
+#' Gloor GB, Macklaim JM, Pawlowsky-Glahn V and Egozcue JJ (2017) Microbiome Datasets Are Compositional: And This Is Not Optional. Front. Microbiol. 8:2224. doi: 10.3389/fmicb.2017.02224
 #' @examples
 #'
 phyloseq_average <- function(physeq, zero_impute = "CZM", group = NULL, drop_group_zero = FALSE, progress = "text", ...){
