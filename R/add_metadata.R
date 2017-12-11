@@ -35,10 +35,10 @@ add_metadata <- function(x, metad, xid = NULL, mid = NULL, drop_mid = T){
 
   ## Extract metadata from phyloseq object
   if(class(metad) %in% "phyloseq"){
-    if(is.null(sample_data(metad, errorIfNULL = F))){
+    if(is.null(phyloseq::sample_data(metad, errorIfNULL = F))){
       stop("Error: sample_data is missing from the phyloseq object 'metad'.\n")
     } else {
-      metad <- as(object = sample_data(metad), Class = "data.frame")
+      metad <- as(object = phyloseq::sample_data(metad), Class = "data.frame")
     }
   }
 
