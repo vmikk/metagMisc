@@ -39,15 +39,15 @@
 phyloseq_otu_occurrence <- function(physeq, variable = NULL,
   taxa_frequency = TRUE, drop_zeroes = FALSE, justdf = FALSE, long = FALSE){
 
-  require(plyr)
-  require(reshape2)
+  # require(plyr)
+  # require(reshape2)
 
   ## Function to collapse samples into occurrences for a single sample group
   single_group_occurrence <- function(phys, rel = FALSE){
 
     ## Transform OTU abundances into presence-absence form
-    sp_count <- apply(X = otu_table(phys),
-        MARGIN = ifelse(taxa_are_rows(phys), yes = 1, no = 2),
+    sp_count <- apply(X = phyloseq::otu_table(phys),
+        MARGIN = ifelse(phyloseq::taxa_are_rows(phys), yes = 1, no = 2),
         FUN = function(x){sum(x > 0)})
 
     ## Absolute occurrence (e.g., number of samples with the species)
@@ -75,10 +75,10 @@ phyloseq_otu_occurrence <- function(physeq, variable = NULL,
     pg <- phyloseq_sep_variable(physeq, variable, drop_zeroes = FALSE)
 
     ## Count species occurrence within each group
-    resl <- ldply(.data = pg, .fun = single_group_occurrence, rel = taxa_frequency, .id = "SampleGroup")
+    resl <- plyr::ldply(.data = pg, .fun = single_group_occurrence, rel = taxa_frequency, .id = "SampleGroup")
 
     ## Reshape species occurrences into a wide format (samples as columns)
-    res <- dcast(data = resl, Taxa ~ SampleGroup, value.var = "Occurrence")
+    res <- reshape2::dcast(data = resl, Taxa ~ SampleGroup, value.var = "Occurrence")
 
   }
 
@@ -110,7 +110,7 @@ phyloseq_otu_occurrence <- function(physeq, variable = NULL,
   if(justdf == FALSE){
 
     ## Remove sample metadata
-    if(!is.null(sample_data(physeq, errorIfNULL = T))){
+    if(!is.null(phyloseq::sample_data(physeq, errorIfNULL = T))){
       physeq@sam_data <- NULL
     }
 
@@ -119,7 +119,7 @@ phyloseq_otu_occurrence <- function(physeq, variable = NULL,
     res$Taxa <- NULL
 
     ## Replace OTU table with the new one
-    otu_table(physeq) <- otu_table(res, taxa_are_rows = T)
+    phyloseq::otu_table(physeq) <- phyloseq::otu_table(res, taxa_are_rows = T)
 
     return(physeq)
   }
