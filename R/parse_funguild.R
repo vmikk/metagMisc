@@ -14,16 +14,16 @@
 #'
 parse_funguild <- function(url = 'http://www.stbates.org/funguild_db.php', tax_name = TRUE){
 
-  require(XML)
-  require(jsonlite)
+  # require(XML)
+  # require(jsonlite)
   # require(RCurl)
 
   ## Parse data
-  tmp <- htmlParse(url)                           # [XML]
-  tmp <- xpathSApply(tmp, "//body", xmlValue)
+  tmp <- XML::htmlParse(url)
+  tmp <- XML::xpathSApply(doc = tmp, path = "//body", fun = XML::xmlValue)
 
   ## Read url and convert to data.frame
-  db <- fromJSON(txt=tmp)
+  db <- jsonlite::fromJSON(txt=tmp)
 
   ## Remove IDs
   db$`_id` <- NULL
