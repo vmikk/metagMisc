@@ -36,12 +36,14 @@
 phyloseq_phylo_ses <- function(physeq, measures = c("PD", "MPD", "MNTD", "VPD"),
   null_model, package = "picante", abundance_weighted = FALSE, nsim = 1000, swapiter = 1000, verbose = TRUE, ...){
 
-  require(plyr)
-  require(picante)         # for null models
-  require(PhyloMeasures)   # for phylogenetic diversity
+  # require(plyr)
+  # require(picante)         # for null models
+  # require(PhyloMeasures)   # for phylogenetic diversity
 
   ## Data validation
-  if( is.null(phy_tree(physeq, errorIfNULL=F)) ){ stop("Phylogenetic tree is missing in physeq.\n") }
+  if( is.null(phyloseq::phy_tree(physeq, errorIfNULL=F)) ){
+    stop("Phylogenetic tree is missing in physeq.\n")
+  }
 
   ## Print when analysis started
   if(verbose == TRUE){
@@ -52,10 +54,10 @@ phyloseq_phylo_ses <- function(physeq, measures = c("PD", "MPD", "MNTD", "VPD"),
   }
 
   ## Check the orientation of the OTU table
-  trows <- taxa_are_rows(physeq)
+  trows <- phyloseq::taxa_are_rows(physeq)
 
   ## Extact OTU table
-  comm <- as(object = otu_table(physeq), Class = "matrix")
+  comm <- as(object = phyloseq::otu_table(physeq), Class = "matrix")
 
   ## Transpose OTU table (species should be columns for picante::randomizeMatrix)
   if(trows == TRUE){ comm <- t(comm) }
@@ -66,7 +68,7 @@ phyloseq_phylo_ses <- function(physeq, measures = c("PD", "MPD", "MNTD", "VPD"),
   }
 
   ## Extact phylogenetic tree
-  phy <- phy_tree(physeq)
+  phy <- phyloseq::phy_tree(physeq)
 
 
   ## Function to estimate diversity with PhyloMeasures or picante
@@ -128,32 +130,32 @@ phyloseq_phylo_ses <- function(physeq, measures = c("PD", "MPD", "MNTD", "VPD"),
     }
 
     if(model %in% c("richness", "sample.pool")){  # same models?
-      res_comm <- randomizeMatrix(comm, null.model="richness")
+      res_comm <- picante::randomizeMatrix(comm, null.model="richness")
       res_phy <- phy
     }
 
     if(model == "frequency"){
-      res_comm <- randomizeMatrix(comm, null.model="frequency")
+      res_comm <- picante::randomizeMatrix(comm, null.model="frequency")
       res_phy <- phy
     }
 
     if(model == "frequency"){
-      res_comm <- randomizeMatrix(comm, null.model="frequency")
+      res_comm <- picante::randomizeMatrix(comm, null.model="frequency")
       res_phy <- phy
     }
 
     if(model == "phylogeny.pool"){
-      res_comm <- randomizeMatrix(comm, null.model="richness")
+      res_comm <- picante::randomizeMatrix(comm, null.model="richness")
       res_phy <- picante::tipShuffle(phy)
     }
 
     if(model == "independentswap"){
-      res_comm <- randomizeMatrix(comm, null.model="independentswap", iterations = iter)
+      res_comm <- picante::randomizeMatrix(comm, null.model="independentswap", iterations = iter)
       res_phy <- phy
     }
 
     if(model == "trialswap"){
-      res_comm <- randomizeMatrix(comm, null.model="trialswap", iterations = iter)
+      res_comm <- picante::randomizeMatrix(comm, null.model="trialswap", iterations = iter)
       res_phy <- phy
     }
 
@@ -167,12 +169,12 @@ phyloseq_phylo_ses <- function(physeq, measures = c("PD", "MPD", "MNTD", "VPD"),
   ## Simulate multiple randomized communities
   ## TO DO ------- add parallel option here
   if(verbose == T){ cat("..Randomizing data with '", null_model, "' algorithm\n", sep = "") }
-  nmods <- rlply(.n = nsim, .expr = null_mod_fun(comm, phy, model = null_model), .progress = progr)
+  nmods <- plyr::rlply(.n = nsim, .expr = null_mod_fun(comm, phy, model = null_model), .progress = progr)
 
   ## Esimate diversity metrics for each of the randomized communities
   ## TO DO ------- add parallel option here
   if(verbose == T){ cat("..Estimating phylogenetic diversity for the randomized data\n") }
-  div.rnd <- ldply(
+  div.rnd <- plyr::ldply(
     .data = nmods,
     .fun = function(z, ...){ pdiv(comm = z$comm, phy = z$phy, ...) },
     pdiv_measures = measures,
@@ -182,9 +184,9 @@ phyloseq_phylo_ses <- function(physeq, measures = c("PD", "MPD", "MNTD", "VPD"),
 
   ## Summarize null-distribution for each community (mean, SD and rank)
   if(verbose == T){ cat("..Estimating effect size\n") }
-  rnd_mean <- ddply(.data=div.rnd, .variables="SampleID", .fun=numcolwise(mean, na.rm = T))
-  rnd_sd <- ddply(.data=div.rnd, .variables="SampleID", .fun=numcolwise(sd, na.rm = T))
-  rnd_rank <- ddply(.data = rbind(div.obs, div.rnd), .variables = "SampleID", numcolwise(.fun = function(z){ rank(z)[1] }))
+  rnd_mean <- plyr::ddply(.data=div.rnd, .variables="SampleID", .fun=plyr::numcolwise(mean, na.rm = T))
+  rnd_sd <- plyr::ddply(.data=div.rnd, .variables="SampleID", .fun=plyr::numcolwise(sd, na.rm = T))
+  rnd_rank <- plyr::ddply(.data = rbind(div.obs, div.rnd), .variables = "SampleID", plyr::numcolwise(.fun = function(z){ rank(z)[1] }))
 
   ## Rename columns
   colnames(rnd_mean)[-1] <- paste(colnames(rnd_mean)[-1], ".rand.mean", sep="")
