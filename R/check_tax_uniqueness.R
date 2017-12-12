@@ -23,7 +23,7 @@ check_tax_uniqueness <- function(x, col = "k", return_all = F, dropNA = T){
   # x = data frame
   #NB! Columns should be ordered, missing values are coded with NA
 
-  require(plyr)
+  # require(plyr)
 
   x <- as.data.frame(x)
 
@@ -37,7 +37,7 @@ check_tax_uniqueness <- function(x, col = "k", return_all = F, dropNA = T){
   }
 
   ## Remove lower ranks and count number of unique values
-  res <- ddply(.data = x[, 1:COLID], .variables = col, .fun = function(z){
+  res <- plyr::ddply(.data = x[, 1:COLID], .variables = col, .fun = function(z){
     rez <- z[!duplicated(z),]    # remove duplicates
     rezz <- data.frame(UniqueCombs = nrow(rez))
     return(rezz)
