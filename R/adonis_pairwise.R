@@ -29,7 +29,7 @@
 adonis_pairwise <- function(x, dd, group.var = "Fact", permut = 999,
 	p.adj=T, adj.meth="fdr", all_results = T, comparison_sep = ".", ...){
 
-  require(vegan)
+  # require(vegan)
 
   ## Test if the selected predictor is in the meta-data
   if(!group.var %in% colnames(x)){
@@ -66,7 +66,7 @@ adonis_pairwise <- function(x, dd, group.var = "Fact", permut = 999,
 	## Pairwise adonis
 	adon <- list()
 	for(i in 1:length(dd.subs)){
-		adon[[i]] <- adonis(dd.subs[[i]] ~ dd.groups[[i]], permutations=permut, ...)
+		adon[[i]] <- vegan::adonis(dd.subs[[i]] ~ dd.groups[[i]], permutations=permut, ...)
 	}
 
 	## Prepare names of the pairwise comparisons
