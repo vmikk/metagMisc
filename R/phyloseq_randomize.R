@@ -22,9 +22,9 @@
 phyloseq_randomize <- function(physeq, null_model = "phylogeny.pool", verbose = T, ...){
   # c("taxa.labels", "richness", "frequency", "sample.pool", "phylogeny.pool", "independentswap", "trialswap")
 
-  require(phyloseq)
-  require(picante)
-  require(vegan)
+  # require(phyloseq)
+  # require(picante)
+  # require(vegan)
 
   ## Picante models
   pm <- c("taxa.labels", "richness", "frequency", "sample.pool", "phylogeny.pool", "independentswap", "trialswap")
@@ -66,21 +66,21 @@ phyloseq_randomize <- function(physeq, null_model = "phylogeny.pool", verbose = 
 
   ### Extract phyloseq components
   ## OTU table
-  comm <- as.data.frame(otu_table(physeq))
-  if(!taxa_are_rows(physeq)){
+  comm <- as.data.frame(phyloseq::otu_table(physeq))
+  if(!phyloseq::taxa_are_rows(physeq)){
     comm <- t(comm)
   }
 
   ## Phylo tree
-  tree_null <- is.null(phy_tree(physeq, errorIfNULL=F))
+  tree_null <- is.null(phyloseq::phy_tree(physeq, errorIfNULL=F))
   if(!tree_null){
-    phy <- phy_tree(physeq)
+    phy <- phyloseq::phy_tree(physeq)
   }
 
 
   if(null_model == "taxa.labels"){
     if(tree_null){ # No phylogeny -> shuffle taxa names
-      rownames(comm) <- sample(taxa_names(physeq))
+      rownames(comm) <- sample(phyloseq::taxa_names(physeq))
     } else {       # Phylogeny present -> shuffle tip names
       phy <- picante::tipShuffle(phy)
     }
@@ -92,22 +92,22 @@ phyloseq_randomize <- function(physeq, null_model = "phylogeny.pool", verbose = 
     if(null_model == "sample.pool"){ null_model <- "richness" }  # this is the same models?
     # https://github.com/skembel/picante/blob/649edc7938b878429914c617e22c67198a8c189a/R/phylodiversity.R#L179
 
-      comm <- t( randomizeMatrix(t(comm), null.model = null_model, ...) )
+      comm <- t( picante::randomizeMatrix(t(comm), null.model = null_model, ...) )
   }
   if(null_model == "phylogeny.pool"){
     if(tree_null){ stop("Error: phylogeny tree is not available; therefore 'phylogeny.pool' model is not applicable.\n") }
-    comm <- t( randomizeMatrix(t(comm), null.model = "richness", ...) )
+    comm <- t( picante::randomizeMatrix(t(comm), null.model = "richness", ...) )
     phy <- picante::tipShuffle(phy)
   }
 
   ## Replace phyloseq slots with the randomized ones
-  if(!taxa_are_rows(physeq)){  # transpose OTU table back
+  if(!phyloseq::taxa_are_rows(physeq)){  # transpose OTU table back
     comm <- t(comm)
   }
-  otu_table(physeq) <- otu_table(comm, taxa_are_rows = TRUE)
+  phyloseq::otu_table(physeq) <- phyloseq::otu_table(comm, taxa_are_rows = TRUE)
 
   if(!tree_null){
-    phy_tree(physeq) <- phy
+    phyloseq::phy_tree(physeq) <- phy
   }
 
   return(physeq)
