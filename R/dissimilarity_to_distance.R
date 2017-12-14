@@ -38,14 +38,14 @@
 #'
 dissimilarity_to_distance <- function(datt, dist_type = "bray", dst = NULL, drop_species = F, importance_percentile = 0.02, show_plot = T, ndim = NULL, ...){
 
-  require(vegan)
-  require(smacof)
+  # require(vegan)
+  # require(smacof)
   # require(ggplot2)
 
   ## Estimate dissimilarity
   if(dist_type != "other"){
     if(!is.null(dst)){ warning("Dissimilarity will be computed with ", dist_type, " method; user-provided matrix (dst) will be ignored.\n") }
-    dst <- vegdist(x = datt, method = dist_type, ...)
+    dst <- vegan::vegdist(x = datt, method = dist_type, ...)
   }
   if(dist_type == "other"){
     if(is.null(dst)){ stop("Error: dissimilarity matrix (dst) should be provided.\n") }
@@ -61,7 +61,7 @@ dissimilarity_to_distance <- function(datt, dist_type = "bray", dst = NULL, drop
   ## Determine weights to fit the original dissimilarities into Euclidean distances
   # smacofConstraint automatically standardizes dissimilarities to have sum of squares n(n-1)/2
   # The diagonal weights (given in cstr$C) are fitted to these standardized dissimilarities
-  cstr <- smacofConstraint(
+  cstr <- smacof::smacofConstraint(
           delta = as.matrix(dst),
           constraint = "diagonal",
           external = datt,
@@ -106,13 +106,13 @@ dissimilarity_to_distance <- function(datt, dist_type = "bray", dst = NULL, drop
     datt <- datt[, -unimp_sp]
 
     ## Re-estimate dissimilarity
-    dst <- vegdist(x = datt, method = dist_type, ...)
+    dst <- vegan::vegdist(x = datt, method = dist_type, ...)
 
     ## Re-estimate the number of dimesions
     ndim <- min(nrow(datt), ncol(datt)) - 1
 
     ## Re-estimate transformation parameters
-    cstr <- smacofConstraint(
+    cstr <- smacof::smacofConstraint(
           delta = as.matrix(dst),
           constraint = "diagonal",
           external = datt,
@@ -143,7 +143,7 @@ dissimilarity_to_distance <- function(datt, dist_type = "bray", dst = NULL, drop
 
     plt <- data.frame(Dissim = as.numeric(dst), Euclid = as.numeric(WEdist))
 
-    dissim_plot <- ggplot(data = plt, aes(x = Dissim, y = Euclid)) +
+    dissim_plot <- ggplot2::ggplot(data = plt, aes(x = Dissim, y = Euclid)) +
       annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=Inf, color="grey", linetype = "longdash") +
       geom_point() +
       labs(x = "Original dissimilarity", y="Weighted Euclidean distance") +
