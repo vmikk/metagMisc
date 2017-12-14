@@ -25,15 +25,15 @@
 #'
 dada_to_fasta <- function(seqtab, out = "DADA2.fasta", hash = "sha1", ...){
 
-  require(dada2)
-  require(openssl)
+  # require(dada2)
+  # require(openssl)
 
   # prepare sequence names in USEARCH and VSEARCH-style
-  seq_uniq <- getUniques(seqtab)   # integer vector named by unique sequence and valued by abundance.
+  seq_uniq <- dada2::getUniques(seqtab)   # integer vector named by unique sequence and valued by abundance.
 
-  if(hash == "sha1"){ hh <- sha1(names(seq_uniq)) }
-  if(hash == "sha256"){ hh <- sha256(names(seq_uniq)) }
-  if(hash == "md5"){ hh <- md5(names(seq_uniq)) }
+  if(hash == "sha1"){ hh <- openssl::sha1(names(seq_uniq)) }
+  if(hash == "sha256"){ hh <- openssl::sha256(names(seq_uniq)) }
+  if(hash == "md5"){ hh <- openssl::md5(names(seq_uniq)) }
 
   seq_names <- paste(as.character(hh),
                   ";size=",
@@ -42,7 +42,7 @@ dada_to_fasta <- function(seqtab, out = "DADA2.fasta", hash = "sha1", ...){
                   sep="")
 
   # Export sequence as fasta
-  uniquesToFasta(seq_uniq, fout = out, ids = seq_names, ...)
+  dada2::uniquesToFasta(seq_uniq, fout = out, ids = seq_names, ...)
 
   invisible(seq_names)
 }
