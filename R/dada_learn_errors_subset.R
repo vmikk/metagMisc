@@ -20,7 +20,8 @@
 #' errsR <- learn_errors_subset(filtR, samps = attr(errsF, "selected_samples"))
 
 dada_learn_errors_subset <- function(filts, n = 25, samps = NULL, multitr = TRUE, verbose = TRUE){
-    require(dada2)
+    
+    # require(dada2)
     # require(plyr)
 
     if(is.null(samps)){
@@ -33,7 +34,7 @@ dada_learn_errors_subset <- function(filts, n = 25, samps = NULL, multitr = TRUE
     }
 
     # Dereplicate selected samples
-    drp.learn <- derepFastq(filts.learn)
+    drp.learn <- dada2::derepFastq(filts.learn)
 
     if(verbose == TRUE){
         # Count number of reads in the selected samples
@@ -42,7 +43,7 @@ dada_learn_errors_subset <- function(filts, n = 25, samps = NULL, multitr = TRUE
     }
 
     # Estimate error rates
-    dd.learn <- dada(drp.learn, err=NULL, selfConsist=TRUE, multithread=multitr)
+    dd.learn <- dada2::dada(drp.learn, err=NULL, selfConsist=TRUE, multithread=multitr)
     err <- dd.learn[[1]]$err_out
 
     # Record which samples were selected for learning
