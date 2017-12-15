@@ -32,8 +32,8 @@
 #'
 phyloseq_mult_raref <- function(x, SampSize = NULL, MinSizeTreshold = NULL, iter = 1000, replace = F, multithread = F, seeds = NULL, ...){
 
-  require(plyr)
-  require(phyloseq)
+  # require(plyr)
+  # require(phyloseq)
 
   ## Sanity check for the random number generator
   if(!is.null(seeds)){
@@ -43,10 +43,10 @@ phyloseq_mult_raref <- function(x, SampSize = NULL, MinSizeTreshold = NULL, iter
   }
 
   ## Filter samples by number of reads
-  if(!is.null(MinSizeTreshold)){ x <- prune_samples(sample_sums(x) >= MinSizeTreshold, x) }
+  if(!is.null(MinSizeTreshold)){ x <- phyloseq::prune_samples(phyloseq::sample_sums(x) >= MinSizeTreshold, x) }
 
   ## Define rarefication depth
-  if(is.null(SampSize)){ SampSize <- round( 0.9*min(sample_sums(x)) ) }
+  if(is.null(SampSize)){ SampSize <- round( 0.9*min(phyloseq::sample_sums(x)) ) }
 
   ## Prepare seed values
   if(is.null(seeds)){ seeds <- 1:iter }
@@ -108,7 +108,7 @@ phyloseq_mult_raref <- function(x, SampSize = NULL, MinSizeTreshold = NULL, iter
   ###############
 
   ## Rarefy
-  res <- mlply(
+  res <- plyr::mlply(
     .data = seeds,
     .fun = function(z, ...){ phyloseq::rarefy_even_depth(x, rngseed=z, sample.size=SampSize, replace=replace, verbose = F, ...) },
     .progress = progr,
