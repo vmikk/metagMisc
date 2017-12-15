@@ -98,7 +98,7 @@ phyloseq_mult_raref <- function(x, SampSize = NULL, MinSizeTreshold = NULL, iter
     parallel::clusterEvalQ(cl, library("phyloseq"))
 
     ## Send useful objects to the workers
-    vars <- c("SampSize", "replace")
+    vars <- c("SampSize", "replace", "x")
     parallel::clusterExport(cl=cl, varlist=vars, envir = environment())
   }
 
