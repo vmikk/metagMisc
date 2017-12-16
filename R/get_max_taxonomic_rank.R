@@ -21,7 +21,7 @@
 #'
 get_max_taxonomic_rank <- function(x, return_rank_only = FALSE){
 
-  require(plyr)
+  # require(plyr)
 
   ## Input data
   inp_class <- class(x)
@@ -29,17 +29,17 @@ get_max_taxonomic_rank <- function(x, return_rank_only = FALSE){
   ## If input is of class 'phyloseq'
   if("phyloseq" %in% inp_class || "taxonomyTable" %in% inp_class){
 
-    if(is.null(tax_table(x, errorIfNULL = F))){
+    if(is.null(phyloseq::tax_table(x, errorIfNULL = F))){
       stop("Error: taxonomy table slot is empty in the input data.\n")
     }
 
-    otu_names <- taxa_names(x)
-    x <- as.data.frame(tax_table(x), stringsAsFactors = F)
+    otu_names <- phyloseq::taxa_names(x)
+    x <- as.data.frame(phyloseq::tax_table(x), stringsAsFactors = F)
   }
 
   ## If there are factors in the input data frame this can cause an "Error: cannot allocate vector of size ... Gb"
   ## Convert all factors to character
-  if("factor" %in% laply(.data = x, .fun = class)){
+  if("factor" %in% plyr::laply(.data = x, .fun = class)){
     x[] <- lapply(x, as.character)
   }
 
@@ -51,10 +51,10 @@ get_max_taxonomic_rank <- function(x, return_rank_only = FALSE){
   }
 
   ## Find the indices of the last non-NA column for each row
-  res <- adply(.data = x, .margins = 1, .fun = function(z){
+  res <- plyr::adply(.data = x, .margins = 1, .fun = function(z){
 
     ## Test which tax ranks are not NAs
-    rnk <- aaply(.data = z, .margins = 1, .fun = function(y) which(!is.na(y)) )
+    rnk <- plyr::aaply(.data = z, .margins = 1, .fun = function(y) which(!is.na(y)) )
 
     ## Return last non-NA column number
     if(length(rnk) > 0){
