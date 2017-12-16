@@ -93,8 +93,8 @@ make_utax_taxonomy <- function(x){
 #' head(make_utax_taxonomy_batch(datt))  # Taxonomy strings for USEARCH classifiers
 #'
 make_utax_taxonomy_batch <- function(x, as_vector = T, ...){
-  require(plyr)
-  res <- adply(.data = x, .margins = 1, .fun = make_utax_taxonomy, .expand = F, .id = NULL, ...)
+  # require(plyr)
+  res <- plyr::adply(.data = x, .margins = 1, .fun = make_utax_taxonomy, .expand = F, .id = NULL, ...)
   colnames(res) <- "Tax"
   if(as_vector == TRUE){ res <- res[,1]  }
   return(res)
