@@ -55,9 +55,9 @@
 #'
 metagenome_contributions <- function(otu_tab, func_tab, tax_tab = NULL, features = NULL, NSTI_present = TRUE, rel_abund = TRUE, remove_zero_contributions = TRUE){
 
-  require(vegan)
-  require(reshape2)
-  require(plyr)
+  # require(vegan)
+  # require(reshape2)
+  # require(plyr)
 
   # Subset OTUs for the features present in the functional table
   otu_vs_func <- otu_tab[, 1] %in% func_tab[, 1]
@@ -94,17 +94,17 @@ metagenome_contributions <- function(otu_tab, func_tab, tax_tab = NULL, features
   }
 
   # Standardize OTU counts to relative abundance
-  if(rel_abund == TRUE){ otus <- decostand(otus, method = "total", MARGIN = 2) }
+  if(rel_abund == TRUE){ otus <- vegan::decostand(otus, method = "total", MARGIN = 2) }
 
   # Reshape data functional table
   if(ncol(funcs) == 1){   # only one feature
     funcs_long <- data.frame(OTU = rownames(funcs), Gene = colnames(funcs), GeneCountPerGenome = funcs[,1], stringsAsFactors = F)
   } else {
-    funcs_long <- melt(data = funcs, varnames = c("OTU", "Gene"), value.name = "GeneCountPerGenome")
+    funcs_long <- reshape2::melt(data = funcs, varnames = c("OTU", "Gene"), value.name = "GeneCountPerGenome")
   }
 
   # Reshape OTU table
-  otus_long <- melt(data = otus, varnames = c("OTU", "Sample"), value.name = "OTUAbundanceInSample")
+  otus_long <- reshape2::melt(data = otus, varnames = c("OTU", "Sample"), value.name = "OTUAbundanceInSample")
 
   # Combine data to a PICRUSt-like table
   res <- plyr::join(x = funcs_long, y = otus_long, by = "OTU", type = "full")
@@ -133,12 +133,12 @@ metagenome_contributions <- function(otu_tab, func_tab, tax_tab = NULL, features
   rel_contrib <- function(x){ x$CountContributedByOTU / sum(x$CountContributedByOTU) }
 
   # Percentage of OTU contribution to the gene count within a sample
-  res <- ddply(.data=res, .variables=c("Gene", "Sample"), .fun=function(z){
+  res <- plyr::ddply(.data=res, .variables=c("Gene", "Sample"), .fun=function(z){
     data.frame(z, ContributionPercentOfSample = rel_contrib(z), stringsAsFactors = F)
     })
 
   # Percentage of OTU contribution over all samples
-  res <- ddply(.data=res, .variables="Gene", .fun=function(z){
+  res <- plyr::ddply(.data=res, .variables="Gene", .fun=function(z){
     data.frame(z, ContributionPercentOfAllSamples = rel_contrib(z), stringsAsFactors = F)
     })
 
