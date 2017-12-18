@@ -122,7 +122,7 @@ phyloseq_filter_prevalence <- function(physeq, prev.trh = 0.05, abund.trh = NULL
 
   ## Define prevalence threshold as % of total samples
   ## This function is located in 'phyloseq_prevalence_plot.R' file
-  prevalenceThreshold <- prev.trh * nsamples(physeq)
+  prevalenceThreshold <- prev.trh * phyloseq::nsamples(physeq)
 
   ## Calculate prevalence (number of samples with OTU) and OTU total abundance
   prevdf <- prevalence(physeq)
