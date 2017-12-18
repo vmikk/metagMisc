@@ -25,7 +25,7 @@ mult_dist_average <- function(dlist){
 
   ## Input = list of dist
   if(class(dlist[[1]]) %in% "dist"){
-    res <- Reduce("+", llply(.data = dlist, .fun = as.matrix)) / length(dlist)
+    res <- Reduce("+", plyr::llply(.data = dlist, .fun = as.matrix)) / length(dlist)
     res <- as.dist(res)
   }
 
@@ -61,10 +61,10 @@ mult_dist_average <- function(dlist){
 #'
 mult_dissim <- function(x, method = "bray", average = T){
 
-  require(phyloseq)
-  require(plyr)
+  # require(phyloseq)
+  # require(plyr)
 
-  physeq_dissim <- llply(
+  physeq_dissim <- plyr::llply(
     .data = x,
     .fun = function(z, ...){ phyloseq::distance(physeq = z, type = "samples", ...) },
     method = method,
