@@ -69,16 +69,16 @@ parse_silva_tax <- function(x, db){
 #'
 parse_silva_tax_batch <- function(x, db){
 
-  require(plyr)
+  # require(plyr)
 
   # Prepare list of taxonomic assignments
-  res <- alply(.data = x, .margins = 1, .fun = parse_silva_tax, db = db)
+  res <- plyr::alply(.data = x, .margins = 1, .fun = parse_silva_tax, db = db)
 
   # Convert each vector to matrix
-  res <- llply(.data = res, .fun = function(x){ t(as.matrix(x)) })
+  res <- plyr::llply(.data = res, .fun = function(x){ t(as.matrix(x)) })
 
   # Prepare table
-  res <- data.frame( do.call(rbind.fill.matrix, res) )
+  res <- data.frame( do.call(plyr::rbind.fill.matrix, res) )
 
   # Sort columns
   tax.levels <- c(
