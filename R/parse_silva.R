@@ -31,7 +31,7 @@ parse_silva_tax <- function(x, db){
   }
 
   # Find path in db and assign taxonomic level
-  tl <- aaply(.data = pp, .margins = 1, .fun = function(z){ db$rank[ match(table = db$path, x = z) ] })
+  tl <- plyr::aaply(.data = pp, .margins = 1, .fun = function(z){ db$rank[ match(table = db$path, x = z) ] })
   names(xs) <- tl
 
   # Assign the last column with 'species' if it is NA
