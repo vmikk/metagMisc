@@ -27,7 +27,7 @@ parse_fastq_eestats2 <- function(file, long = FALSE){
     # read.delim("R1.eestats2.txt", stringsAsFactors = FALSE, skip = 2)
     # data.table::fread(input = "R1.eestats2.txt")
 
-    require(plyr)
+    # require(plyr)
 
     # load file
     inp <- readLines(file)
@@ -46,20 +46,21 @@ parse_fastq_eestats2 <- function(file, long = FALSE){
     res <- gsub(pattern = "\\(", replacement = " ", x = inp[2:length(inp)])
     res <- gsub(pattern = "%)", replacement = " ", x = res[2:length(res)])
     res <- gsub("^\\s+|\\s+$", "", res)   # trim leading and ending whitespaces
-    res <- adply(.data = res, .margins = 1, .fun = function(z){ strsplit(z, split = " +")[[1]] }, .id = NULL)
+    res <- plyr::adply(.data = res, .margins = 1, .fun = function(z){ strsplit(z, split = " +")[[1]] }, .id = NULL)
 
     colnames(res) <- header
     res <- colwise(as.numeric)(res)
 
     # reshape data
     if(long == TRUE){
-      require(reshape2)
+
+      # require(reshape2)
       
       # Columns with percentage of reads
       perc.col <- grep(pattern = "%", x = colnames(res))
       
       # reshape only read counts
-      mm <- melt(data = res[,-perc.col],
+      mm <- reshape2::melt(data = res[,-perc.col],
                  id.vars = header[1],
                  variable.name = "MaxEE", value.name = "NumberOfReads")
 
