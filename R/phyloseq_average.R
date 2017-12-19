@@ -36,9 +36,9 @@
 #'
 phyloseq_average <- function(physeq, zero_impute = "CZM", group = NULL, drop_group_zero = FALSE, progress = "text", ...){
 
-  require(compositions)   # for Aitchison CoDa approach
-  require(zCompositions)  # for Bayesian-multiplicative replacement
-  require(plyr)
+  # require(compositions)   # for Aitchison CoDa approach
+  # require(zCompositions)  # for Bayesian-multiplicative replacement
+  # require(plyr)
 
   ## If zero imputation method is specified as logical, sustitute it with CZM or NULL
   if(zero_impute == TRUE){
@@ -55,12 +55,12 @@ phyloseq_average <- function(physeq, zero_impute = "CZM", group = NULL, drop_gro
     # meth = method of zero imputation ("CZM" or "GBM")
 
     ## Remove sample metadata
-    if(!is.null(sample_data(x, errorIfNULL = FALSE))){
+    if(!is.null(phyloseq::sample_data(x, errorIfNULL = FALSE))){
       x@sam_data <- NULL
     }
 
     ## Extract OTU abundance table
-    otus <- as.data.frame(otu_table(x))
+    otus <- as.data.frame(phyloseq::otu_table(x))
 
     # How many zeros are in the table? If more than 15% - rise a warning
     nz <- sum(otus == 0)
@@ -69,14 +69,14 @@ phyloseq_average <- function(physeq, zero_impute = "CZM", group = NULL, drop_gro
     }
 
     ## Transpose OTU abundance table (samples must be ROWS from this step!)
-    if(taxa_are_rows(x) == TRUE){
+    if(phyloseq::taxa_are_rows(x) == TRUE){
       otus <- t(otus)
     }
 
     ## Replace 0 values with an estimate of the probability that the zero is not 0
     if(zeroimp == TRUE){
       otus <- try(
-        cmultRepl(otus, label=0, method=meth, output="prop", suppress.print = TRUE, ...)  # output="counts"  [zCompositions]
+        zCompositions::cmultRepl(otus, label=0, method=meth, output="prop", suppress.print = TRUE, ...)  # output="counts"  [zCompositions]
         )
       # Methods:
       #   CZM = multiplicative simple replacement
@@ -88,11 +88,11 @@ phyloseq_average <- function(physeq, zero_impute = "CZM", group = NULL, drop_gro
     }
 
     ## Transform the data using the the centred log-ratio (Aitchison compositions)
-    otucomp <- acomp(otus)       # [compositions]
+    otucomp <- compositions::acomp(otus)            # [compositions]
 
     ## Average proportions
     # TO DO: add possibilty to specify a robust estimator ('robust = TRUE')
-    otuavg <- mean(otucomp)        # [compositions]
+    otuavg <- compositions::mean.acomp(otucomp)     # [compositions]
     otuavg <- as.matrix(otuavg)    # it will be transposed here
     colnames(otuavg) <- "Average"  # rename average proporion column
 
@@ -102,7 +102,7 @@ phyloseq_average <- function(physeq, zero_impute = "CZM", group = NULL, drop_gro
     # }
 
     ## Replace original counts with the average relative abundance
-    otu_table(x) <- otu_table(otuavg, taxa_are_rows = TRUE)
+    otu_table(x) <- phyloseq::otu_table(otuavg, taxa_are_rows = TRUE)
 
     return(x)
   } ## End of single_group_avg
@@ -126,9 +126,9 @@ phyloseq_average <- function(physeq, zero_impute = "CZM", group = NULL, drop_gro
   if(!is.null(group)){
 
     ## Backup phylogenetic tree and remove it from the main object
-    with_phy_tree <- phy_tree(physeq, errorIfNULL = F)
+    with_phy_tree <- phyloseq::phy_tree(physeq, errorIfNULL = F)
     if(!is.null(with_phy_tree)){
-      tree <- phy_tree(physeq)
+      tree <- phyloseq::phy_tree(physeq)
       physeq@phy_tree <- NULL
     }
 
@@ -137,28 +137,28 @@ phyloseq_average <- function(physeq, zero_impute = "CZM", group = NULL, drop_gro
 
     ## Average OTU proportions within each group
     if(is.null(zero_impute)){
-      res <- llply(.data = ph_gr, .fun = single_group_avg, zeroimp = FALSE, .progress = progress)
+      res <- plyr::llply(.data = ph_gr, .fun = single_group_avg, zeroimp = FALSE, .progress = progress)
     } else {
-      res <- llply(.data = ph_gr, .fun = single_group_avg, zeroimp = TRUE, meth = zero_impute, .progress = progress)
+      res <- plyr::llply(.data = ph_gr, .fun = single_group_avg, zeroimp = TRUE, meth = zero_impute, .progress = progress)
     }
 
     ## Give the group names to the averaged proportions
     for(i in 1:length(res)){
-      sample_names(res[[i]]) <- names(res)[i]
+      phyloseq::sample_names(res[[i]]) <- names(res)[i]
     }
 
     ## Combine results
     # do.call(merge_phyloseq, res)   # doesn't work
     res_mrg <- res[[1]]
     for(j in 2:length(res)){
-        res_mrg <- merge_phyloseq(res_mrg, res[[j]])
+        res_mrg <- phyloseq::merge_phyloseq(res_mrg, res[[j]])
     }
     res <- res_mrg
     rm(res_mrg)
 
     ## Restore phylogenetic tree
     if(!is.null(with_phy_tree)){
-      phy_tree(res) <- tree
+      phyloseq::phy_tree(res) <- tree
     }
   } ## End of multiple groups
 
