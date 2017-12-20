@@ -3,7 +3,6 @@
 #' @description FUNGuild = Fungi + fUNctional + Guild
 #' @param url Funguild databse link
 #' @param tax_name Logical, change numeral taxonomic coding with the corresponding taxonomic levels
-#'
 #' @return Data frame containing the entire FUNGuild database.
 #' @export
 #' @references
@@ -11,7 +10,8 @@
 #' https://github.com/UMNFuN/FUNGuild
 #' @examples
 #' fg <- parse_funguild()
-#'
+#' attr(fg, "DownloadDate")  # Check when the database was downloaded
+#' 
 parse_funguild <- function(url = 'http://www.stbates.org/funguild_db.php', tax_name = TRUE){
 
   # require(XML)
@@ -53,6 +53,9 @@ parse_funguild <- function(url = 'http://www.stbates.org/funguild_db.php', tax_n
   # which(
   # 	with(db, trophicMode == "NULL" & guild == "NULL" & growthForm == "NULL" & trait == "NULL" & notes == "NULL")
   # 	)
+
+  ## Add database dump date as attributes to the result
+  attr(db, "DownloadDate") <- date()
 
   return(db)
 }
