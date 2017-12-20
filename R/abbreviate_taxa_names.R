@@ -23,7 +23,7 @@
 abbreviate_taxa_names <- function(names, nlet = 3, totl = 7, sep="_", seconditem = F){
 
   ## make valid names
-  names <- make.names(names, unique = FALSE)
+  names <- base::make.names(names, unique = FALSE)
 
   ## remove trailing and duplicated dots
   names <- gsub("\\.[\\.]+", ".", names)
@@ -47,9 +47,9 @@ abbreviate_taxa_names <- function(names, nlet = 3, totl = 7, sep="_", seconditem
         x
       }}))
 
-  names <- abbreviate(names, minlength = totl)
+  names <- base::abbreviate(names, minlength = totl)
 
   ## Final clean-up
-  names <- vegan::make.names(names, unique = TRUE)
+  names <- base::make.names(names, unique = TRUE)
   return(names)
 }
