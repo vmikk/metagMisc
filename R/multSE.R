@@ -27,7 +27,7 @@
 #'
 multSE <- function(D, group, nsamp = NULL, nresamp = 10000, progress = "text") {
 
-  require(plyr)
+  # require(plyr)
 
   # Ensure distance matrix is in the form of a matrix (rather than a "distance" object)
   D <- as.matrix(D)
@@ -96,11 +96,11 @@ multSE <- function(D, group, nsamp = NULL, nresamp = 10000, progress = "text") {
   # Repeat resampling
   if(is.null(nsamp)){
     # For the smallest sample size across all groups
-    permvals <- rdply(.n = nresamp, .expr = resamp(nmax), .progress = progress)
+    permvals <- plyr::rdply(.n = nresamp, .expr = resamp(nmax), .progress = progress)
     N_for_table <- nmax
   } else {
     # For the specified sample size
-    permvals <- rdply(.n = nresamp, .expr = resamp(nsamp), .progress = progress)
+    permvals <- plyr::rdply(.n = nresamp, .expr = resamp(nsamp), .progress = progress)
     N_for_table <- nsamp
   }
 
