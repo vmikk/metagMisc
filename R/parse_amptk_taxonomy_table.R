@@ -12,11 +12,13 @@
 #' parse_taxonomy_amptk("k:Fungi,p:Ascomycota,g:Chalara")
 #'
 parse_taxonomy_amptk <- function(x){
-    require(phyloseq)
+    
+    # require(phyloseq)
+
     ## Convert ufits taxonomic ranks to QIIME-like style
     x <- gsub(pattern = ":", replacement = "__", x = x)
     x <- gsub(pattern = ",", replacement = ";", x = x)
-    res <- parse_taxonomy_qiime(x)
+    res <- phyloseq::parse_taxonomy_qiime(x)
     return(res)
 }
 
@@ -59,7 +61,8 @@ parse_taxonomy_amptk <- function(x){
 #' parse_taxonomy_amptk_batch(tax2, withID = FALSE)
 #'
 parse_taxonomy_amptk_batch <- function(x, withID = TRUE){
-    require(plyr)
+    
+    # require(plyr)
 
     if(withID == TRUE){
       ## Split OTUId to SequenceId (e.g., JQ976006) or MethodId (UTAX,SINTAX) + Taxonomy
@@ -67,14 +70,14 @@ parse_taxonomy_amptk_batch <- function(x, withID = TRUE){
       res <- do.call(rbind, res)
 
       # Prepare list of taxonomic assignments
-      res <- alply(.data = res[, 2], .margins = 1, .fun = parse_taxonomy_amptk)
+      res <- plyr::alply(.data = res[, 2], .margins = 1, .fun = parse_taxonomy_amptk)
     } else {
       # Prepare list of taxonomic assignments
-      res <- alply(.data = x, .margins = 1, .fun = parse_taxonomy_amptk)
+      res <- plyr::alply(.data = x, .margins = 1, .fun = parse_taxonomy_amptk)
     }
 
     # Convert each vector to matrix
-    res <- llply(.data = res, .fun = function(x){ t(as.matrix(x)) })
+    res <- plyr::llply(.data = res, .fun = function(x){ t(as.matrix(x)) })
 
     # Prepare table
     res <- data.frame( do.call(rbind.fill.matrix, res), stringsAsFactors = F)
