@@ -18,21 +18,21 @@ phyloseq_sep_tax <- function(physeq, TaxRank = "Phylum", drop_NA = FALSE){
   ## TO DO - change from for-loop to plyr
   ##       - verify that the taxonomic names are unique across higher ranks (e.g. no same class-names within different phylums)
 
-  require(phyloseq)
-  require(plyr)
+  # require(phyloseq)
+  # require(plyr)
 
   ## Test if the taxonomic table is present
-  if( is.null(tax_table(physeq)) ){
+  if( is.null(phyloseq::tax_table(physeq, errorIfNULL=F)) ){
     stop("Nothing subset. No taxonomyTable in physeq.\n")
   }
 
   ## Test if the specified TaxRank is valid
-  if( !TaxRank %in% rank_names(physeq) ){
+  if( !TaxRank %in% phyloseq::rank_names(physeq) ){
   	stop("Specified taxonomic rank is missing in the taxonomy table of physeq.\n")
   }
 
   ## Extract tax table
-  txtbl <- as.data.frame(tax_table(physeq), stringsAsFactors = F)
+  txtbl <- as.data.frame(phyloseq::tax_table(physeq), stringsAsFactors = F)
 
   ## Remove missing values if required
   if(drop_NA == TRUE){
@@ -65,7 +65,7 @@ phyloseq_sep_tax <- function(physeq, TaxRank = "Phylum", drop_NA = FALSE){
     tax_subs <- txtbl[which(txtbl[,TaxRank] == rnk[i]), ]
     tax_subs <- as(tax_subs, "matrix")
     ps <- physeq
-    tax_table(ps) <- tax_table(tax_subs)
+    phyloseq::tax_table(ps) <- phyloseq::tax_table(tax_subs)
     res[[i]] <- ps
     rm(ps, tax_subs)
   }
