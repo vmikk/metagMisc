@@ -7,6 +7,18 @@ Miscellaneous functions for metagenomic analysis.
 
 The repository is currently in **ALPHA** state. Nothing is guaranteed and the material is subject to change without a notice (e.g., function names or arguments).
 
+# Getting started
+
+Vignette is under construction.
+
+# Package features
+- Multiple rarefaction
+- OTU abundance averaging following CoDa (Compositional Data Analysis) workflow
+- Phylogenetic diversity estimation
+- Pairwise dissimilarity boxplots
+- Prevalence plots (total OTU abundance vs OTU prevalence)
+- Diversity profiles based on Hill numbers (with `entropart` package)
+
 # Installation
 ```
 devtools::install_github("vmikk/metagMisc")
