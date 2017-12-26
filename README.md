@@ -16,13 +16,13 @@ Vignette is under construction.
 - OTU abundance averaging following CoDa (Compositional Data Analysis) workflow
 - Phylogenetic diversity estimation
 - Pairwise dissimilarity boxplots
-![alt text](vignettes/Pairwise_dissimilarity_boxplot.png "Pairwise dissimilarity boxplots (enterotype data)")
+<img src="vignettes/Pairwise_dissimilarity_boxplot.png" width="500" title="Pairwise dissimilarity boxplots (enterotype data)" />
 - Prevalence plots (total OTU abundance vs OTU prevalence)
-![alt text](vignettes/Prevalence_plots.png "Prevalence plots (GlobalPatterns data)")
+<img src="vignettes/Prevalence_plots.png" width="500" title="Prevalence plots (GlobalPatterns data)" />
 - Diversity profiles based on Hill numbers (with `entropart` package)
-![alt text](vignettes/Diversity_profile.png "Diversity profiles (esophagus data)")
+<img src="vignettes/Diversity_profile.png" width="500" title="Diversity profiles (esophagus data)" />
 - Extraction of the most abundant OTUs
-![alt text](vignettes/Filter_top_taxa.png "Top taxa (GlobalPatterns data)")
+<img src="vignettes/Filter_top_taxa.png" width="500" title="Top taxa (GlobalPatterns data)" />
 
 
 # Installation
