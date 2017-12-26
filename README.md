@@ -16,8 +16,14 @@ Vignette is under construction.
 - OTU abundance averaging following CoDa (Compositional Data Analysis) workflow
 - Phylogenetic diversity estimation
 - Pairwise dissimilarity boxplots
+[[https://github.com/vmikk/metagMisc/blob/master/vignettes/Pairwise_dissimilarity_boxplot.png]]
 - Prevalence plots (total OTU abundance vs OTU prevalence)
+[[https://github.com/vmikk/metagMisc/blob/master/vignettes/Prevalence_plots.png]]
 - Diversity profiles based on Hill numbers (with `entropart` package)
+[[https://github.com/vmikk/metagMisc/blob/master/vignettes/Diversity_profile.png]]
+- Extraction of the most abundant OTUs
+[[https://github.com/vmikk/metagMisc/blob/master/vignettes/Filter_top_taxa.png]]
+
 
 # Installation
 ```
