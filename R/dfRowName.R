@@ -3,6 +3,7 @@
 #'
 #' @param x Data frame
 #' @param name Name of the new column to be created
+#' @param stringsAsFactors Logical; should character vectors be converted to factors? (default, FALSE)
 #'
 #' @return Data frame
 #' @export
