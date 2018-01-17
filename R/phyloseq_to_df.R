@@ -26,8 +26,17 @@ phyloseq_to_df <- function(physeq, addtax = T, addtot = F, abund_sort = T){
     }
   }
 
-  if(addtax==TRUE) { res <- data.frame(OTU = phyloseq::taxa_names(physeq), phyloseq::tax_table(physeq), phyloseq::otu_table(physeq), stringsAsFactors = F) }
-  if(addtax==FALSE){ res <- data.frame(OTU = phyloseq::taxa_names(physeq), phyloseq::otu_table(physeq), stringsAsFactors = F) }
+  ## Prepare data frame
+  res <- data.frame(OTU = phyloseq::taxa_names(physeq), phyloseq::otu_table(physeq), stringsAsFactors = F)
+
+  ## Add taxonomy
+  if(addtax == TRUE){
+    taxx <- as.data.frame(phyloseq::tax_table(physeq), stringsAsFactors = F)
+    res <- cbind(res, taxx[match(x = res$OTU, table = rownames(taxx)), ])
+
+    ## Reorder columns (OTU name - Taxonomy - Sample Abundance)
+    res <- res[, c("OTU", phyloseq::rank_names(physeq), phyloseq::sample_names(physeq))]
+  }
 
   if(abund_sort == TRUE){
     otus <- res[, which(colnames(res) %in% phyloseq::sample_names(physeq))]
