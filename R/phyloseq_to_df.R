@@ -19,6 +19,13 @@ phyloseq_to_df <- function(physeq, addtax = T, addtot = F, abund_sort = T){
 
   # require(phyloseq)
 
+  ## Data validation
+  if(addtax == TRUE){
+    if(is.null(phyloseq::tax_table(physeq, errorIfNULL = F))){
+      stop("Error: taxonomy table slot is empty in the input data.\n")
+    }
+  }
+
   if(addtax==TRUE) { res <- data.frame(OTU = phyloseq::taxa_names(physeq), phyloseq::tax_table(physeq), phyloseq::otu_table(physeq), stringsAsFactors = F) }
   if(addtax==FALSE){ res <- data.frame(OTU = phyloseq::taxa_names(physeq), phyloseq::otu_table(physeq), stringsAsFactors = F) }
 
