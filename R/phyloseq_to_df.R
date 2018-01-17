@@ -2,9 +2,9 @@
 #' @title Convert phyloseq object to data frame (for exporting).
 #'
 #' @param physeq A phyloseq-class object
-#' @param addtax Add taxonomy to the result table
-#' @param addtot Add total OTU abundance to the result table
-#' @param abund_sort Sort OTUs by total abundance
+#' @param addtax Logical; add taxonomy to the result table (default, TRUE)
+#' @param addtot Logical; add total OTU abundance to the resulting table (default, FALSE)
+#' @param sorting Reorder OTUs according to their total abundance ("abundance", default) or taxonomy (sorting = "taxonomy"); if reordering is not required use 'sorting = NULL'
 #'
 #' @return Data frame with OTU taxonomy and abundance
 #' @export
