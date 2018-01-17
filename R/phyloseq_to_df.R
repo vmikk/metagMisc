@@ -20,7 +20,7 @@ phyloseq_to_df <- function(physeq, addtax = T, addtot = F, sorting = "abundance"
   # require(phyloseq)
 
   ## Data validation
-  if(addtax == TRUE){
+  if(any(addtax == TRUE || sorting == "taxonomy")){
     if(is.null(phyloseq::tax_table(physeq, errorIfNULL = F))){
       stop("Error: taxonomy table slot is empty in the input data.\n")
     }
@@ -60,7 +60,7 @@ phyloseq_to_df <- function(physeq, addtax = T, addtot = F, sorting = "abundance"
 
   ## Add OTU total abundance
   if(addtot == TRUE){
-    res$Total <- rowSums(res[,which(colnames(res) %in% phyloseq::sample_names(physeq))])
+    res$Total <- rowSums(res[, which(colnames(res) %in% phyloseq::sample_names(physeq))])
   }
 
   rownames(res) <- NULL
