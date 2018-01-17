@@ -15,7 +15,7 @@
 #' GlobalPatternsDF <- phyloseq_to_df(GlobalPatterns)
 #' str(GlobalPatternsDF)
 #'
-phyloseq_to_df <- function(physeq, addtax = T, addtot = F, abund_sort = T){
+phyloseq_to_df <- function(physeq, addtax = T, addtot = F, sorting = "abundance"){
 
   # require(phyloseq)
 
@@ -38,11 +38,27 @@ phyloseq_to_df <- function(physeq, addtax = T, addtot = F, abund_sort = T){
     res <- res[, c("OTU", phyloseq::rank_names(physeq), phyloseq::sample_names(physeq))]
   }
 
-  if(abund_sort == TRUE){
-    otus <- res[, which(colnames(res) %in% phyloseq::sample_names(physeq))]
-    res <- res[order(rowSums(otus, na.rm = T), decreasing = T), ]
+  ## Reorder OTUs
+  if(!is.null(sorting)){
+
+    ## Sort by OTU abundance
+    if(sorting == "abundance"){
+      otus <- res[, which(colnames(res) %in% phyloseq::sample_names(physeq))]
+      res <- res[order(rowSums(otus, na.rm = T), decreasing = T), ]
+    }
+
+    ## Sort by OTU taxonomy
+    if(sorting == "taxonomy"){
+      taxtbl <- as.data.frame( phyloseq::tax_table(physeq), stringsAsFactors = F )
+
+      ## Reorder by all columns
+      taxtbl <- taxtbl[do.call(order, taxtbl), ]
+      # taxtbl <- data.table::setorderv(taxtbl, cols = colnames(taxtbl), na.last = T)
+      res <- res[match(x = rownames(taxtbl), table = res$OTU), ]
+    }
   }
 
+  ## Add OTU total abundance
   if(addtot == TRUE){
     res$Total <- rowSums(res[,which(colnames(res) %in% phyloseq::sample_names(physeq))])
   }
