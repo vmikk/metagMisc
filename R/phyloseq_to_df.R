@@ -17,18 +17,18 @@
 #'
 phyloseq_to_df <- function(physeq, addtax = T, addtot = F, abund_sort = T){
 
-  require(phyloseq)
+  # require(phyloseq)
 
-  if(addtax==TRUE) { res <- data.frame(OTU = taxa_names(physeq), tax_table(physeq), otu_table(physeq), stringsAsFactors = F) }
-  if(addtax==FALSE){ res <- data.frame(OTU = taxa_names(physeq), otu_table(physeq), stringsAsFactors = F) }
+  if(addtax==TRUE) { res <- data.frame(OTU = phyloseq::taxa_names(physeq), phyloseq::tax_table(physeq), phyloseq::otu_table(physeq), stringsAsFactors = F) }
+  if(addtax==FALSE){ res <- data.frame(OTU = phyloseq::taxa_names(physeq), phyloseq::otu_table(physeq), stringsAsFactors = F) }
 
   if(abund_sort == TRUE){
-    otus <- res[, which(colnames(res) %in% sample_names(physeq))]
+    otus <- res[, which(colnames(res) %in% phyloseq::sample_names(physeq))]
     res <- res[order(rowSums(otus, na.rm = T), decreasing = T), ]
   }
 
   if(addtot == TRUE){
-    res$Total <- rowSums(res[,which(colnames(res) %in% sample_names(physeq))])
+    res$Total <- rowSums(res[,which(colnames(res) %in% phyloseq::sample_names(physeq))])
   }
 
   rownames(res) <- NULL
