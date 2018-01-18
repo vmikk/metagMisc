@@ -17,16 +17,17 @@
 #' phyloseq_sep_variable(GlobalPatterns, variable = "SampleType", drop_zeroes = FALSE)
 #'
 phyloseq_sep_variable <- function(physeq, variable, drop_zeroes = T){
-    require(phyloseq)
-    require(plyr)
+    
+    # require(phyloseq)
+    # require(plyr)
 
     ## Check the input
-    if(is.null(sample_data(physeq, errorIfNULL = T))){
+    if(is.null(phyloseq::sample_data(physeq, errorIfNULL = F))){
         stop("Sample data is missing in the phyloseq-object.\n")
     }
 
     ## Extract samle meta-data
-    mtd <- as(object = sample_data(physeq), Class = "data.frame")
+    mtd <- as(object = phyloseq::sample_data(physeq), Class = "data.frame")
 
     if(!variable %in% colnames(mtd)){
         stop("Grouping variable is missing from the sample data of phyloseq-object.\n")
@@ -38,19 +39,19 @@ phyloseq_sep_variable <- function(physeq, variable, drop_zeroes = T){
 
     ## Add sample IDs to the meta-data
     smp <- data.frame(
-        SID = sample_names(physeq),
+        SID = phyloseq::sample_names(physeq),
         mtd,
         stringsAsFactors = F)
 
     ## Exatract sample names by the specified variable
-    svv <- dlply(.data = smp, .variables = variable, .fun = function(z){ z$SID })
+    svv <- plyr::dlply(.data = smp, .variables = variable, .fun = function(z){ z$SID })
 
     ## Extract samples by groupping variable
-    res <- llply(.data = svv, .fun = function(z){ prune_samples(z, x = physeq) })
+    res <- plyr::llply(.data = svv, .fun = function(z){ phyloseq::prune_samples(z, x = physeq) })
 
     ## Remove taxa with zero abundance
     if(drop_zeroes == TRUE){
-        res <- llply(.data = res, .fun = function(x){ prune_taxa(taxa_sums(x) > 0, x) })
+        res <- plyr::llply(.data = res, .fun = function(x){ phyloseq::prune_taxa(phyloseq::taxa_sums(x) > 0, x) })
     }
 
     return(res)
