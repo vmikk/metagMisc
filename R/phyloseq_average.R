@@ -32,6 +32,8 @@
 #' @seealso \code{\link[zCompositions]{cmultRepl}}, \code{\link[compositions]{acomp}}
 #' @references
 #' Gloor GB, Macklaim JM, Pawlowsky-Glahn V and Egozcue JJ (2017) Microbiome Datasets Are Compositional: And This Is Not Optional. Front. Microbiol. 8:2224. doi: 10.3389/fmicb.2017.02224
+#' Martin-Fernandez JA, Barcelo-Vidal C, Pawlowsky-Glahn V. (2003) Dealing With Zeros and Missing Values in Compositional Data Sets Using Nonparametric Imputation. Mathematical Geology 35:3. doi: 10.1023/A:1023866030544
+#'
 #' @examples
 #'
 phyloseq_average <- function(physeq, zero_impute = "CZM", group = NULL, drop_group_zero = FALSE, progress = "text", ...){
