@@ -92,8 +92,25 @@ phyloseq_mult_raref_avg <- function(physeq, SampSize = NULL, iter = 1000, parall
 
   ## Average relative OTU abundances within each sample across rarefaction iterations
   cat("..OTU abundance averaging within rarefaction iterations\n")
+  
+  ## OTU averaging function shortcut
+  OTU_avg <- function(z){   
+    
+    ## Function source code is in 'phyloseq_average.R'
+    otuavg <- OTU_average(z, avg_type = "arithmetic", result = "matrix", verbose = FALSE)
+              # zeroimp = FALSE, meth = "CZM"
+
+    ## Add column name with OTU IDs
+    otuavg <- dfRowName(x = otuavg, name = "OTU")
+    return(otuavg)  # rows = OTUs
+  }
+  
   ## Batch averaging by sample
-  smps_avg <- plyr::ldply(.data = smps, .fun = OTU_average, .id = "SampleID", .progress = "text")
+  smps_avg <- plyr::ldply(
+    .data = smps,
+    .fun = OTU_avg,
+    .id = "SampleID",
+    .progress = "text")
 
   ## Rename samples (for llply instead of ldply)
   # for(i in 1:length(smps_avg)){
@@ -122,38 +139,4 @@ phyloseq_mult_raref_avg <- function(physeq, SampSize = NULL, iter = 1000, parall
   attr(res, which = "RarefactionReplacement") <- RarefactionReplacement
 
   return(res)
-}
-
-
-## Function to average OTU table
-OTU_average <- function(xx){
-  # xx = phyloseq
-  
-  ## Remove OTUs with zero abundance
-  # xx <- phyloseq::prune_taxa(phyloseq::taxa_sums(xx) > 0, xx)   # zeroes are already removed
-
-  ## Convert to relative OTU abundance
-  xx <- phyloseq::transform_sample_counts(xx, function(OTU) OTU/sum(OTU) )
-
-  ## Extract OTU table
-  otus <- as.data.frame(phyloseq::otu_table(xx))
-
-  ## Transpose OTU abundance table (samples must be ROWS from this step!)
-  if(phyloseq::taxa_are_rows(xx) == TRUE){
-    otus <- t(otus)
-  }
-
-  ## Transform the data using the the centred log-ratio (Aitchison compositions)
-  otucomp <- suppressWarnings( compositions::acomp(otus) )
-
-  ## Average proportions
-  # TO DO: add possibilty to specify a robust estimator ('robust = TRUE')
-  otuavg <- suppressWarnings( compositions::mean.acomp(otucomp) )
-  otuavg <- as.matrix(otuavg)    # it will be transposed here
-  colnames(otuavg) <- "Average"  # rename average proporion column
-
-  ## Add column name with OTU IDs
-  otuavg <- dfRowName(x = otuavg, name = "OTU")
-
-  return(otuavg)  # rows = OTUs
 }
