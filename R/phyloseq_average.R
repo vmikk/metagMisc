@@ -64,96 +64,6 @@ phyloseq_average <- function(physeq, avg_type = "coda", zero_impute = "CZM",
     progress <- "none"
   }
 
-  ## Function to average OTU relative abundances
-  single_group_avg <- function(x, avg_type = "coda", zeroimp = FALSE, meth = "CZM", verbose = TRUE){
-    # x = phyloseq object
-    # avg_type = averaging type ("coda" for Aitchison CoDa approach; "arithmetic" for simple arithmetic mean)
-    # zeroimp = logical; if TRUE, zeros will be imputed
-    # meth = method of zero imputation ("CZM" or "GBM")
-
-    ## Remove sample metadata
-    if(!is.null(phyloseq::sample_data(x, errorIfNULL = FALSE))){
-      x@sam_data <- NULL
-    }
-
-    ## Extract OTU abundance table
-    otus <- as.data.frame(phyloseq::otu_table(x))
-
-    ## Show some warnings
-    if(verbose == TRUE){
-      # How many zeros are in the table? If more than 15% - rise a warning
-      nz <- sum(otus == 0)
-      if(nz > nrow(otus)*ncol(otus)*0.15){
-        warning("Warning: there are more than 15% of zeroes in OTU table. Consider some additional data filtering.\n")
-      }
-      
-      ## How many OTUs are with zero total abundance?
-      oz <- phyloseq::taxa_sums(x) == 0
-      if(any(oz)){
-        warning("Warning: there are ", sum(oz), " OTUs with zero total abundance.\n")
-      }
-    }
-
-    ## Transpose OTU abundance table (samples must be ROWS from this step!)
-    if(phyloseq::taxa_are_rows(x) == TRUE){
-      otus <- t(otus)
-    }
-
-    ## CoDa workfolow
-    if(avg_type == "coda"){
-
-        ## Replace 0 values with an estimate of the probability that the zero is not 0
-        if(zeroimp == TRUE){
-          otus <- try(
-            zCompositions::cmultRepl(otus, label=0, method=meth, output="prop", suppress.print = TRUE, ...)  # output="counts"  [zCompositions]
-            )
-          # Methods:
-          #   CZM = multiplicative simple replacement
-          #   GBM = Geometric Bayesian multiplicative
-    
-          if(class(otus) %in% "try-error"){
-            stop("Error in multiplicative zero replacement, try to use other methods (e.g., 'zero_impute = CZM').\n")
-          }
-        }
-    
-        ## Transform the data using the the centred log-ratio (Aitchison compositions)
-        otucomp <- compositions::acomp(otus)            # [compositions]
-    
-        ## Average proportions
-        # TO DO: add possibilty to specify a robust estimator ('robust = TRUE')
-        otuavg <- compositions::mean.acomp(otucomp)     # [compositions]
-        otuavg <- as.matrix(otuavg)    # it will be transposed here
-        colnames(otuavg) <- "Average"  # rename average proporion column
-    }
-
-    ## Simple arithmetic averaging (in case if there are a lot of zeros and CoDa gives strange results)
-    if(avg_type == "arithmetic"){
-
-        ## Convert counts to proportions
-        if(any(rowSums(otus) > 1)){  ## check that values are not proportions
-           k <- .Machine$double.eps
-           tmp <- pmax(k, apply(otus, MARGIN = 1, sum, na.rm = TRUE))
-           otus <- sweep(otus, MARGIN = 1, tmp, "/")
-        }
-
-        ## Arithmetic averaging of proportions
-        otuavg <- colMeans(otus, na.rm = TRUE)
-        otuavg <- as.matrix(otuavg)
-        colnames(otuavg) <- "Average"  # rename average proporion column
-    }
-
-    ## Back-transpose OTU abundances if neccesary
-    # if(taxa_are_rows(x) == FALSE){
-    #   otuavg <- t(otuavg)
-    # }
-
-    ## Replace original counts with the average relative abundance
-    otu_table(x) <- phyloseq::otu_table(otuavg, taxa_are_rows = TRUE)
-
-    return(x)
-  } ## End of single_group_avg
-
-
   ## Average througth the all samples
   if(is.null(group)){
 
@@ -210,3 +120,94 @@ phyloseq_average <- function(physeq, avg_type = "coda", zero_impute = "CZM",
 
   return(res)
 }
+
+
+## Function to average OTU relative abundances
+single_group_avg <- function(x, avg_type = "coda", zeroimp = FALSE, meth = "CZM", verbose = TRUE){
+  # x = phyloseq object
+  # avg_type = averaging type ("coda" for Aitchison CoDa approach; "arithmetic" for simple arithmetic mean)
+  # zeroimp = logical; if TRUE, zeros will be imputed
+  # meth = method of zero imputation ("CZM" or "GBM")
+
+  ## Remove sample metadata
+  if(!is.null(phyloseq::sample_data(x, errorIfNULL = FALSE))){
+    x@sam_data <- NULL
+  }
+
+  ## Extract OTU abundance table
+  otus <- as.data.frame(phyloseq::otu_table(x))
+
+  ## Show some warnings
+  if(verbose == TRUE){
+    # How many zeros are in the table? If more than 15% - rise a warning
+    nz <- sum(otus == 0)
+    if(nz > nrow(otus)*ncol(otus)*0.15){
+      warning("Warning: there are more than 15% of zeroes in OTU table. Consider some additional data filtering.\n")
+    }
+    
+    ## How many OTUs are with zero total abundance?
+    oz <- phyloseq::taxa_sums(x) == 0
+    if(any(oz)){
+      warning("Warning: there are ", sum(oz), " OTUs with zero total abundance.\n")
+    }
+  }
+
+  ## Transpose OTU abundance table (samples must be ROWS from this step!)
+  if(phyloseq::taxa_are_rows(x) == TRUE){
+    otus <- t(otus)
+  }
+
+  ## CoDa workfolow
+  if(avg_type == "coda"){
+
+      ## Replace 0 values with an estimate of the probability that the zero is not 0
+      if(zeroimp == TRUE){
+        otus <- try(
+          zCompositions::cmultRepl(otus, label=0, method=meth, output="prop", suppress.print = TRUE, ...)  # output="counts"  [zCompositions]
+          )
+        # Methods:
+        #   CZM = multiplicative simple replacement
+        #   GBM = Geometric Bayesian multiplicative
+  
+        if(class(otus) %in% "try-error"){
+          stop("Error in multiplicative zero replacement, try to use other methods (e.g., 'zero_impute = CZM').\n")
+        }
+      }
+  
+      ## Transform the data using the the centred log-ratio (Aitchison compositions)
+      otucomp <- compositions::acomp(otus)            # [compositions]
+  
+      ## Average proportions
+      # TO DO: add possibilty to specify a robust estimator ('robust = TRUE')
+      otuavg <- compositions::mean.acomp(otucomp)     # [compositions]
+      otuavg <- as.matrix(otuavg)    # it will be transposed here
+      colnames(otuavg) <- "Average"  # rename average proporion column
+  }
+
+  ## Simple arithmetic averaging (in case if there are a lot of zeros and CoDa gives strange results)
+  if(avg_type == "arithmetic"){
+
+      ## Convert counts to proportions
+      if(any(rowSums(otus) > 1)){  ## check that values are not proportions
+         k <- .Machine$double.eps
+         tmp <- pmax(k, apply(otus, MARGIN = 1, sum, na.rm = TRUE))
+         otus <- sweep(otus, MARGIN = 1, tmp, "/")
+      }
+
+      ## Arithmetic averaging of proportions
+      otuavg <- colMeans(otus, na.rm = TRUE)
+      otuavg <- as.matrix(otuavg)
+      colnames(otuavg) <- "Average"  # rename average proporion column
+  }
+
+  ## Back-transpose OTU abundances if neccesary
+  # if(taxa_are_rows(x) == FALSE){
+  #   otuavg <- t(otuavg)
+  # }
+
+  ## Replace original counts with the average relative abundance
+  otu_table(x) <- phyloseq::otu_table(otuavg, taxa_are_rows = TRUE)
+
+  return(x)
+} ## End of single_group_avg
+
