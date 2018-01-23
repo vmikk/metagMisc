@@ -54,6 +54,7 @@ phyloseq_average <- function(physeq, avg_type = "coda", zero_impute = "CZM",
   ## Add warning for zero imputation and non-CoDa averaging
   if(!is.null(zero_impute) & avg_type != "coda"){
     warning("Warning: imputations of zeros is implemented only for CoDa approach.\n")
+    zero_impute <- NULL
   }
 
   ## Progress indicator
