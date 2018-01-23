@@ -69,12 +69,12 @@ phyloseq_average <- function(physeq, avg_type = "coda", zero_impute = "CZM",
 
     ## Without zero imputation
     if(is.null(zero_impute)){
-      res <- single_group_avg(physeq, avg_type = avg_type, zeroimp = FALSE, verbose = verbose)
+      res <- OTU_average(physeq, avg_type = avg_type, zeroimp = FALSE, verbose = verbose)
     }
 
     ## With zero imputation
     if(!is.null(zero_impute)){
-      res <- single_group_avg(physeq, avg_type = avg_type, zeroimp = TRUE, meth = zero_impute, verbose = verbose)
+      res <- OTU_average(physeq, avg_type = avg_type, zeroimp = TRUE, meth = zero_impute, verbose = verbose)
     }
   } ## End of single group
 
@@ -93,9 +93,9 @@ phyloseq_average <- function(physeq, avg_type = "coda", zero_impute = "CZM",
 
     ## Average OTU proportions within each group
     if(is.null(zero_impute)){
-      res <- plyr::llply(.data = ph_gr, .fun = single_group_avg, avg_type = avg_type, zeroimp = FALSE, verbose = verbose, .progress = progress)
+      res <- plyr::llply(.data = ph_gr, .fun = OTU_average, avg_type = avg_type, zeroimp = FALSE, verbose = verbose, .progress = progress)
     } else {
-      res <- plyr::llply(.data = ph_gr, .fun = single_group_avg, avg_type = avg_type, zeroimp = TRUE, meth = zero_impute, verbose = verbose, .progress = progress)
+      res <- plyr::llply(.data = ph_gr, .fun = OTU_average, avg_type = avg_type, zeroimp = TRUE, meth = zero_impute, verbose = verbose, .progress = progress)
     }
 
     ## Give the group names to the averaged proportions
@@ -123,7 +123,7 @@ phyloseq_average <- function(physeq, avg_type = "coda", zero_impute = "CZM",
 
 
 ## Function to average OTU relative abundances
-single_group_avg <- function(x, avg_type = "coda", zeroimp = FALSE, meth = "CZM", verbose = TRUE){
+OTU_average <- function(x, avg_type = "coda", zeroimp = FALSE, meth = "CZM", verbose = TRUE){
   # x = phyloseq object
   # avg_type = averaging type ("coda" for Aitchison CoDa approach; "arithmetic" for simple arithmetic mean)
   # zeroimp = logical; if TRUE, zeros will be imputed
@@ -209,5 +209,5 @@ single_group_avg <- function(x, avg_type = "coda", zeroimp = FALSE, meth = "CZM"
   otu_table(x) <- phyloseq::otu_table(otuavg, taxa_are_rows = TRUE)
 
   return(x)
-} ## End of single_group_avg
+} ## End of OTU_average
 
