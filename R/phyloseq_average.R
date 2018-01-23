@@ -36,7 +36,8 @@
 #'
 #' @examples
 #'
-phyloseq_average <- function(physeq, avg_type = "coda", zero_impute = "CZM", group = NULL, drop_group_zero = FALSE, progress = "text", ...){
+phyloseq_average <- function(physeq, avg_type = "coda", zero_impute = "CZM", 
+    group = NULL, drop_group_zero = FALSE, verbose = TRUE, ...){
 
   # require(compositions)   # for Aitchison CoDa approach
   # require(zCompositions)  # for Bayesian-multiplicative replacement
@@ -55,8 +56,15 @@ phyloseq_average <- function(physeq, avg_type = "coda", zero_impute = "CZM", gro
     warning("Warning: imputations of zeros is implemented only for CoDa approach.\n")
   }
 
+  ## Progress indicator
+  if(verbose == TRUE){
+    progress <- "text"
+  } else {
+    progress <- "none"
+  }
+
   ## Function to average OTU relative abundances
-  single_group_avg <- function(x, avg_type = "coda", zeroimp = FALSE, meth = "CZM"){
+  single_group_avg <- function(x, avg_type = "coda", zeroimp = FALSE, meth = "CZM", verbose = TRUE){
     # x = phyloseq object
     # avg_type = averaging type ("coda" for Aitchison CoDa approach; "arithmetic" for simple arithmetic mean)
     # zeroimp = logical; if TRUE, zeros will be imputed
@@ -70,16 +78,19 @@ phyloseq_average <- function(physeq, avg_type = "coda", zero_impute = "CZM", gro
     ## Extract OTU abundance table
     otus <- as.data.frame(phyloseq::otu_table(x))
 
-    # How many zeros are in the table? If more than 15% - rise a warning
-    nz <- sum(otus == 0)
-    if(nz > nrow(otus)*ncol(otus)*0.15){
-      warning("Warning: there are more than 15% of zeroes in OTU table. Consider some additional data filtering.\n")
-    }
-
-    ## How many OTUs are with zero total abundance?
-    oz <- phyloseq::taxa_sums(x) == 0
-    if(any(oz)){
-      warning("Warning: there are ", sum(oz), " OTUs with zero total abundance.\n")
+    ## Show some warnings
+    if(verbose == TRUE){
+      # How many zeros are in the table? If more than 15% - rise a warning
+      nz <- sum(otus == 0)
+      if(nz > nrow(otus)*ncol(otus)*0.15){
+        warning("Warning: there are more than 15% of zeroes in OTU table. Consider some additional data filtering.\n")
+      }
+      
+      ## How many OTUs are with zero total abundance?
+      oz <- phyloseq::taxa_sums(x) == 0
+      if(any(oz)){
+        warning("Warning: there are ", sum(oz), " OTUs with zero total abundance.\n")
+      }
     }
 
     ## Transpose OTU abundance table (samples must be ROWS from this step!)
@@ -147,12 +158,12 @@ phyloseq_average <- function(physeq, avg_type = "coda", zero_impute = "CZM", gro
 
     ## Without zero imputation
     if(is.null(zero_impute)){
-      res <- single_group_avg(physeq, avg_type = avg_type, zeroimp = FALSE)
+      res <- single_group_avg(physeq, avg_type = avg_type, zeroimp = FALSE, verbose = verbose)
     }
 
     ## With zero imputation
     if(!is.null(zero_impute)){
-      res <- single_group_avg(physeq, avg_type = avg_type, zeroimp = TRUE, meth = zero_impute)
+      res <- single_group_avg(physeq, avg_type = avg_type, zeroimp = TRUE, meth = zero_impute, verbose = verbose)
     }
   } ## End of single group
 
@@ -171,9 +182,9 @@ phyloseq_average <- function(physeq, avg_type = "coda", zero_impute = "CZM", gro
 
     ## Average OTU proportions within each group
     if(is.null(zero_impute)){
-      res <- plyr::llply(.data = ph_gr, .fun = single_group_avg, avg_type = avg_type, zeroimp = FALSE, .progress = progress)
+      res <- plyr::llply(.data = ph_gr, .fun = single_group_avg, avg_type = avg_type, zeroimp = FALSE, verbose = verbose, .progress = progress)
     } else {
-      res <- plyr::llply(.data = ph_gr, .fun = single_group_avg, avg_type = avg_type, zeroimp = TRUE, meth = zero_impute, .progress = progress)
+      res <- plyr::llply(.data = ph_gr, .fun = single_group_avg, avg_type = avg_type, zeroimp = TRUE, meth = zero_impute, verbose = verbose, .progress = progress)
     }
 
     ## Give the group names to the averaged proportions
