@@ -76,6 +76,12 @@ phyloseq_average <- function(physeq, avg_type = "coda", zero_impute = "CZM", gro
       warning("Warning: there are more than 15% of zeroes in OTU table. Consider some additional data filtering.\n")
     }
 
+    ## How many OTUs are with zero total abundance?
+    oz <- phyloseq::taxa_sums(x) == 0
+    if(any(oz)){
+      warning("Warning: there are ", sum(oz), " OTUs with zero total abundance.\n")
+    }
+
     ## Transpose OTU abundance table (samples must be ROWS from this step!)
     if(phyloseq::taxa_are_rows(x) == TRUE){
       otus <- t(otus)
