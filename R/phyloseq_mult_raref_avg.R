@@ -6,6 +6,32 @@ phyloseq_mult_raref_avg <- function(z, SampSize = NULL, iter = 1000, parallel = 
   # require(plyr)
   # require(reshape2)
 
+  ## Extract slots from phyloseq object (later we'll return them)
+  ## and remove them to save RAM
+  if(!is.null(phyloseq::tax_table(physeq, errorIfNULL=F))){
+    taxx <- phyloseq::tax_table(physeq)
+    taxpresent <- TRUE
+    physeq@tax_table <- NULL
+  } else {
+    taxpresent <- FALSE   # no tax_table in pheloseq
+  }
+
+  if(!is.null(phyloseq::phy_tree(physeq, errorIfNULL=F))){
+    phyy <- phyloseq::phy_tree(physeq)
+    phypresent <- TRUE
+    physeq@phy_tree <- NULL
+  } else {
+    phypresent <- FALSE   # no phy_tree in pheloseq
+  }
+
+  if(!is.null(phyloseq::sample_data(physeq, errorIfNULL=F))){
+    samm <- phyloseq::sample_data(physeq)
+    sampresent <- TRUE
+    physeq@sam_data <- NULL
+  } else {
+    sampresent <- FALSE   # no sample_data in pheloseq
+  }
+
   ## Rarefy (do not remove zero-OTUs)
   cat("..Multiple rarefaction\n")
   phys_raref <- phyloseq_mult_raref(z, SampSize = SampSize, iter = iter, multithread = parallel, trimOTUs = F, ...)
@@ -83,6 +109,11 @@ phyloseq_mult_raref_avg <- function(z, SampSize = NULL, iter = 1000, parallel = 
             phyloseq::tax_table(z),
             phyloseq::sample_data(z))
 
+  ## Recover phyloseq slots
+  if(taxpresent == TRUE){ res <- phyloseq::merge_phyloseq(res, taxx) }
+  if(phypresent == TRUE){ res <- phyloseq::merge_phyloseq(res, phyy) }
+  if(sampresent == TRUE){ res <- phyloseq::merge_phyloseq(res, samm) }
+  
   ## Add rarefaction parameters as attributes to the phyloseq object
   attr(res, which = "RarefactionDepth") <- attr(phys_raref, which = "RarefactionDepth")
   attr(res, which = "RarefactionReplacement") <- attr(phys_raref, which = "RarefactionReplacement")
