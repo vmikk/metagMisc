@@ -123,11 +123,13 @@ phyloseq_average <- function(physeq, avg_type = "coda", zero_impute = "CZM",
 
 
 ## Function to average OTU relative abundances
-OTU_average <- function(x, avg_type = "coda", zeroimp = FALSE, meth = "CZM", verbose = TRUE){
+OTU_average <- function(x, avg_type = "coda", zeroimp = FALSE, meth = "CZM", result = "phyloseq", verbose = TRUE){
   # x = phyloseq object
   # avg_type = averaging type ("coda" for Aitchison CoDa approach; "arithmetic" for simple arithmetic mean)
   # zeroimp = logical; if TRUE, zeros will be imputed
   # meth = method of zero imputation ("CZM" or "GBM")
+  # result = resulting object ("phyloseq" or "matrix")
+  # verbose = logical; shows warnings
 
   ## Remove sample metadata
   if(!is.null(phyloseq::sample_data(x, errorIfNULL = FALSE))){
@@ -206,8 +208,14 @@ OTU_average <- function(x, avg_type = "coda", zeroimp = FALSE, meth = "CZM", ver
   # }
 
   ## Replace original counts with the average relative abundance
-  otu_table(x) <- phyloseq::otu_table(otuavg, taxa_are_rows = TRUE)
+  if(result == "phyloseq"){
+    otu_table(x) <- phyloseq::otu_table(otuavg, taxa_are_rows = TRUE)
+    return(x)
+  }
 
-  return(x)
-} ## End of OTU_average
+  ## Just return matrix with averaged OTU proportions
+  if(result == "matrix"){
+    return(otuavg)
+  }
 
+}
