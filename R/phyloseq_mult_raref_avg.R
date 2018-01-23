@@ -1,5 +1,17 @@
 
-## Perform rarefaction and average relative OTU abundance
+#' @title Perform rarefaction and average relative OTU abundance
+#'
+#' @param physeq
+#' @param SampSize
+#' @param iter
+#' @param parallel
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#'
 phyloseq_mult_raref_avg <- function(physeq, SampSize = NULL, iter = 1000, parallel = FALSE, ...){
 
   # require(compositions)
@@ -92,10 +104,10 @@ phyloseq_mult_raref_avg <- function(physeq, SampSize = NULL, iter = 1000, parall
 
   ## Average relative OTU abundances within each sample across rarefaction iterations
   cat("..OTU abundance averaging within rarefaction iterations\n")
-  
+
   ## OTU averaging function shortcut
-  OTU_avg <- function(z){   
-    
+  OTU_avg <- function(z){
+
     ## Function source code is in 'phyloseq_average.R'
     otuavg <- OTU_average(z, avg_type = "arithmetic", result = "matrix", verbose = FALSE)
               # zeroimp = FALSE, meth = "CZM"
@@ -104,7 +116,7 @@ phyloseq_mult_raref_avg <- function(physeq, SampSize = NULL, iter = 1000, parall
     otuavg <- dfRowName(x = otuavg, name = "OTU")
     return(otuavg)  # rows = OTUs
   }
-  
+
   ## Batch averaging by sample
   smps_avg <- plyr::ldply(
     .data = smps,
