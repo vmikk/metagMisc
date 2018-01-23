@@ -36,7 +36,7 @@
 #'
 #' @examples
 #'
-phyloseq_average <- function(physeq, zero_impute = "CZM", group = NULL, drop_group_zero = FALSE, progress = "text", ...){
+phyloseq_average <- function(physeq, avg_type = "coda", zero_impute = "CZM", group = NULL, drop_group_zero = FALSE, progress = "text", ...){
 
   # require(compositions)   # for Aitchison CoDa approach
   # require(zCompositions)  # for Bayesian-multiplicative replacement
@@ -51,8 +51,9 @@ phyloseq_average <- function(physeq, zero_impute = "CZM", group = NULL, drop_gro
   }
 
   ## Function to average OTU relative abundances
-  single_group_avg <- function(x, zeroimp = FALSE, meth = "CZM"){
+  single_group_avg <- function(x, avg_type = "coda", zeroimp = FALSE, meth = "CZM"){
     # x = phyloseq object
+    # avg_type = averaging type ("coda" for Aitchison CoDa approach; "arithmetic" for simple arithmetic mean)
     # zeroimp = logical; if TRUE, zeros will be imputed
     # meth = method of zero imputation ("CZM" or "GBM")
 
@@ -75,28 +76,48 @@ phyloseq_average <- function(physeq, zero_impute = "CZM", group = NULL, drop_gro
       otus <- t(otus)
     }
 
-    ## Replace 0 values with an estimate of the probability that the zero is not 0
-    if(zeroimp == TRUE){
-      otus <- try(
-        zCompositions::cmultRepl(otus, label=0, method=meth, output="prop", suppress.print = TRUE, ...)  # output="counts"  [zCompositions]
-        )
-      # Methods:
-      #   CZM = multiplicative simple replacement
-      #   GBM = Geometric Bayesian multiplicative
+    ## CoDa workfolow
+    if(avg_type == "coda"){
 
-      if(class(otus) %in% "try-error"){
-        stop("Error in multiplicative zero replacement, try to use other methods (e.g., 'zero_impute = CZM').\n")
-      }
+        ## Replace 0 values with an estimate of the probability that the zero is not 0
+        if(zeroimp == TRUE){
+          otus <- try(
+            zCompositions::cmultRepl(otus, label=0, method=meth, output="prop", suppress.print = TRUE, ...)  # output="counts"  [zCompositions]
+            )
+          # Methods:
+          #   CZM = multiplicative simple replacement
+          #   GBM = Geometric Bayesian multiplicative
+    
+          if(class(otus) %in% "try-error"){
+            stop("Error in multiplicative zero replacement, try to use other methods (e.g., 'zero_impute = CZM').\n")
+          }
+        }
+    
+        ## Transform the data using the the centred log-ratio (Aitchison compositions)
+        otucomp <- compositions::acomp(otus)            # [compositions]
+    
+        ## Average proportions
+        # TO DO: add possibilty to specify a robust estimator ('robust = TRUE')
+        otuavg <- compositions::mean.acomp(otucomp)     # [compositions]
+        otuavg <- as.matrix(otuavg)    # it will be transposed here
+        colnames(otuavg) <- "Average"  # rename average proporion column
     }
 
-    ## Transform the data using the the centred log-ratio (Aitchison compositions)
-    otucomp <- compositions::acomp(otus)            # [compositions]
+    ## Simple arithmetic averaging (in case if there are a lot of zeros and CoDa gives strange results)
+    if(avg_type == "arithmetic"){
 
-    ## Average proportions
-    # TO DO: add possibilty to specify a robust estimator ('robust = TRUE')
-    otuavg <- compositions::mean.acomp(otucomp)     # [compositions]
-    otuavg <- as.matrix(otuavg)    # it will be transposed here
-    colnames(otuavg) <- "Average"  # rename average proporion column
+        ## Convert counts to proportions
+        if(any(rowSums(otus) > 1)){  ## check that values are not proportions
+           k <- .Machine$double.eps
+           tmp <- pmax(k, apply(otus, MARGIN = 1, sum, na.rm = TRUE))
+           otus <- sweep(otus, MARGIN = 1, tmp, "/")
+        }
+
+        ## Arithmetic averaging of proportions
+        otuavg <- colMeans(otus, na.rm = TRUE)
+        otuavg <- as.matrix(otuavg)
+        colnames(otuavg) <- "Average"  # rename average proporion column
+    }
 
     ## Back-transpose OTU abundances if neccesary
     # if(taxa_are_rows(x) == FALSE){
@@ -115,12 +136,12 @@ phyloseq_average <- function(physeq, zero_impute = "CZM", group = NULL, drop_gro
 
     ## Without zero imputation
     if(is.null(zero_impute)){
-      res <- single_group_avg(physeq, zeroimp = FALSE)
+      res <- single_group_avg(physeq, avg_type = avg_type, zeroimp = FALSE)
     }
 
     ## With zero imputation
     if(!is.null(zero_impute)){
-      res <- single_group_avg(physeq, zeroimp = TRUE, meth = zero_impute)
+      res <- single_group_avg(physeq, avg_type = avg_type, zeroimp = TRUE, meth = zero_impute)
     }
   } ## End of single group
 
@@ -139,9 +160,9 @@ phyloseq_average <- function(physeq, zero_impute = "CZM", group = NULL, drop_gro
 
     ## Average OTU proportions within each group
     if(is.null(zero_impute)){
-      res <- plyr::llply(.data = ph_gr, .fun = single_group_avg, zeroimp = FALSE, .progress = progress)
+      res <- plyr::llply(.data = ph_gr, .fun = single_group_avg, avg_type = avg_type, zeroimp = FALSE, .progress = progress)
     } else {
-      res <- plyr::llply(.data = ph_gr, .fun = single_group_avg, zeroimp = TRUE, meth = zero_impute, .progress = progress)
+      res <- plyr::llply(.data = ph_gr, .fun = single_group_avg, avg_type = avg_type, zeroimp = TRUE, meth = zero_impute, .progress = progress)
     }
 
     ## Give the group names to the averaged proportions
