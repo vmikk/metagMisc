@@ -50,6 +50,11 @@ phyloseq_average <- function(physeq, avg_type = "coda", zero_impute = "CZM", gro
     zero_impute <- NULL
   }
 
+  ## Add warning for zero imputation and non-CoDa averaging
+  if(!is.null(zero_impute) & avg_type != "coda"){
+    warning("Warning: imputations of zeros is implemented only for CoDa approach.\n")
+  }
+
   ## Function to average OTU relative abundances
   single_group_avg <- function(x, avg_type = "coda", zeroimp = FALSE, meth = "CZM"){
     # x = phyloseq object
