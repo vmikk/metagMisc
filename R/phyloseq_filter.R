@@ -186,3 +186,18 @@ phyloseq_filter_sample_wise_abund_trim <- function(physeq, minabund = 10, rm_zer
   }
   return(res)
 }
+
+
+
+
+## Extract the most abundant taxa
+phyloseq_filter_top_taxa <- function(physeq, n = 100){
+  
+  ## Extract names for the taxa that should be preserved
+  keepTaxa <- names(sort(phyloseq::taxa_sums(physeq), decreasing = TRUE)[1:n])
+  
+  ## Extract this taxa
+  physeq_pruned <- prune_taxa(keepTaxa, physeq)
+
+  return(phys_pruned)
+}
