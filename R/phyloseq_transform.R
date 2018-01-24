@@ -23,19 +23,20 @@
 #' @examples
 #'
 phyloseq_transform_css <- function(physeq, norm = TRUE, log = TRUE, ...){
-  require(metagenomeSeq)
+  
+  # require(metagenomeSeq)
 
-  MGS <- phyloseq_to_metagenomeSeq(physeq)
+  MGS <- phyloseq::phyloseq_to_metagenomeSeq(physeq)
 
   # get the normalized count matrix
-  otu_norm <- MRcounts(MGS, norm = norm, log = log, ...)
+  otu_norm <- metagenomeSeq::MRcounts(MGS, norm = norm, log = log, ...)
   # exportMat(datt.norm, file = "tmp.txt")    # norm = TRUE, log = TRUE
   ## save sample statistics (sample scaling factor, quantile value, number of identified features and library size):
   # exportStats(dattM.sf, file = "tmp_stats.txt")
 
   # Substitue raw abundance to the css-normalized data
   physeq.tr <- physeq
-  otu_table(physeq.tr) <- otu_table(otu_norm, taxa_are_rows = T)
+  otu_table(physeq.tr) <- phyloseq::otu_table(otu_norm, taxa_are_rows = T)
   return(physeq.tr)
 }
 
