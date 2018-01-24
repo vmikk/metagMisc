@@ -5,18 +5,26 @@
 #' @param SampSize
 #' @param iter
 #' @param parallel
-#' @param ...
+#' @param verbose
+#' @param ... passed to phyloseq_mult_raref
 #'
 #' @return
 #' @export
 #'
 #' @examples
 #'
-phyloseq_mult_raref_avg <- function(physeq, SampSize = NULL, iter = 1000, parallel = FALSE, ...){
+phyloseq_mult_raref_avg <- function(physeq, SampSize = NULL, iter = 1000, parallel = FALSE, verbose = TRUE, ...){
 
   # require(compositions)
   # require(plyr)
   # require(reshape2)
+
+  ## Progress indicator
+  if(verbose == TRUE){ 
+    progress <- "text"
+  } else {
+    progress <- "none"
+  }
 
   ## Extract slots from phyloseq object (later we'll return them)
   ## and remove them to save RAM
@@ -46,11 +54,11 @@ phyloseq_mult_raref_avg <- function(physeq, SampSize = NULL, iter = 1000, parall
 
 
   ## Rarefy (do not remove zero-OTUs)
-  cat("..Multiple rarefaction\n")
+  if(verbose == TRUE){ cat("..Multiple rarefaction\n") }
   phys_raref <- phyloseq_mult_raref(physeq, SampSize = SampSize, iter = iter, multithread = parallel, trimOTUs = F, ...)
 
   ## Rename rarefied samples (add raref ID)
-  cat("..Sample renaming\n")
+  if(verbose == TRUE){ cat("..Sample renaming\n") }
   samps_names <- vector()
   for(i in 1:length(phys_raref)){
     tmp_name <- paste(phyloseq::sample_names(phys_raref[[i]]), i, sep="__")
@@ -61,7 +69,7 @@ phyloseq_mult_raref_avg <- function(physeq, SampSize = NULL, iter = 1000, parall
   rm(i)
 
   ### Combine rarefied OTU tables into a single table
-  cat("..Rarefied data merging\n")
+  if(verbose == TRUE){ cat("..Rarefied data merging\n") }
   ## using for-loop and merge_phyloseq  -- very slow for large number of iterations
   # phys <- phys_raref[[1]]
   # for(i in 2:length(phys_raref)){
@@ -99,11 +107,11 @@ phyloseq_mult_raref_avg <- function(physeq, SampSize = NULL, iter = 1000, parall
   rm(phys_raref, phys_tabs)
 
   ## Split by sample
-  cat("..Splitting by sample\n")
+  if(verbose == TRUE){ cat("..Splitting by sample\n") }
   smps <- phyloseq_sep_variable(phys, variable = "SampleID", drop_zeroes = T)
 
   ## Average relative OTU abundances within each sample across rarefaction iterations
-  cat("..OTU abundance averaging within rarefaction iterations\n")
+  if(verbose == TRUE){ cat("..OTU abundance averaging within rarefaction iterations\n") }
 
   ## OTU averaging function shortcut
   OTU_avg <- function(z){
@@ -122,7 +130,7 @@ phyloseq_mult_raref_avg <- function(physeq, SampSize = NULL, iter = 1000, parall
     .data = smps,
     .fun = OTU_avg,
     .id = "SampleID",
-    .progress = "text")
+    .progress = progress)
 
   ## Rename samples (for llply instead of ldply)
   # for(i in 1:length(smps_avg)){
@@ -136,7 +144,7 @@ phyloseq_mult_raref_avg <- function(physeq, SampSize = NULL, iter = 1000, parall
   smps_avg_wide$OTU <- NULL
 
   ## Re-create phyloseq object
-  cat("..Re-create phyloseq object\n")
+  if(verbose == TRUE){ cat("..Re-create phyloseq object\n") }
   res <- phyloseq::phyloseq(
             phyloseq::otu_table(smps_avg_wide, taxa_are_rows = TRUE)
             )
