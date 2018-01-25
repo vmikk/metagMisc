@@ -191,13 +191,26 @@ phyloseq_filter_sample_wise_abund_trim <- function(physeq, minabund = 10, rm_zer
 
 
 ## Extract the most abundant taxa
-phyloseq_filter_top_taxa <- function(physeq, n = 100){
+phyloseq_filter_top_taxa <- function(physeq, perc = 10, n = NULL){
   
+  ## Arguments validation
+  if(perc <= 0 | perc > 100){ stop("Error: percentage should be in 1-100 range.\n") }
+
+  ## Get total abundances for all taxa
+  taxx <- sort(phyloseq::taxa_sums(physeq), decreasing = TRUE)
+
+  ## Find how many taxa to preserve (if percentage is specified)
+  if(is.null(n)){
+    n <- phyloseq::ntaxa(physeq) * perc / 100
+    n <- floor(n)
+  }
+
   ## Extract names for the taxa that should be preserved
-  keepTaxa <- names(sort(phyloseq::taxa_sums(physeq), decreasing = TRUE)[1:n])
+  keepTaxa <- names(taxx)[1:n]
   
   ## Extract this taxa
-  physeq_pruned <- prune_taxa(keepTaxa, physeq)
+  physeq_pruned <- phyloseq::prune_taxa(keepTaxa, physeq)
 
-  return(phys_pruned)
+  return(physeq_pruned)
 }
+
