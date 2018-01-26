@@ -15,7 +15,7 @@
 #' GlobalPatternsDF <- phyloseq_to_df(GlobalPatterns)
 #' str(GlobalPatternsDF)
 #'
-phyloseq_to_df <- function(physeq, addtax = T, addtot = F, sorting = "abundance"){
+phyloseq_to_df <- function(physeq, addtax = T, addtot = F, addmaxrank = F, sorting = "abundance"){
 
   # require(phyloseq)
 
@@ -31,12 +31,31 @@ phyloseq_to_df <- function(physeq, addtax = T, addtot = F, sorting = "abundance"
 
   ## Add taxonomy
   if(addtax == TRUE){
+    
+    ## Extract taxonomy table
     taxx <- as.data.frame(phyloseq::tax_table(physeq), stringsAsFactors = F)
-    res <- cbind(res, taxx[match(x = res$OTU, table = rownames(taxx)), ])
 
-    ## Reorder columns (OTU name - Taxonomy - Sample Abundance)
-    res <- res[, c("OTU", phyloseq::rank_names(physeq), phyloseq::sample_names(physeq))]
-  }
+    ## Reorder taxonomy table
+    taxx <- taxx[match(x = res$OTU, table = rownames(taxx)), ]
+
+    ## Add taxonomy table to the data
+    res <- cbind(res, taxx)
+
+    ## Add max tax rank column
+    if(addmaxrank == TRUE){
+
+      ## Determine the lowest level of taxonomic classification
+      res$LowestTaxRank <- get_max_taxonomic_rank(taxx, return_rank_only = TRUE)
+
+      ## Reorder columns (OTU name - Taxonomy - Max Rank - Sample Abundance)
+      res <- res[, c("OTU", phyloseq::rank_names(physeq), "LowestTaxRank", phyloseq::sample_names(physeq))]
+
+    } else {
+      ## Reorder columns (OTU name - Taxonomy - Sample Abundance)
+      res <- res[, c("OTU", phyloseq::rank_names(physeq), phyloseq::sample_names(physeq))]
+    
+    } # end of addmaxrank
+  }   # end of addtax
 
   ## Reorder OTUs
   if(!is.null(sorting)){
