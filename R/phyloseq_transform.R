@@ -57,23 +57,23 @@ phyloseq_transform_css <- function(physeq, norm = TRUE, log = TRUE, ...){
 #'
 phyloseq_transform_vst_blind <- function(physeq, dropneg = F, dropmissing = T, ...){
 
-  require(DESeq2)
+  # require(DESeq2)
 
-  # Add dummy sample data (phyloseq_to_deseq2 doesn't work without sample_data)
-  if(is.null( sample_data(physeq, errorIfNULL = F) )){
+  ## Add dummy sample data (phyloseq_to_deseq2 doesn't work without sample_data)
+  if(is.null( phyloseq::sample_data(physeq, errorIfNULL = F) )){
     smpdat_nul <- TRUE
-    smpdat <- data.frame(TMP = rep(1, times = nsamples(physeq)))
-    rownames(smpdat) <- sample_names(physeq)
-    sample_data(physeq) <- smpdat
+    smpdat <- data.frame(TMP = rep(1, times = phyloseq::nsamples(physeq)))
+    rownames(smpdat) <- phyloseq::sample_names(physeq)
+    phyloseq::sample_data(physeq) <- smpdat
   }
 
-  dsc <- phyloseq_to_deseq2(physeq, design = formula(~ 1))
+  dsc <- phyloseq::phyloseq_to_deseq2(physeq, design = formula(~ 1))
   # otu_norm <- varianceStabilizingTransformation(dsc, blind = T, ...)
   # otu_norm <- assay(otu_norm)
 
-  dsc <- estimateSizeFactors(dsc)
-  dsc <- estimateDispersions(dsc)
-  otu_norm <- getVarianceStabilizedData(dsc)
+  dsc <- DESeq2::estimateSizeFactors(dsc)
+  dsc <- DESeq2::estimateDispersions(dsc)
+  otu_norm <- DESeq2::getVarianceStabilizedData(dsc)
   # Negative values probably correspond to “less than one count”
 
   # Set to zero all values less than zero
@@ -83,11 +83,11 @@ phyloseq_transform_vst_blind <- function(physeq, dropneg = F, dropmissing = T, .
 
   # Substitue raw abundance to the variance stabilized data
   physeq.tr <- physeq
-  otu_table(physeq.tr) <- otu_table(otu_norm, taxa_are_rows = T)
+  phyloseq::otu_table(physeq.tr) <- phyloseq::otu_table(otu_norm, taxa_are_rows = T)
 
   # Remove missing OTUs
   if(dropneg == TRUE & dropmissing == TRUE){
-    physeq.tr <- prune_taxa(taxa_sums(physeq.tr) > 0, physeq.tr)
+    physeq.tr <- phyloseq::prune_taxa(phyloseq::taxa_sums(physeq.tr) > 0, physeq.tr)
   }
 
   # Remove dummy sample data if present
