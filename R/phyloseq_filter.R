@@ -189,10 +189,17 @@ phyloseq_filter_sample_wise_abund_trim <- function(physeq, minabund = 10, rm_zer
 
 
 
-
-## Extract the most abundant taxa
+#' @title Extract the most abundant taxa.
+#' @param physeq A phyloseq-class object
+#' @param perc Percentage of the most abundant taxa to retain
+#' @param n Number of the most abundant taxa to retain (this argument will override perc argument)
+#' @return Phyloseq object with a filtered data.
+#' @export
+#'
+#' @examples
+#'
 phyloseq_filter_top_taxa <- function(physeq, perc = 10, n = NULL){
-  
+
   ## Arguments validation
   if(perc <= 0 | perc > 100){ stop("Error: percentage should be in 1-100 range.\n") }
 
@@ -207,7 +214,7 @@ phyloseq_filter_top_taxa <- function(physeq, perc = 10, n = NULL){
 
   ## Extract names for the taxa that should be preserved
   keepTaxa <- names(taxx)[1:n]
-  
+
   ## Extract this taxa
   physeq_pruned <- phyloseq::prune_taxa(keepTaxa, physeq)
 
@@ -223,7 +230,7 @@ phyloseq_filter_top_taxa_range <- function(physeq){
   fr <- plyr::mlply(.data = data.frame(perc = percs), .fun = function(...){ phyloseq_filter_top_taxa(physeq, ...) })
   names(fr) <- percs
 
-  fr_tab <- ldply(.data = fr, .fun = function(z){ 
+  fr_tab <- ldply(.data = fr, .fun = function(z){
     sz <- sample_sums(z)
     res <- data.frame(Sample = names(sz), Preserved = sz)
     return(res)
@@ -231,8 +238,8 @@ phyloseq_filter_top_taxa_range <- function(physeq){
 
   pp <- ggplot(data = fr_tab, aes(x = perc, y = Preserved, group = Sample)) +   # color = Sample
     geom_vline(xintercept=75, color="grey", linetype = "longdash") +
-    geom_line() + 
-    geom_point() + 
+    geom_line() +
+    geom_point() +
     labs(x = "Number of most abundant taxa retained, %", y = "Percentage of total sample abundance") +
     theme(legend.position = "none")
 
