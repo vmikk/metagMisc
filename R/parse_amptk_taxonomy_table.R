@@ -83,11 +83,12 @@ parse_taxonomy_amptk_batch <- function(x, withID = TRUE){
     res <- data.frame( do.call(rbind.fill.matrix, res), stringsAsFactors = F)
 
     # Sort columns
-    tax.levels <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
-    tax.levels <- data.frame(Level = tax.levels, Rank = 1:length(tax.levels))
-
-    mm <- match(x = colnames(res), table = tax.levels$Level)
-    res <- res[, as.character(tax.levels$Level[sort(mm)]) ]
-
+    if(ncol(res) > 1){
+      tax.levels <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
+      tax.levels <- data.frame(Level = tax.levels, Rank = 1:length(tax.levels))
+    
+      mm <- match(x = colnames(res), table = tax.levels$Level)
+      res <- res[, as.character(tax.levels$Level[sort(mm)]) ]
+    }
     return(res)
 }
