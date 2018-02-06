@@ -4,9 +4,13 @@ taxonomy_to_qiime <- function(x, dropNA = TRUE, add_OTUID = TRUE){
   # x = data.frame or phyloseq with tax_table()
   # dropNA = remove missing tax ranks
 
-
+  ## If phyloseq is provided - extract OTU table
   if(class(x) %in% c("phyloseq", "taxonomyTable")){
     tx <- as.data.frame(phyloseq::tax_table(x), stringsAsFactors = F)
+  }
+  ## If data frame is provided
+  if(class(x) %in% "data.frame"){
+    tx <- x
   }
 
   ## Column names abbreviations
