@@ -67,30 +67,50 @@ phyloseq_transform_vst_blind <- function(physeq, dropneg = F, dropmissing = T, .
     phyloseq::sample_data(physeq) <- smpdat
   }
 
+  ## Convert phyloseq data to DESeq2 object
   dsc <- phyloseq::phyloseq_to_deseq2(physeq, design = formula(~ 1))
   # otu_norm <- varianceStabilizingTransformation(dsc, blind = T, ...)
   # otu_norm <- assay(otu_norm)
 
-  dsc <- DESeq2::estimateSizeFactors(dsc)
-  dsc <- DESeq2::estimateDispersions(dsc)
-  otu_norm <- DESeq2::getVarianceStabilizedData(dsc)
-  # Negative values probably correspond to “less than one count”
+  ## Estimate the size factors and dispersions
+  dsc_tr <- try( DESeq2::estimateSizeFactors(dsc) )
+  ## If it fails (probably because of excessive zeros) try a workaround
+  ## see https://github.com/joey711/phyloseq/issues/445
+  if("try-error" %in% class(dsc_tr)){
+    
+    ## Zero-tolerant version of geometric mean
+    gm_mean <- function(x, na.rm=TRUE){ exp(sum(log(x[x > 0]), na.rm=na.rm) / length(x)) }
 
-  # Set to zero all values less than zero
+    geoMeans <- apply(counts(dsc), 1, gm_mean)     # geometric means of the counts
+    dsc <- DESeq2::estimateSizeFactors(dsc, geoMeans = geoMeans)
+  } else {
+    dsc <- dsc_tr    # if everithing is OK
+    rm(dsc_tr)
+  }
+
+  ## Estimate dispersions
+  # dsc <- DESeq2::estimateDispersions(dsc)
+  dsc <- DESeq(dsc, fitType="local")
+
+  ## Extract variance stabilized data
+  otu_norm <- DESeq2::getVarianceStabilizedData(dsc)
+  
+  ## Negative values probably correspond to "less than one count"
+  ## Set to zero all values less than zero
   if(dropneg == TRUE){
     otu_norm[otu_norm < 0.0] <- 0.0
   }
 
-  # Substitue raw abundance to the variance stabilized data
+  ## Substitue raw abundance to the variance stabilized data
   physeq.tr <- physeq
   phyloseq::otu_table(physeq.tr) <- phyloseq::otu_table(otu_norm, taxa_are_rows = T)
 
-  # Remove missing OTUs
+  ## Remove missing OTUs
   if(dropneg == TRUE & dropmissing == TRUE){
     physeq.tr <- phyloseq::prune_taxa(phyloseq::taxa_sums(physeq.tr) > 0, physeq.tr)
   }
 
-  # Remove dummy sample data if present
+  ## Remove dummy sample data if present
   if(smpdat_nul == TRUE){
     pp@sam_data <- NULL
   }
