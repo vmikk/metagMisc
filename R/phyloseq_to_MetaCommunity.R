@@ -14,11 +14,11 @@
 #'
 phyloseq_to_MetaCommunity <- function(physeq, wei = NULL){
 
-  require(entropart)
+  # require(entropart)
 
   ## Extract OTU table
-  otus <- as.data.frame(otu_table(physeq))
-  if(taxa_are_rows(physeq) == FALSE){ otus <- t(otus) }
+  otus <- as.data.frame(phyloseq::otu_table(physeq))
+  if(phyloseq::taxa_are_rows(physeq) == FALSE){ otus <- t(otus) }
 
   ## Prepare equal community weights
   if(is.null(wei)){
@@ -27,7 +27,7 @@ phyloseq_to_MetaCommunity <- function(physeq, wei = NULL){
   Weights <- data.frame(Communities = colnames(otus), Weights = wei)
 
   ## Convert phyloseq class to MetaCommunity class
-  MC <- MetaCommunity(otus, Weights)
+  MC <- entropart::MetaCommunity(otus, Weights)
 
   return(MC)
 }
