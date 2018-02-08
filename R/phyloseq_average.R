@@ -114,10 +114,10 @@ phyloseq_average <- function(physeq, avg_type = "acomp", acomp_zero_impute = NUL
 
 ## Function to average OTU relative abundances
 OTU_average <- function(x, avg_type = "aldex", 
-  acomp_zero_impute = NULL, aldex_samples = 128, aldex_denom = "zero",
+  acomp_zero_impute = NULL, aldex_samples = 128, aldex_denom = "all",
   result = "phyloseq", verbose = TRUE){
   # x = phyloseq object
-  # avg_type = averaging type ("acomp" for Aitchison CoDa approach; "arithmetic" for simple arithmetic mean)
+  # avg_type = averaging type ("aldex" for ALDEx2-based averaging, "acomp" for Aitchison CoDa approach; "arithmetic" for simple arithmetic mean)
   # acomp_zero_impute = NULL or character indicating the method of zero imputation ("CZM" or "GBM")
   # aldex_samples = The number of Monte-Carlo Dirichlet instances to generate
   # aldex_denom = which features to use as the denominator for the geometric mean calculation ("zero", "all", "iqlr", "lvha")
@@ -152,7 +152,7 @@ OTU_average <- function(x, avg_type = "aldex",
     otus <- t(otus)
   }
 
-  ## CoDa workfolow
+  ## Acomp-based averaging
   if(avg_type == "acomp"){
 
       ## Replace 0 values with an estimate of the probability that the zero is not 0
@@ -188,8 +188,10 @@ OTU_average <- function(x, avg_type = "aldex",
 
     ## Generate Monte Carlo samples of the Dirichlet distribution for each sample.
     ## Convert each instance using the centred log-ratio transform
-    ald <- ALDEx2::aldex.clr(reads = otus, conds = rep("a", ncol(otus)), 
-                     mc.samples = aldex_samples, denom= aldex_denom, verbose = FALSE, useMC = FALSE)
+    ald <- try( ALDEx2::aldex.clr(reads = otus, conds = rep("a", ncol(otus)), 
+               mc.samples = aldex_samples, denom = aldex_denom, verbose = verbose, useMC = FALSE) )
+
+    if(class(ald) %in% "try-error"){ stop("Error in ALDEx2::aldex.clr. Try to use another 'denom'.\n") }
 
     ## Extract the Monte Carlo Dirochlet instances
     mc <- ALDEx2::getMonteCarloInstances(ald)
