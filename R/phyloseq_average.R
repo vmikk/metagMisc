@@ -174,7 +174,9 @@ OTU_average <- function(x, avg_type = "aldex",
   
       ## Average proportions
       # TO DO: add possibilty to specify a robust estimator ('robust = TRUE')
-      otuavg <- compositions::mean.acomp(otucomp)     # [compositions]
+      otuavg <- try( suppressWarnings( compositions::mean.acomp(otucomp, robust = F) ), silent = T)
+      if(class(otuavg) %in% "try-error"){ stop("Error: method acomp failed.\n") }
+      
       otuavg <- as.matrix(otuavg)    # it will be transposed here
       colnames(otuavg) <- "Average"  # rename average proporion column
   }
