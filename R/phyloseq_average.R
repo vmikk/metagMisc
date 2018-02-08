@@ -113,10 +113,14 @@ phyloseq_average <- function(physeq, avg_type = "acomp", acomp_zero_impute = NUL
 
 
 ## Function to average OTU relative abundances
-OTU_average <- function(x, avg_type = "acomp", acomp_zero_impute = NULL, result = "phyloseq", verbose = TRUE){
+OTU_average <- function(x, avg_type = "aldex", 
+  acomp_zero_impute = NULL, aldex_samples = 128, aldex_denom = "zero",
+  result = "phyloseq", verbose = TRUE){
   # x = phyloseq object
   # avg_type = averaging type ("acomp" for Aitchison CoDa approach; "arithmetic" for simple arithmetic mean)
   # acomp_zero_impute = NULL or character indicating the method of zero imputation ("CZM" or "GBM")
+  # aldex_samples = The number of Monte-Carlo Dirichlet instances to generate
+  # aldex_denom = which features to use as the denominator for the geometric mean calculation ("zero", "all", "iqlr", "lvha")
   # result = resulting object ("phyloseq" or "matrix")
   # verbose = logical; shows warnings
 
@@ -173,6 +177,48 @@ OTU_average <- function(x, avg_type = "acomp", acomp_zero_impute = NULL, result 
       otuavg <- compositions::mean.acomp(otucomp)     # [compositions]
       otuavg <- as.matrix(otuavg)    # it will be transposed here
       colnames(otuavg) <- "Average"  # rename average proporion column
+  }
+
+  ## ALDEx2-based averaging (thanks to Thom Quinn for the advice on these steps)
+  if(avg_type == "aldex"){
+    ## ALDEx2 requires OTUs as rows and samples as columns
+    otus <- t(otus)
+
+    ## Generate Monte Carlo samples of the Dirichlet distribution for each sample.
+    ## Convert each instance using the centred log-ratio transform
+    ald <- ALDEx2::aldex.clr(reads = otus, conds = rep("a", ncol(otus)), 
+                     mc.samples = aldex_samples, denom= aldex_denom, verbose = FALSE, useMC = FALSE)
+
+    ## Extract the Monte Carlo Dirochlet instances
+    mc <- ALDEx2::getMonteCarloInstances(ald)
+    k <- ALDEx2::numMCInstances(ald)            # number of samples
+
+    logratio <- 0   # placeholder
+
+    ## Extract each Monte Carlo instance
+    ## And add i-th log-ratio transformation to cumulative sum
+    ## Based on propr code by Thom Quinn
+    ## https://github.com/tpq/propr/blob/90a96e6e24397dcd50e89b25af00edc0fcf56197/R/aldex2propr.R#L70
+    for(i in 1:k){
+      mci_lr <- t(sapply(mc, function(x) x[, i]))
+      logratio <- logratio + mci_lr
+    }
+
+    ## Average log-ratios
+    logratio <- logratio / k
+
+    ## Functions
+    closure <- function(x){ x/sum(x) }               # divide proportions by sums
+    geomean <- function(x){ prod(x)^(1/length(x)) }  # geometric mean
+
+    ## Get the portions back
+    ## ALDEx2 uses binary logarithm (log2) instead of natural logarithm, so for the back-transformation of log-ratios use 2^x instead of exp(x)
+    mci_means <- t(apply(logratio, MARGIN = 1, FUN = function(x){ closure(2^x) }))
+
+    ## Average OTU proportions across the samples
+    otuavg <- apply(mci_means, MARGIN = 2, FUN = geomean)
+    otuavg <- as.matrix(otuavg)
+    colnames(otuavg) <- "Average"
   }
 
   ## Simple arithmetic averaging (in case if there are a lot of zeros and CoDa gives strange results)
