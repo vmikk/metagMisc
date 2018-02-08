@@ -98,6 +98,16 @@ phyloseq_average <- function(physeq, avg_type = "acomp", acomp_zero_impute = NUL
     }
   } ## End of multiple groups
 
+  ## Add averaging details as attributes to the resulting list
+  attr(res, which = "Average_type") <- avg_type
+  if(avg_type == "acomp"){ 
+    attr(res, which = "Average_ZeroImputationMethod") <- acomp_zero_impute
+  } else {
+    attr(res, which = "Average_ZeroImputationMethod") <- NULL
+  }
+  attr(res, which = "Average_ByGroup") <- group
+  attr(res, which = "Average_GroupZerosRemoved") <- drop_group_zero
+
   return(res)
 }
 
