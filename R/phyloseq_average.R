@@ -2,7 +2,8 @@
 #' @title Average relative OTU abundances.
 #' @description This function implements OTU abundance averaging following CoDa (Compositional Data Analysis) workflow.
 #' @param physeq A phyloseq-class object
-#' @param zero_impute Character ("CZM", "GBM","SQ","BL") or logical; indicating weather to perform replacement of 0 abundance values with an estimate of the probability that the zero is not 0
+#' @param avg_type Averaging type ("acomp" for Aitchison CoDa approach; "arithmetic" for simple arithmetic mean)
+#' @param acomp_zero_impute Character ("CZM", "GBM","SQ","BL") or NULL; indicating weather to perform replacement of 0 abundance values with an estimate of the probability that the zero is not 0 (implemented only for avg_type = "acomp")
 #' @param group Variable name in \code{\link[phyloseq]{sample_data}}) which defines sample groups for averaging (default is NULL)
 #' @param drop_group_zero Logical; indicating weather OTUs with zero abundance withing a group of samples should be removed
 #' @param progress Name of the progress bar to use ("none" or "text"; see \code{\link[plyr]{create_progress_bar}})
@@ -36,23 +37,15 @@
 #'
 #' @examples
 #'
-phyloseq_average <- function(physeq, avg_type = "coda", zero_impute = "CZM", 
+phyloseq_average <- function(physeq, avg_type = "acomp", acomp_zero_impute = NULL, 
     group = NULL, drop_group_zero = FALSE, verbose = TRUE, ...){
 
   # require(compositions)   # for Aitchison CoDa approach
   # require(zCompositions)  # for Bayesian-multiplicative replacement
   # require(plyr)
 
-  ## If zero imputation method is specified as logical, sustitute it with CZM or NULL
-  if(zero_impute == TRUE){
-    zero_impute <- "CZM"
-  }
-  if(zero_impute == FALSE){
-    zero_impute <- NULL
-  }
-
   ## Add warning for zero imputation and non-CoDa averaging
-  if(!is.null(zero_impute) & avg_type != "coda"){
+  if(!is.null(acomp_zero_impute) & avg_type != "acomp"){
     warning("Warning: imputations of zeros is implemented only for CoDa approach.\n")
     zero_impute <- NULL
   }
@@ -66,16 +59,7 @@ phyloseq_average <- function(physeq, avg_type = "coda", zero_impute = "CZM",
 
   ## Average througth the all samples
   if(is.null(group)){
-
-    ## Without zero imputation
-    if(is.null(zero_impute)){
-      res <- OTU_average(physeq, avg_type = avg_type, zeroimp = FALSE, verbose = verbose)
-    }
-
-    ## With zero imputation
-    if(!is.null(zero_impute)){
-      res <- OTU_average(physeq, avg_type = avg_type, zeroimp = TRUE, meth = zero_impute, verbose = verbose)
-    }
+    res <- OTU_average(physeq, avg_type = avg_type, acomp_zero_impute = acomp_zero_impute, verbose = verbose)
   } ## End of single group
 
   ## Average by group
@@ -92,11 +76,7 @@ phyloseq_average <- function(physeq, avg_type = "coda", zero_impute = "CZM",
     ph_gr <- phyloseq_sep_variable(physeq, variable = group, drop_zeroes = drop_group_zero)
 
     ## Average OTU proportions within each group
-    if(is.null(zero_impute)){
-      res <- plyr::llply(.data = ph_gr, .fun = OTU_average, avg_type = avg_type, zeroimp = FALSE, verbose = verbose, .progress = progress)
-    } else {
-      res <- plyr::llply(.data = ph_gr, .fun = OTU_average, avg_type = avg_type, zeroimp = TRUE, meth = zero_impute, verbose = verbose, .progress = progress)
-    }
+    res <- plyr::llply(.data = ph_gr, .fun = OTU_average, avg_type = avg_type, acomp_zero_impute = acomp_zero_impute, verbose = verbose, .progress = progress)
 
     ## Give the group names to the averaged proportions
     for(i in 1:length(res)){
@@ -123,11 +103,10 @@ phyloseq_average <- function(physeq, avg_type = "coda", zero_impute = "CZM",
 
 
 ## Function to average OTU relative abundances
-OTU_average <- function(x, avg_type = "coda", zeroimp = FALSE, meth = "CZM", result = "phyloseq", verbose = TRUE){
+OTU_average <- function(x, avg_type = "acomp", acomp_zero_impute = NULL, result = "phyloseq", verbose = TRUE){
   # x = phyloseq object
-  # avg_type = averaging type ("coda" for Aitchison CoDa approach; "arithmetic" for simple arithmetic mean)
-  # zeroimp = logical; if TRUE, zeros will be imputed
-  # meth = method of zero imputation ("CZM" or "GBM")
+  # avg_type = averaging type ("acomp" for Aitchison CoDa approach; "arithmetic" for simple arithmetic mean)
+  # acomp_zero_impute = NULL or character indicating the method of zero imputation ("CZM" or "GBM")
   # result = resulting object ("phyloseq" or "matrix")
   # verbose = logical; shows warnings
 
@@ -160,12 +139,12 @@ OTU_average <- function(x, avg_type = "coda", zeroimp = FALSE, meth = "CZM", res
   }
 
   ## CoDa workfolow
-  if(avg_type == "coda"){
+  if(avg_type == "acomp"){
 
       ## Replace 0 values with an estimate of the probability that the zero is not 0
-      if(zeroimp == TRUE){
+      if(!is.null(acomp_zero_impute)){
         otus <- try(
-          zCompositions::cmultRepl(otus, label=0, method=meth, output="prop", suppress.print = TRUE, ...)  # output="counts"  [zCompositions]
+          zCompositions::cmultRepl(otus, label=0, method=acomp_zero_impute, output="prop", suppress.print = TRUE, ...)  # output="counts"  [zCompositions]
           )
         # Methods:
         #   CZM = multiplicative simple replacement
