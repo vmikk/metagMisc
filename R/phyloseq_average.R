@@ -156,7 +156,7 @@ OTU_average <- function(x, avg_type = "aldex",
   if(avg_type == "acomp"){
 
       ## Replace 0 values with an estimate of the probability that the zero is not 0
-      if(!is.null(acomp_zero_impute)){
+      if(!is.null(acomp_zero_impute) & any(otus == 0)){
         otus <- try(
           zCompositions::cmultRepl(otus, label=0, method=acomp_zero_impute, output="prop", suppress.print = TRUE, ...)  # output="counts"  [zCompositions]
           )
