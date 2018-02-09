@@ -37,7 +37,8 @@
 #'
 #' @examples
 #'
-phyloseq_average <- function(physeq, avg_type = "acomp", acomp_zero_impute = NULL, 
+phyloseq_average <- function(physeq, avg_type = "acomp", 
+    acomp_zero_impute = NULL, aldex_samples = 128, aldex_denom = "all", 
     group = NULL, drop_group_zero = FALSE, verbose = TRUE, ...){
 
   # require(compositions)   # for Aitchison CoDa approach
@@ -59,7 +60,10 @@ phyloseq_average <- function(physeq, avg_type = "acomp", acomp_zero_impute = NUL
 
   ## Average througth the all samples
   if(is.null(group)){
-    res <- OTU_average(physeq, avg_type = avg_type, acomp_zero_impute = acomp_zero_impute, verbose = verbose)
+    res <- OTU_average(physeq, avg_type = avg_type, 
+      acomp_zero_impute = acomp_zero_impute, 
+      aldex_samples = aldex_samples, aldex_denom = aldex_denom, 
+      verbose = verbose)
   } ## End of single group
 
   ## Average by group
@@ -76,7 +80,10 @@ phyloseq_average <- function(physeq, avg_type = "acomp", acomp_zero_impute = NUL
     ph_gr <- phyloseq_sep_variable(physeq, variable = group, drop_zeroes = drop_group_zero)
 
     ## Average OTU proportions within each group
-    res <- plyr::llply(.data = ph_gr, .fun = OTU_average, avg_type = avg_type, acomp_zero_impute = acomp_zero_impute, verbose = verbose, .progress = progress)
+    res <- plyr::llply(.data = ph_gr, .fun = OTU_average, 
+      avg_type = avg_type, acomp_zero_impute = acomp_zero_impute, 
+      aldex_samples = aldex_samples, aldex_denom = aldex_denom, 
+      verbose = verbose, .progress = progress)
 
     ## Give the group names to the averaged proportions
     for(i in 1:length(res)){
@@ -100,13 +107,22 @@ phyloseq_average <- function(physeq, avg_type = "acomp", acomp_zero_impute = NUL
 
   ## Add averaging details as attributes to the resulting list
   attr(res, which = "Average_type") <- avg_type
+  attr(res, which = "Average_ByGroup") <- group
+  attr(res, which = "Average_GroupZerosRemoved") <- drop_group_zero
+  
   if(avg_type == "acomp"){ 
     attr(res, which = "Average_ZeroImputationMethod") <- acomp_zero_impute
   } else {
     attr(res, which = "Average_ZeroImputationMethod") <- NULL
   }
-  attr(res, which = "Average_ByGroup") <- group
-  attr(res, which = "Average_GroupZerosRemoved") <- drop_group_zero
+
+  if(avg_type == "aldex"){ 
+    attr(res, which = "Average_AldexMCSamples") <- aldex_samples
+    attr(res, which = "Average_AldexDenom") <- aldex_denom
+  } else {
+    attr(res, which = "Average_AldexMCSamples") <- NULL
+    attr(res, which = "Average_AldexDenom") <- NULL
+  }
 
   return(res)
 }
