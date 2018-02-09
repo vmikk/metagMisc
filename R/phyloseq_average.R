@@ -2,8 +2,10 @@
 #' @title Average relative OTU abundances.
 #' @description This function implements OTU abundance averaging following CoDa (Compositional Data Analysis) workflow.
 #' @param physeq A phyloseq-class object
-#' @param avg_type Averaging type ("acomp" for Aitchison CoDa approach; "arithmetic" for simple arithmetic mean)
-#' @param acomp_zero_impute Character ("CZM", "GBM","SQ","BL") or NULL; indicating weather to perform replacement of 0 abundance values with an estimate of the probability that the zero is not 0 (implemented only for avg_type = "acomp")
+#' @param avg_type Averaging type ("aldex" for ALDEx2-based averaging , "acomp" for Aitchison CoDa approach; "arithmetic" for simple arithmetic mean)
+#' @param acomp_zero_impute Character ("CZM", "GBM","SQ","BL") or NULL; indicating weather to perform replacement of 0 abundance values with an estimate of the probability that the zero is not 0 (implemented only for avg_type = "acomp"; see \code{\link[zCompositions]{cmultRepl}})
+#' @param aldex_samples The number of Monte-Carlo Dirichlet instances to generate (see \code{\link[ALDEx2]{aldex.clr}})
+#' @param aldex_denom Character ("zero", "all", "iqlr", "lvha"), indicating which features to use as the denominator for the geometric mean calculation (see \code{\link[ALDEx2]{aldex.clr}})
 #' @param group Variable name in \code{\link[phyloseq]{sample_data}}) which defines sample groups for averaging (default is NULL)
 #' @param drop_group_zero Logical; indicating weather OTUs with zero abundance withing a group of samples should be removed
 #' @param progress Name of the progress bar to use ("none" or "text"; see \code{\link[plyr]{create_progress_bar}})
@@ -15,6 +17,11 @@
 #' on the relative scale (e.g., OTUs with 1 and 2 reads in one sample are so far as OTUs
 #' with 10 and 20 reads in the other samples). Therefore such OTU tables represents
 #' closed compositions and requires a special treatment within Aitchison geometry framework.
+#' 
+#' With ALDEx2-based approach (avg_type = "aldex") it is possible to take into 
+#' account per-OTU technical variation within each sample using Monte-Carlo instances 
+#' drawn from the Dirichlet distribution (see Fernandes et al., 2013). 
+#' As the result the expected average of the OTU portions will be estimated.
 #'
 #' Zero OTU abundance could be due to the insufficient number of reads. However,
 #' it is possible to replace the zero counts with an expected value.
@@ -30,11 +37,12 @@
 #'
 #' @return phyloseq object with OTU relative abundance averaged over samples (all together or within a group).
 #' @export
-#' @seealso \code{\link[zCompositions]{cmultRepl}}, \code{\link[compositions]{acomp}}
+#' @seealso \code{\link[ALDEx2]{aldex.clr}}, \code{\link[compositions]{acomp}}, \code{\link[zCompositions]{cmultRepl}}
 #' @references
 #' Gloor GB, Macklaim JM, Pawlowsky-Glahn V and Egozcue JJ (2017) Microbiome Datasets Are Compositional: And This Is Not Optional. Front. Microbiol. 8:2224. doi: 10.3389/fmicb.2017.02224
-#' Martin-Fernandez JA, Barcelo-Vidal C, Pawlowsky-Glahn V. (2003) Dealing With Zeros and Missing Values in Compositional Data Sets Using Nonparametric Imputation. Mathematical Geology 35:3. doi: 10.1023/A:1023866030544
-#'
+#' Martin-Fernandez JA, Barcelo-Vidal C, Pawlowsky-Glahn V (2003) Dealing With Zeros and Missing Values in Compositional Data Sets Using Nonparametric Imputation. Mathematical Geology 35:3. doi: 10.1023/A:1023866030544
+#' Fernandes AD, Macklaim JM, Linn TG, Reid G, Gloor GB (2013) ANOVA-Like Differential Expression (ALDEx) Analysis for Mixed Population RNA-Seq. PLOS ONE 8(7): e67019. doi: 10.1371/journal.pone.0067019
+#' 
 #' @examples
 #'
 phyloseq_average <- function(physeq, avg_type = "acomp", 
