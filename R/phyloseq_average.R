@@ -139,7 +139,7 @@ phyloseq_average <- function(physeq, avg_type = "aldex",
 ## Function to average OTU relative abundances
 OTU_average <- function(x, avg_type = "aldex", 
   acomp_zero_impute = NULL, aldex_samples = 128, aldex_denom = "all",
-  result = "phyloseq", verbose = TRUE){
+  result = "phyloseq", verbose = TRUE, ...){
   # x = phyloseq object
   # avg_type = averaging type ("aldex" for ALDEx2-based averaging, "acomp" for Aitchison CoDa approach; "arithmetic" for simple arithmetic mean)
   # acomp_zero_impute = NULL or character indicating the method of zero imputation ("CZM" or "GBM")
@@ -251,6 +251,7 @@ OTU_average <- function(x, avg_type = "aldex",
 
     ## Average OTU proportions across the samples
     otuavg <- apply(mci_means, MARGIN = 2, FUN = geomean)
+    otuavg <- closure(otuavg)
     otuavg <- as.matrix(otuavg)
     colnames(otuavg) <- "Average"
   }
