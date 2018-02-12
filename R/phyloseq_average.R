@@ -5,7 +5,7 @@
 #' @param avg_type Averaging type ("aldex" for ALDEx2-based averaging , "acomp" for Aitchison CoDa approach; "arithmetic" for simple arithmetic mean)
 #' @param acomp_zero_impute Character ("CZM", "GBM","SQ","BL") or NULL; indicating weather to perform replacement of 0 abundance values with an estimate of the probability that the zero is not 0 (implemented only for avg_type = "acomp"; see \code{\link[zCompositions]{cmultRepl}})
 #' @param aldex_samples The number of Monte-Carlo Dirichlet instances to generate (see \code{\link[ALDEx2]{aldex.clr}})
-#' @param aldex_denom Character ("zero", "all", "iqlr", "lvha"), indicating which features to use as the denominator for the geometric mean calculation (see \code{\link[ALDEx2]{aldex.clr}})
+#' @param aldex_denom Character ("all", "iqlr", "lvha"), indicating which features to use as the denominator for the geometric mean calculation (see \code{\link[ALDEx2]{aldex.clr}})
 #' @param group Variable name in \code{\link[phyloseq]{sample_data}}) which defines sample groups for averaging (default is NULL)
 #' @param drop_group_zero Logical; indicating weather OTUs with zero abundance withing a group of samples should be removed
 #' @param progress Name of the progress bar to use ("none" or "text"; see \code{\link[plyr]{create_progress_bar}})
@@ -45,7 +45,7 @@
 #' 
 #' @examples
 #'
-phyloseq_average <- function(physeq, avg_type = "acomp", 
+phyloseq_average <- function(physeq, avg_type = "aldex", 
     acomp_zero_impute = NULL, aldex_samples = 128, aldex_denom = "all", 
     group = NULL, drop_group_zero = FALSE, verbose = TRUE, ...){
 
@@ -144,9 +144,15 @@ OTU_average <- function(x, avg_type = "aldex",
   # avg_type = averaging type ("aldex" for ALDEx2-based averaging, "acomp" for Aitchison CoDa approach; "arithmetic" for simple arithmetic mean)
   # acomp_zero_impute = NULL or character indicating the method of zero imputation ("CZM" or "GBM")
   # aldex_samples = The number of Monte-Carlo Dirichlet instances to generate
-  # aldex_denom = which features to use as the denominator for the geometric mean calculation ("zero", "all", "iqlr", "lvha")
+  # aldex_denom = which features to use as the denominator for the geometric mean calculation ("all", "iqlr", "lvha")
   # result = resulting object ("phyloseq" or "matrix")
   # verbose = logical; shows warnings
+
+  ## Replace aldex_denom = "zero" with aldex_denom = "all"
+  if(avg_type == "aldex" & aldex_denom == "zero"){
+    print("Warning: ALDEx2 denom 'zero' works only for multiple groups, forcing aldex_denom = 'all'.\n")
+    aldex_denom <- "all"
+  }
 
   ## Remove sample metadata
   if(!is.null(phyloseq::sample_data(x, errorIfNULL = FALSE))){
