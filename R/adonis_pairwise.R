@@ -27,7 +27,7 @@
 #' ad$Adonis.tab
 #'
 adonis_pairwise <- function(x, dd, group.var, add_permdisp = TRUE, permut = 999,
-  p.adj=T, adj.meth="fdr", all_results = T, comparison_sep = ".", permdisp_type = "median", ...){
+  p.adj = T, adj.meth = "fdr", all_results = T, comparison_sep = ".", permdisp_type = "median", ...){
 
   # require(vegan)
 
@@ -91,21 +91,18 @@ adonis_pairwise <- function(x, dd, group.var, add_permdisp = TRUE, permut = 999,
   if(add_permdisp == TRUE){ names(permd) <- names(permdt) <- foo }
 
   ## Extract adonis results
-  adon.extract.p <- function(adon){ adon$aov.tab$Pr[1] }
-  adon.extract.F <- function(adon){ adon$aov.tab$F.Model[1] }
-  adon.extract.df <- function(adon){ paste(adon$aov.tab$Df[1:2], collapse=";") }
-  ad.t <- data.frame(Comparison = foo,
-          F = unlist(lapply(adon, FUN = adon.extract.F)),
-          df = unlist(lapply(adon, FUN = adon.extract.df)),
-          p = unlist(lapply(adon, FUN = adon.extract.p)))
-  rownames(ad.t) <- NULL
+  adonis_extract <- function(z){
+    data.frame(F = z$aov.tab$F.Model[1], df = paste(z$aov.tab$Df[1:2], collapse=";"), p = z$aov.tab$Pr[1])
+  }
+  ad.t <- plyr::ldply(.data = adon, .fun = adonis_extract, .id = "Comparison")
 
   ## Extract permutest results
+  if(add_permdisp == TRUE){ 
   permutest_extract <- function(z){
     data.frame(F = z$tab$F[1], df = paste(z$tab$Df, collapse = ";"), p = z$tab$`Pr(>F)`[1])
   }
   pr.t <- plyr::ldply(.data = permdt, .fun = permutest_extract, .id = "Comparison")
-
+  }
 
   ## Adjust P-values
   if(p.adj == TRUE){
@@ -119,7 +116,7 @@ adonis_pairwise <- function(x, dd, group.var, add_permdisp = TRUE, permut = 999,
   ## Prepare the output
   res <- list()
   res$Adonis.tab <- ad.t
-  res$Betadisper.tab <- pr.t
+  if(add_permdisp == TRUE){ res$Betadisper.tab <- pr.t }
 
   ## Add additional data to the results
   if(all_results == TRUE){
