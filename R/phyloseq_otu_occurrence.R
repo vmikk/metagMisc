@@ -37,13 +37,17 @@
 #' head(gpl)
 #'
 phyloseq_otu_occurrence <- function(physeq, variable = NULL,
-  taxa_frequency = TRUE, drop_zeroes = FALSE, justdf = FALSE, long = FALSE){
+  taxa_frequency = "percentage", drop_zeroes = FALSE, justdf = FALSE, long = FALSE){
+
+  # taxa_frequency = "count"      - just counts OTU occurence (number of samples)
+  # taxa_frequency = "percentage" - proportion of sampling units that contains the OTU (sample units in which OTU occurred / total number of sample units examined)
+  # taxa_frequency = "relfreq"    - relative frequency of OTU (frequency of each OTU / sum of the frequency of all OTUs)
 
   # require(plyr)
   # require(reshape2)
 
   ## Function to collapse samples into occurrences for a single sample group
-  single_group_occurrence <- function(phys, rel = FALSE){
+  single_group_occurrence <- function(phys, rel = "count"){
 
     ## Transform OTU abundances into presence-absence form
     sp_count <- apply(X = phyloseq::otu_table(phys),
@@ -51,18 +55,22 @@ phyloseq_otu_occurrence <- function(physeq, variable = NULL,
         FUN = function(x){sum(x > 0)})
 
     ## Absolute occurrence (e.g., number of samples with the species)
-    if(rel == FALSE){
+    if(rel == "count"){
       rez <- data.frame(Taxa = names(sp_count), Occurrence = sp_count, stringsAsFactors = F)
-    }
+    } else {
 
-    ## Relative occurrence (frequency)
-    if(rel == TRUE){
+      ## Frequency of occurrence
       rez <- data.frame(Taxa = names(sp_count), Occurrence = sp_count / nsamples(phys), stringsAsFactors = F)
+
+      ## Relative frequency (OTU frequency / sum of the frequency of all OTUs)
+      if(rel == "relfreq"){
+        rez$Occurrence <- rez$Occurrence / sum(rez$Occurrence)
+      }
     }
 
     rownames(rez) <- NULL
     return(rez)
-  }
+  } # end of single_group_occurrence
 
   ## If no sample groups are specified
   if(is.null(variable)){
