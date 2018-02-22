@@ -1,7 +1,8 @@
 
 ## Estimate interpolated and extrapolated Hill numbers and build rarefaction curve
 phyloseq_inext <- function(physeq, Q = 0, correct_singletons = FALSE, endpoint=NULL, knots = 40,
-    multithread = FALSE, show_CI = TRUE, show_sample_labels = TRUE, show_plot = TRUE, justDF = FALSE, ...) {
+    multithread = FALSE, show_CI = TRUE, show_sample_labels = TRUE,
+    show_plot = TRUE, justDF = FALSE, add_raw_data = TRUE, ...) {
   # physeq = phyloseq object
   # Q = Hill's q-value (default = 0 - OTU number; 1 = Shannon diversity)
   # correct_singletons = Logical; apply Good-Turing correction
@@ -12,6 +13,7 @@ phyloseq_inext <- function(physeq, Q = 0, correct_singletons = FALSE, endpoint=N
   # show_sample_labels = Logical; add sample labels to the plot
   # show_plot = Logical; show plot on screen
   # justDF = Logical; return table with rarefaction results and do not show the plot
+  # add_raw_data = Logical; add attributes with iNEXT results to the output
   # ... = will be passed to iNEXT (e.g., conf = 0.95, nboot = 50)
 
   ## Prepare a list of OTU abundance vectors
@@ -101,8 +103,15 @@ phyloseq_inext <- function(physeq, Q = 0, correct_singletons = FALSE, endpoint=N
 
   ## Just return the table (otherwise, make a plot)
   if(justDF == TRUE){
+    
+    ## Add raw data to the results
+    if(add_raw_data == TRUE){
+      attr(res, which = "iNEXT") <- inext_res
+    }
+
     return(res)
-  }
+  } # end of justDF
+
 
   ## Extract coordinates for sample labels
   samplabs <- ddply(.data = res, .variables = "SampleID", .fun = function(z){
@@ -139,7 +148,11 @@ phyloseq_inext <- function(physeq, Q = 0, correct_singletons = FALSE, endpoint=N
     print(pp)
   }
 
-  ## Add
+  ## Add raw data to the results
+  if(add_raw_data == TRUE){
+    attr(pp, which = "RarefTable") <- res
+    attr(pp, which = "iNEXT") <- inext_res
+  }
 
   invisible(pp)
 }
