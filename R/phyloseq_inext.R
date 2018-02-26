@@ -73,7 +73,7 @@ phyloseq_inext <- function(physeq, Q = 0, curve_type = "diversity",
     }
 
     ## Estimate interpolated and extrapolated Hill numbers
-    inext_res <- llply(
+    inext_res <- plyr::llply(
         .data = x,
         .fun = function(z, ...){ iNEXT::iNEXT(x = z, datatype = "abundance", ...) },
         .parallel = multithread,
@@ -86,7 +86,7 @@ phyloseq_inext <- function(physeq, Q = 0, curve_type = "diversity",
     }
 
     ## Extract results (list with data.frames for each sample)
-    res <- llply(.data = inext_res, .fun = function(z){ z$iNextEst })
+    res <- plyr::llply(.data = inext_res, .fun = function(z){ z$iNextEst })
 
   } # end of multithread = TRUE
 
@@ -116,14 +116,14 @@ phyloseq_inext <- function(physeq, Q = 0, curve_type = "diversity",
 
 
   ## Extract coordinates for sample labels
-  samplabs <- ddply(.data = res, .variables = "SampleID", .fun = function(z){
+  samplabs <- plyr::ddply(.data = res, .variables = "SampleID", .fun = function(z){
     mid <- which.max(z$qD)
     rez <- data.frame(SampSize = z[mid, "m"], MaxQD = z[mid, "qD"], MaxSC = z[mid, "SC"])
     return(rez)
   })
 
   ## Split data to interpolated, observed & extrapolated parts
-  resl <- dlply(.data = res, .variables = "method", .fun = function(z){ z })
+  resl <- plyr::dlply(.data = res, .variables = "method", .fun = function(z){ z })
 
   ## Which variables to plot?
   if(curve_type == "diversity"){ YY <- "qD"; YYL <- "qD.LCL"; YYU <- "qD.UCL"; YYM <- "MaxQD"; ylab <- paste("Species diversity, q = ", Q, sep = "") }
