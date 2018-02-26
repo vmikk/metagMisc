@@ -1,10 +1,12 @@
 
 ## Estimate interpolated and extrapolated Hill numbers and build rarefaction curve
-phyloseq_inext <- function(physeq, Q = 0, correct_singletons = FALSE, endpoint=NULL, knots = 40,
+phyloseq_inext <- function(physeq, Q = 0, curve_type = "diversity", 
+    correct_singletons = FALSE, endpoint=NULL, knots = 40,
     multithread = FALSE, show_CI = TRUE, show_sample_labels = TRUE,
     show_plot = TRUE, justDF = FALSE, add_raw_data = TRUE, ...) {
   # physeq = phyloseq object
   # Q = Hill's q-value (default = 0 - OTU number; 1 = Shannon diversity)
+  # curve_type = "diversity" or "coverage"
   # correct_singletons = Logical; apply Good-Turing correction
   # endpoint = sample size for extrapolation (default = NULL = double reference sample size)
   # knots = number of equally-spaced sample sizes (x-axis) to analyze
@@ -116,15 +118,19 @@ phyloseq_inext <- function(physeq, Q = 0, correct_singletons = FALSE, endpoint=N
   ## Extract coordinates for sample labels
   samplabs <- ddply(.data = res, .variables = "SampleID", .fun = function(z){
     mid <- which.max(z$qD)
-    rez <- data.frame(MaxQD = z[mid, "qD"], SampSize = z[mid, "m"])
+    rez <- data.frame(SampSize = z[mid, "m"], MaxQD = z[mid, "qD"], MaxSC = z[mid, "SC"])
     return(rez)
   })
 
   ## Split data to interpolated, observed & extrapolated parts
   resl <- dlply(.data = res, .variables = "method", .fun = function(z){ z })
 
+  ## Which variables to plot?
+  if(curve_type == "diversity"){ YY <- "qD"; YYL <- "qD.LCL"; YYU <- "qD.UCL"; YYM <- "MaxQD"; ylab <- paste("Species diversity, q = ", Q, sep = "") }
+  if(curve_type == "coverage") { YY <- "SC"; YYL <- "SC.LCL"; YYU <- "SC.UCL"; YYM <- "MaxSC"; ylab <- "Sample coverage" }
+
   ## Prepare a plot
-  pp <- ggplot(data = res, aes(x = m, y = qD, group = SampleID)) +  # color = color
+  pp <- ggplot(data = res, aes_string(x = "m", y = YY, group = "SampleID")) +  # color = color
     geom_line(data = resl$interpolated, linetype = "solid") +
     geom_line(data = resl$extrapolated, linetype = "dashed") +
     geom_point(data = resl$observed, size = 2)
@@ -132,17 +138,17 @@ phyloseq_inext <- function(physeq, Q = 0, correct_singletons = FALSE, endpoint=N
   ## Show confinence interval
   if(show_CI == TRUE){
     pp <- pp +
-      geom_ribbon(aes(ymin = qD.LCL, ymax = qD.UCL, color = NULL), alpha = 0.2)   # fill = color
+      geom_ribbon(aes_string(ymin = YYL, ymax = YYU, color = NULL), alpha = 0.2)   # fill = color
   }
 
   ## Show sample labels
   if(show_sample_labels == TRUE){
     pp <- pp +
-      geom_text(data = samplabs, aes(x = SampSize, y = MaxQD, label = SampleID), size = 4, hjust = -0.5)     # color = color
+      geom_text(data = samplabs, aes_string(x = "SampSize", y = YYM, label = "SampleID"), size = 4, hjust = -0.5)     # color = color
   }
 
   ## Add axes labels
-  pp <- pp + labs(x = "Sample Size", y = paste("Species diversity, q = ", Q, sep = ""))
+  pp <- pp + labs(x = "Sample Size", y = ylab)
 
   if(show_plot == TRUE){
     print(pp)
