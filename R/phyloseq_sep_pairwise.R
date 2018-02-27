@@ -41,11 +41,13 @@ phyloseq_sep_pairwise <- function(phys, group, comparis = "all", drop_zeroes = T
       phgr[[compars[2, i]]]
       )
   }
-  names(res) <- aaply(.data = compars, .margins = 2, .fun = paste, collapse="__")
+  names(res) <- plyr::aaply(.data = compars, .margins = 2, .fun = paste, collapse="__")
 
   ## Remove zero OTUs
   if(drop_zeroes == TRUE){
-    res <- llply(.data = res, .fun = function(z){ prune_taxa(taxa_sums(z) > 0, z) })
+    res <- plyr::llply(
+      .data = res,
+      .fun = function(z){ phyloseq::prune_taxa(phyloseq::taxa_sums(z) > 0, z) })
   }
 
   return(res)
