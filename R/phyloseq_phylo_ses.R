@@ -96,7 +96,7 @@ phyloseq_phylo_ses <- function(physeq, measures = c("PD", "MPD", "MNTD", "VPD"),
     ## Estimate diversity with picante
     if(method == "picante"){
       if("PD" %in% pdiv_measures){
-        rez <- c(rez, list(PD = picante::pd(samp = comm, tree = phy)$PD ))
+        rez <- c(rez, list(PD = picante::pd(samp = comm, tree = phy, include.root = F)$PD ))
       }
       if("MPD" %in% pdiv_measures){
         rez <- c(rez, list(MPD = picante::mpd(samp = comm, dis = dis, abundance.weighted = abund_wei) ))
