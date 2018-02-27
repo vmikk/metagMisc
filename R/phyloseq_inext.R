@@ -1,22 +1,28 @@
 
-## Estimate interpolated and extrapolated Hill numbers and build rarefaction curve
-phyloseq_inext <- function(physeq, Q = 0, curve_type = "diversity", 
+#' @title Estimate interpolated and extrapolated Hill numbers and sample coverage and construct rarefaction curve.
+#'
+#' @param physeq A phyloseq-class object
+#' @param Q Diversity order of Hill number; 0 for species richness (default), 1 for Shannon diversity; 2 for Simpson diversity
+#' @param curve_type Which data to show on the plot: "diversity" (default) or sample "coverage"
+#' @param correct_singletons Logical; apply Good-Turing correction for singleon counts
+#' @param endpoint Sample size for extrapolation (default = NULL, which corresponds to a double reference sample size for each sample)
+#' @param knots Number of equally-spaced sample sizes (x-axis) to analyze (default, 40)
+#' @param multithread Logical; if TRUE, attempts to run the function on multiple cores
+#' @param show_CI Logical; show bootstap confidence interval on the plot
+#' @param show_sample_labels Logical; add sample labels to the plot
+#' @param show_plot Logical; show plot on screen
+#' @param justDF Logical; return table with rarefaction results and do not show the plot
+#' @param add_raw_data Logical; add attributes with iNEXT results to the output (see \code{\link[iNEXT]{iNEXT}})
+#' @param ... Additional arguments may be passed to \code{\link[iNEXT]{iNEXT}} (e.g., conf = 0.95, nboot = 100)
+#' @return Plot of class 'ggplot' or 'data.frame' (if 'justDF = TRUE')
+#' @export
+#' @seealso \code{\link[iNEXT]{iNEXT}}, \code{\link{prepare_inext}}
+#' @examples
+#'
+phyloseq_inext <- function(physeq, Q = 0, curve_type = "diversity",
     correct_singletons = FALSE, endpoint=NULL, knots = 40,
     multithread = FALSE, show_CI = TRUE, show_sample_labels = TRUE,
     show_plot = TRUE, justDF = FALSE, add_raw_data = TRUE, ...) {
-  # physeq = phyloseq object
-  # Q = Hill's q-value (default = 0 - OTU number; 1 = Shannon diversity)
-  # curve_type = "diversity" or "coverage"
-  # correct_singletons = Logical; apply Good-Turing correction
-  # endpoint = sample size for extrapolation (default = NULL = double reference sample size)
-  # knots = number of equally-spaced sample sizes (x-axis) to analyze
-  # multithread = Logical;
-  # show_CI = Logical; show bootstap confidence interval on the plot
-  # show_sample_labels = Logical; add sample labels to the plot
-  # show_plot = Logical; show plot on screen
-  # justDF = Logical; return table with rarefaction results and do not show the plot
-  # add_raw_data = Logical; add attributes with iNEXT results to the output
-  # ... = will be passed to iNEXT (e.g., conf = 0.95, nboot = 50)
 
   ## Prepare a list of OTU abundance vectors
   x <- prepare_inext(
@@ -105,7 +111,7 @@ phyloseq_inext <- function(physeq, Q = 0, curve_type = "diversity",
 
   ## Just return the table (otherwise, make a plot)
   if(justDF == TRUE){
-    
+
     ## Add raw data to the results
     if(add_raw_data == TRUE){
       attr(res, which = "iNEXT") <- inext_res
