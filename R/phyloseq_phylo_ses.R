@@ -96,7 +96,12 @@ phyloseq_phylo_ses <- function(physeq, measures = c("PD", "MPD", "MNTD", "VPD"),
     ## Estimate diversity with picante
     if(method == "picante"){
       if("PD" %in% pdiv_measures){
-        rez <- c(rez, list(PD = picante::pd(samp = comm, tree = phy, include.root = F)$PD ))
+        if(abund_wei == FALSE){
+          rez <- c(rez, list(PD = picante::pd(samp = comm, tree = phy, include.root = F)$PD ))
+        }
+        if(abund_wei == TRUE){
+          rez <- c(rez, list(PD = pd_weighted(samp = comm, tree = phy) ))
+        }
       }
       if("MPD" %in% pdiv_measures){
         rez <- c(rez, list(MPD = picante::mpd(samp = comm, dis = dis, abundance.weighted = abund_wei) ))
@@ -303,3 +308,46 @@ weighted.var <- function(x, w = NULL, normwt = FALSE, na.rm = FALSE){
 # x <- runif(500); wts <- sample(1:6, 500, TRUE)
 # weighted.var(x, wts)
 
+
+
+
+## Abundance weighted calculation of Faiths PD index
+## based on lefse_0.5::weighted.faith by Nathan G. Swenson
+## https://github.com/NGSwenson/lefse_0.5/commit/74814e2f4f8a1f0244da8e8a48bb17897718db67
+pd_weighted <- function(samp, tree){
+
+  ## Function for a single sample
+  wpd <- function(smp){
+    
+    ## Extract the names of species in a community with an abundance greater than zero
+    ## and make a pruned phylogeny for that community
+    tmp.tree <- geiger::treedata(tree, smp[smp > 0], warnings=F)$phy
+
+    ## Create empty branches matrix
+    branches <- matrix(NA, nrow = nrow(tmp.tree$edge), ncol = 4)
+
+    ## Fill first two columns of the matrix with node numbers defining each edge
+    branches[,1:2] <- tmp.tree$edge
+
+    ## Fill the third column with the length of each branch
+    branches[,3] <- tmp.tree$edge.length
+    
+    get.leaves <- function(x){ leaves.node <- geiger::tips(tmp.tree, x[2]) }
+    
+    ## Retrieve species names subtended by each branch (i.e. ## row) in the branches matrix
+    leaves <- apply(X = branches, MARGIN = 1, FUN = get.leaves)
+    
+    ## Calculate the mean abundance (Ai) for species across each set of leaves
+    for(i in 1:length(leaves)){
+      branches[i, 4] <- mean(smp[leaves[[i]]], na.rm = T) 
+    }
+
+    ## Calculated the Weighted Faith’s Index
+    rez <- nrow(tmp.tree$edge) * ((sum(branches[,3] * branches[,4])) / sum(branches[,4]))
+    return(rez)
+  }
+
+  ## Estimate weithed PD for each sample
+  res <- apply(X = samp, MARGIN = 1, FUN = wpd)
+  res
+}
