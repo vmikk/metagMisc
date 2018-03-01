@@ -40,20 +40,20 @@
 #'
 phyloseq_phylo_div <- function(physeq, measures=c("PD", "MPD", "MNTD", "SES.PD", "SES.MPD", "SES.MNTD"), ...){
 
-  require(PhyloMeasures)
+  # require(PhyloMeasures)
 
   ## Data validation
   if(!class(physeq) %in% "phyloseq"){ stop("Error: Input should be of class 'phyloseq'.\n") }
-  if( is.null(phy_tree(physeq, errorIfNULL=FALSE)) ){ stop("Error: Phylogenetic tree is missing in physeq.\n") }
+  if( is.null(phyloseq::phy_tree(physeq, errorIfNULL=FALSE)) ){ stop("Error: Phylogenetic tree is missing in physeq.\n") }
 
   ## Prepare community matrix = matrix with binary (0/1) values, where each row represents a tip set
   ## Each column name in the matrix must match a tip label on the input tree
 
   ## Check the orientation of the OTU table
-  trows <- taxa_are_rows(physeq)
+  trows <- phyloseq::taxa_are_rows(physeq)
 
   ## Extact OTU table
-  comm <- as(object = otu_table(physeq), Class = "matrix")
+  comm <- as(object = phyloseq::otu_table(physeq), Class = "matrix")
   if(trows == TRUE){ comm <- t(comm) }
 
   ## Scale OTU abundance to presence/absence
@@ -64,30 +64,30 @@ phyloseq_phylo_div <- function(physeq, measures=c("PD", "MPD", "MNTD", "SES.PD",
 
   ## Basic metrics
   if("PD" %in% measures){
-    res <- c(res, list(PD = pd.query(tree = phy_tree(physeq), matrix = comm, ...) ))
+    res <- c(res, list(PD = PhyloMeasures::pd.query(tree = phy_tree(physeq), matrix = comm, ...) ))
   }
   if("MPD" %in% measures){
-    res <- c(res, list(MPD = mpd.query(tree = phy_tree(physeq), matrix = comm, ...) ))
+    res <- c(res, list(MPD = PhyloMeasures::mpd.query(tree = phy_tree(physeq), matrix = comm, ...) ))
   }
   if("MNTD" %in% measures){
-    res <- c(res, list(MNTD = mntd.query(tree = phy_tree(physeq), matrix = comm, ...) ))
+    res <- c(res, list(MNTD = PhyloMeasures::mntd.query(tree = phy_tree(physeq), matrix = comm, ...) ))
   }
 
   ## Standardized effect sizes
   if("SES.PD" %in% measures){
-    res <- c(res, list(SES.PD = pd.query(tree = phy_tree(physeq), matrix = comm, standardize = T, ...) ))
+    res <- c(res, list(SES.PD = PhyloMeasures::pd.query(tree = phy_tree(physeq), matrix = comm, standardize = T, ...) ))
   }
   if("SES.MPD" %in% measures){
-    res <- c(res, list(SES.MPD = mpd.query(tree = phy_tree(physeq), matrix = comm, standardize = T, ...) ))
+    res <- c(res, list(SES.MPD = PhyloMeasures::mpd.query(tree = phy_tree(physeq), matrix = comm, standardize = T, ...) ))
   }
   if("SES.MNTD" %in% measures){
-    res <- c(res, list(SES.MNTD = mntd.query(tree = phy_tree(physeq), matrix = comm, standardize = T, ...) ))
+    res <- c(res, list(SES.MNTD = PhyloMeasures::mntd.query(tree = phy_tree(physeq), matrix = comm, standardize = T, ...) ))
   }
 
 
   ## Combine results
   res <- do.call("cbind", res)
-  rownames(res) <- sample_names(physeq)
+  rownames(res) <- phyloseq::sample_names(physeq)
   res <- as.data.frame(res)
 
   return(res)
