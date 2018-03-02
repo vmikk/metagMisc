@@ -36,7 +36,8 @@
 #'                    nsim = 200, swapiter = 200)  # NB. increase the number of iterations!
 #'
 phyloseq_phylo_ses <- function(physeq, measures = c("PD", "MPD", "MNTD", "VPD"),
-  null_model, package = "picante", abundance_weighted = FALSE, nsim = 1000, swapiter = 1000, verbose = TRUE, ...){
+  null_model = "taxa.labels", package = "picante", abundance_weighted = FALSE, 
+  nsim = 1000, swapiter = 1000, verbose = TRUE, ...){
 
   # require(plyr)
   # require(picante)         # for null models
