@@ -8,12 +8,14 @@
 #'
 #' Currently only non-abundance-weighted estimates are implemented.
 #' @param physeq A phyloseq-class object (phylogenetic tree is required)
-#' @param measures Character vector with diversity indices names ("PD", "MPD", "MNTD")
+#' @param measures Character vector with diversity indices names ("PD", "MPD", "MNTD", "VPD")
 #' @param null_model Character string indicating which null model to use (for the supported list of models see \code{\link[picante]{ses.pd}})
+#' @param package Which package to use for diversity estimation - "picante" (default) or "PhyloMeasures" (could be faster)
+#' @param abundance_weighted Logical; should diversity metrics be weighted by species abundance? (default = FALSE)
 #' @param nsim Number of randomizations for null-distribution generation
 #' @param swapiter Number of iterations for independentswap or trialswap algorithms
 #' @param verbose Logical; if TRUE, progress messages from the function will be printed
-# @param ...
+#' @param ... Additional arguments currently are not implemented
 #' @details Values of SES above zero indicate that the species pool of a habitat is more diverse than the regional species pool.
 #' @return Data frame.
 #' @export
