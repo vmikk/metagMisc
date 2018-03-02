@@ -27,4 +27,5 @@ Suggests:
 License: MIT
 Encoding: UTF-8
 LazyData: true
+ByteCompile: true
 RoxygenNote: 6.0.1
