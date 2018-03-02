@@ -17,6 +17,14 @@
 #' @return Plot of class 'ggplot' or 'data.frame' (if 'justDF = TRUE')
 #' @export
 #' @seealso \code{\link[iNEXT]{iNEXT}}, \code{\link{prepare_inext}}
+#' @references
+#' Chao A, Gotelli NJ, Hsieh TC, Sander EL, Ma KH, Colwell RK, Ellison AM (2014) 
+#' Rarefaction and extrapolation with Hill numbers: a framework for sampling and estimation in species diversity studies. 
+#' Ecological Monographs, 84: 45-67. DOI: 10.1890/13-0133.1
+#' 
+#' Hsieh TC, Ma KH, Chao A (2016) iNEXT: An R package for interpolation and extrapolation of species diversity (Hill numbers). 
+#' Methods in Ecology and Evolution, 7: 1451-1456. DOI: 10.1111/2041-210X.12613
+#' 
 #' @examples
 #'
 phyloseq_inext <- function(physeq, Q = 0, curve_type = "diversity",
