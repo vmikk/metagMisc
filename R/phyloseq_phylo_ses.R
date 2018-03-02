@@ -47,6 +47,18 @@ phyloseq_phylo_ses <- function(physeq, measures = c("PD", "MPD", "MNTD", "VPD"),
     stop("Phylogenetic tree is missing in physeq.\n")
   }
 
+  if( package == "PhyloMeasures" & abundance_weighted == TRUE  ){
+    stop("Abundance-weighted estimates are not supported with PhyloMeasures package.\n")
+  }
+
+  if( is.null(null_model) ){
+    stop("Null model should be specified.\n")
+  }
+
+  if( length(null_model) != 1 ){
+    stop("Only a single null model should be specified.\n")
+  }
+
   ## Print when analysis started
   if(verbose == TRUE){
     progr <- "text"
