@@ -90,7 +90,7 @@ phyloseq_phylo_ses <- function(physeq, measures = c("PD", "MPD", "MNTD", "VPD"),
   pdiv <- function(comm, phy, pdiv_measures, method = "picante", abund_wei){
 
     ## Get pairwise distances from a phylogenetic tree
-    if(method == "picante"){ dis <- ape::cophenetic.phylo(phy) }
+    if(method == "picante" | "VPD" %in% pdiv_measures){ dis <- ape::cophenetic.phylo(phy) }
 
     ## Initialize results
     rez <- vector("list")
@@ -128,7 +128,7 @@ phyloseq_phylo_ses <- function(physeq, measures = c("PD", "MPD", "MNTD", "VPD"),
 
     ## Estimate VPD with internal function
     if("VPD" %in% pdiv_measures){
-      rez <- c(rez, list(VPD = vpd(samp = comm, dis = phy, abundance.weighted = abund_wei) ))
+      rez <- c(rez, list(VPD = vpd(samp = comm, dis = dis, abundance.weighted = abund_wei) ))
     }
 
     rez <- do.call("cbind", rez)
