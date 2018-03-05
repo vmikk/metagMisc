@@ -1,9 +1,20 @@
 
-## Average diversity estimates over all rarefaction iterations (for each sample)
-phyloseq_mult_raref_div <- function(physeq, SampSize = min(sample_sums(physeq)), iter = 1000, 
+#' @title Average diversity estimates across multiple rarefaction iterations.
+#' @description This function performs multiple rarefaction and estimates average diversity (e.g., Simpson or Shannon indices) for each sample.
+#' @param physeq A phyloseq-class object
+#' @param SampSize Rarefaction depth (number of reads to sample)
+#' @param iter Number of rarefication iterations
+#' @param divindex Alpha-diversity measures to estimate (for the supported indices see \code{\link[phyloseq]{estimate_richness}})
+#' @param parallel Logical; if TRUE, attempts to run the function on multiple cores
+#' @param verbose Logical; if TRUE, progress messages from the function will be printed
+#' @param ... Additional argument may be passed to \code{\link{phyloseq_mult_raref}}
+#'
+#' @return A data.frame of the richness estimates.
+#' @export
+#'
+#' @examples
+phyloseq_mult_raref_div <- function(physeq, SampSize = min(sample_sums(physeq)), iter = 1000,
   divindex = c("Observed", "Shannon"), parallel = FALSE, verbose = TRUE, ...){
-  # divindex = alpha-diversity measures
-  # ... additional arguments to rarefy_even_depth
 
   ## Progress indicator
   if(verbose == TRUE){
