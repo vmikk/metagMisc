@@ -4,16 +4,18 @@
 #' @param x Sample meta-data (data frame for the independent variables)
 #' @param dd Dissimilarity matrix between samples
 #' @param group.var Name of the independent variable to test (RHS in adonis formula)
+#' @param add_permdisp Logical; if TRUE (default), results of tests for homogeneity of multivariate dispersions will be added to output (see \code{\link[vegan]{betadisper}})
 #' @param permut Number of permutations required
 #' @param p.adj Logical, adjust P-values for multiple comparisons
 #' @param adj.meth Correction method from \code{\link{p.adjust}} ("holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr")
 #' @param all_results Logical, return results of adonis and data subsets for each pairwise comparison
 #' @param comparison_sep Character string to separate the levels of independent variable the in the pairwise comparison names (default, ".")
-#' @param ... Additional arguments will be passed to \code{\link{adonis}}
+#' @param permdisp_type Use the spatial median (default) or the group centroid for the analysis for homogeneity of multivariate dispersions (see \code{\link[vegan]{betadisper}})
+#' @param ... Additional arguments will be passed to \code{\link[vegan]{adonis}}
 #'
-#' @return List with ......
+#' @return List with adinonis and betadisper results.
 #' @export
-#' @seealso \code{\link{adonis}}
+#' @seealso \code{\link[vegan]{adonis}}, \code{\link[vegan]{betadisper}}
 #' @examples
 #' library(vegan)
 #' data(dune)
@@ -23,8 +25,9 @@
 #' adonis(dune ~ Management, data = dune.env)
 #'
 #' # Pairwise comparisons between Management levels
-#' ad <- adonis_pairwise(x = dune.env, dd = vegdist(dune), group.var = "Management")
-#' ad$Adonis.tab
+#' tst <- adonis_pairwise(x = dune.env, dd = vegdist(dune), group.var = "Management")
+#' tst$Adonis.tab
+#' tst$Betadisper.tab
 #'
 adonis_pairwise <- function(x, dd, group.var, add_permdisp = TRUE, permut = 999,
   p.adj = T, adj.meth = "fdr", all_results = T, comparison_sep = ".", permdisp_type = "median", ...){
@@ -65,13 +68,13 @@ adonis_pairwise <- function(x, dd, group.var, add_permdisp = TRUE, permut = 999,
 
   ## Pairwise tests
   adon <- list()              # placeholders
-  if(add_permdisp == TRUE){ 
+  if(add_permdisp == TRUE){
     permd <- list()   # for betadisper
     permdt <- list()  # for permutest
   }
 
   for(i in 1:length(dd.subs)){
-    
+
     ## Multivariate analysis of variance (adonis)
     adon[[i]] <- vegan::adonis(dd.subs[[i]] ~ dd.groups[[i]], permutations = permut, ...)
 
@@ -97,7 +100,7 @@ adonis_pairwise <- function(x, dd, group.var, add_permdisp = TRUE, permut = 999,
   ad.t <- plyr::ldply(.data = adon, .fun = adonis_extract, .id = "Comparison")
 
   ## Extract permutest results
-  if(add_permdisp == TRUE){ 
+  if(add_permdisp == TRUE){
   permutest_extract <- function(z){
     data.frame(F = z$tab$F[1], df = paste(z$tab$Df, collapse = ";"), p = z$tab$`Pr(>F)`[1])
   }
