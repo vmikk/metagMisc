@@ -23,7 +23,7 @@
 #' phyloseq_compare(esophagus, eso_trim, cols = c("Esophagus", "Trimmed esophagus"))
 #' phyloseq_compare(esophagus, eso_trim, cols = c("Esophagus", "Trimmed esophagus"), more_stats = T)
 #'
-phyloseq_compare <- function(physeq, ..., cols = NULL, more_stats = FALSE, long = FALSE){
+phyloseq_summary <- function(physeq, ..., cols = NULL, more_stats = FALSE, long = FALSE){
 
   require(plyr)
   require(reshape2)
