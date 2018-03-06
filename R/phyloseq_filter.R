@@ -223,7 +223,16 @@ phyloseq_filter_top_taxa <- function(physeq, perc = 10, n = NULL){
 
 
 
-## Check the range of filtering values to determine the optimal threshold
+#' @title Check the range of the top-taxa filtering values to determine the optimal threshold.
+#' @description This function performs taxa filtering by retaining the most abundant taxa.
+#' A range of abundance percentages (5 - 95\%) will be explored.
+#' @param physeq A phyloseq-class object
+#' @param show_plot Logical; if TRUE, shows the plot on screen
+#' @return ggplot-object.
+#' @export
+#'
+#' @examples
+#' 
 phyloseq_filter_top_taxa_range <- function(physeq, show_plot = TRUE){
   percs <- seq(5, 95, 5)
 
