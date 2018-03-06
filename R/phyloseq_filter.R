@@ -224,7 +224,7 @@ phyloseq_filter_top_taxa <- function(physeq, perc = 10, n = NULL){
 
 
 ## Check the range of filtering values to determine the optimal threshold
-phyloseq_filter_top_taxa_range <- function(physeq){
+phyloseq_filter_top_taxa_range <- function(physeq, show_plot = TRUE){
   percs <- seq(5, 95, 5)
 
   fr <- plyr::mlply(.data = data.frame(perc = percs), .fun = function(...){ phyloseq_filter_top_taxa(physeq, ...) })
@@ -234,7 +234,7 @@ phyloseq_filter_top_taxa_range <- function(physeq){
     sz <- sample_sums(z)
     res <- data.frame(Sample = names(sz), Preserved = sz)
     return(res)
-    })
+  })
 
   pp <- ggplot(data = fr_tab, aes(x = perc, y = Preserved, group = Sample)) +   # color = Sample
     geom_vline(xintercept=75, color="grey", linetype = "longdash") +
@@ -243,5 +243,6 @@ phyloseq_filter_top_taxa_range <- function(physeq){
     labs(x = "Number of most abundant taxa retained, %", y = "Percentage of total sample abundance") +
     theme(legend.position = "none")
 
-  return(pp)
+  if(show_plot == TRUE){ print(pp) }
+  invisible(pp)
 }
