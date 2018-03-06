@@ -239,8 +239,8 @@ phyloseq_filter_top_taxa_range <- function(physeq, show_plot = TRUE){
   fr <- plyr::mlply(.data = data.frame(perc = percs), .fun = function(...){ phyloseq_filter_top_taxa(physeq, ...) })
   names(fr) <- percs
 
-  fr_tab <- ldply(.data = fr, .fun = function(z){
-    sz <- sample_sums(z)
+  fr_tab <- plyr::ldply(.data = fr, .fun = function(z){
+    sz <- phyloseq::sample_sums(z)
     res <- data.frame(Sample = names(sz), Preserved = sz)
     return(res)
   })
