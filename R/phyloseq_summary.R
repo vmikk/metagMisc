@@ -1,6 +1,6 @@
 
-#' @title Compare two phyloseq objects.
-#'
+#' @title Summary for phyloseq objects.
+#' @description This function could be used for comparison of multiple phyloseq objects (e.g., after trimming).
 #' @param physeq A phyloseq-class object
 #' @param ... Optionally more phyloseq objects
 #' @param cols Character vector with column names for phy1 & phy2 in the resulting table
@@ -20,8 +20,8 @@
 #' # Remove taxa that have less than 5 reads
 #' eso_trim <- prune_taxa(taxa_sums(esophagus) >= 5, esophagus)
 #'
-#' phyloseq_compare(esophagus, eso_trim, cols = c("Esophagus", "Trimmed esophagus"))
-#' phyloseq_compare(esophagus, eso_trim, cols = c("Esophagus", "Trimmed esophagus"), more_stats = T)
+#' phyloseq_summary(esophagus, eso_trim, cols = c("Esophagus", "Trimmed esophagus"))
+#' phyloseq_summary(esophagus, eso_trim, cols = c("Esophagus", "Trimmed esophagus"), more_stats = T)
 #'
 phyloseq_summary <- function(physeq, ..., cols = NULL, more_stats = FALSE, long = FALSE){
 
