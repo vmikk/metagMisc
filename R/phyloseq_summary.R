@@ -25,9 +25,6 @@
 #'
 phyloseq_summary <- function(physeq, ..., cols = NULL, more_stats = FALSE, long = FALSE){
 
-  require(plyr)
-  require(reshape2)
-
   ## Merge phyloseq objects into a list
   if(!missing(...)){
     lls <- list(physeq, ...)
@@ -47,15 +44,15 @@ phyloseq_summary <- function(physeq, ..., cols = NULL, more_stats = FALSE, long 
     # x = single phyloseq object
 
     ## Number of reads per OTU
-    treads <- taxa_sums(x)
+    treads <- phyloseq::taxa_sums(x)
 
     ## Number of reads per sample
-    sreads <- sample_sums(x)
+    sreads <- phyloseq::sample_sums(x)
 
     ## Prepare resulting table
     res <- rbind(
-      data.frame(V0 = "Number of samples", V1 = nsamples(x)),
-      data.frame(V0 = "Number of OTUs", V1 = ntaxa(x)),
+      data.frame(V0 = "Number of samples", V1 = phyloseq::nsamples(x)),
+      data.frame(V0 = "Number of OTUs", V1 = phyloseq::ntaxa(x)),
       data.frame(V0 = "Total number of reads", V1 = sum(treads)),
       data.frame(V0 = "Average number of reads per OTU", V1 = mean(treads)),
       data.frame(V0 = "Average number of reads per sample", V1 = mean(sreads)),
@@ -105,7 +102,7 @@ phyloseq_summary <- function(physeq, ..., cols = NULL, more_stats = FALSE, long 
   } ## End of summary function
 
   ## Apply summary function for each phyloseq object
-  RES <- ldply(.data = lls, .fun = smr, .id = "Phyloseq", more_stats = more_stats)
+  RES <- plyr::ldply(.data = lls, .fun = smr, .id = "Phyloseq", more_stats = more_stats)
 
   ## Reshape data to a wide format
   if(long == FALSE){
