@@ -4,12 +4,14 @@
 \alias{dfRowName}
 \title{Transfer rownames of data frame to a new column (for data export)}
 \usage{
-dfRowName(x, name = "Rows")
+dfRowName(x, name = "Rows", stringsAsFactors = FALSE)
 }
 \arguments{
 \item{x}{Data frame}
 
 \item{name}{Name of the new column to be created}
+
+\item{stringsAsFactors}{Logical; should character vectors be converted to factors? (default, FALSE)}
 }
 \value{
 Data frame
