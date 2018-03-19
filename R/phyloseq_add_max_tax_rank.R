@@ -1,7 +1,14 @@
 
-## Add the lowest level of taxonomic classification to the taxonomy table
+#' @title Add the lowest level of taxonomic classification to the taxonomy table of phyloseq-class object.
+#' @param physeq A phyloseq-class object
+#' @param abbreviate Logical; if TRUE, lowest taxon name will be abbreviated (useful for plotting). Default is FALSE
+#' @param ... Additional arguments may be passed to \code{\link{abbreviate_taxa_names}}
+#' @return Phyloseq object with modified taxonomy table.
+#' @export
+#'
+#' @examples
+#'
 phyloseq_add_max_tax_rank <- function(physeq, abbreviate = F, ...){
-  # ... passed to abbreviate_taxa_names
 
   ## Determine the lowest level of taxonomic classification
   sp_ranks <- get_max_taxonomic_rank(physeq)                                   # [metagMisc]
