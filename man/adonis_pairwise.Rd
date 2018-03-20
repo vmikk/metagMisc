@@ -4,8 +4,9 @@
 \alias{adonis_pairwise}
 \title{Pairwise comparisons for permutational multivariate analysis of variance using distance matrices}
 \usage{
-adonis_pairwise(x, dd, group.var = "Fact", permut = 999, p.adj = T,
-  adj.meth = "fdr", all_results = T, comparison_sep = ".", ...)
+adonis_pairwise(x, dd, group.var, add_permdisp = TRUE, permut = 999,
+  p.adj = T, adj.meth = "fdr", all_results = T, comparison_sep = ".",
+  permdisp_type = "median", ...)
 }
 \arguments{
 \item{x}{Sample meta-data (data frame for the independent variables)}
@@ -13,6 +14,8 @@ adonis_pairwise(x, dd, group.var = "Fact", permut = 999, p.adj = T,
 \item{dd}{Dissimilarity matrix between samples}
 
 \item{group.var}{Name of the independent variable to test (RHS in adonis formula)}
+
+\item{add_permdisp}{Logical; if TRUE (default), results of tests for homogeneity of multivariate dispersions will be added to output (see \code{\link[vegan]{betadisper}})}
 
 \item{permut}{Number of permutations required}
 
@@ -24,10 +27,12 @@ adonis_pairwise(x, dd, group.var = "Fact", permut = 999, p.adj = T,
 
 \item{comparison_sep}{Character string to separate the levels of independent variable the in the pairwise comparison names (default, ".")}
 
-\item{...}{Additional arguments will be passed to \code{\link{adonis}}}
+\item{permdisp_type}{Use the spatial median (default) or the group centroid for the analysis for homogeneity of multivariate dispersions (see \code{\link[vegan]{betadisper}})}
+
+\item{...}{Additional arguments will be passed to \code{\link[vegan]{adonis}}}
 }
 \value{
-List with ......
+List with adinonis and betadisper results.
 }
 \examples{
 library(vegan)
@@ -38,10 +43,11 @@ data(dune.env)
 adonis(dune ~ Management, data = dune.env)
 
 # Pairwise comparisons between Management levels
-ad <- adonis_pairwise(x = dune.env, dd = vegdist(dune), group.var = "Management")
-ad$Adonis.tab
+tst <- adonis_pairwise(x = dune.env, dd = vegdist(dune), group.var = "Management")
+tst$Adonis.tab
+tst$Betadisper.tab
 
 }
 \seealso{
-\code{\link{adonis}}
+\code{\link[vegan]{adonis}}, \code{\link[vegan]{betadisper}}
 }
