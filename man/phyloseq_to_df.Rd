@@ -4,16 +4,17 @@
 \alias{phyloseq_to_df}
 \title{Convert phyloseq object to data frame (for exporting).}
 \usage{
-phyloseq_to_df(physeq, addtax = T, addtot = F, abund_sort = T)
+phyloseq_to_df(physeq, addtax = T, addtot = F, addmaxrank = F,
+  sorting = "abundance")
 }
 \arguments{
 \item{physeq}{A phyloseq-class object}
 
-\item{addtax}{Add taxonomy to the result table}
+\item{addtax}{Logical; add taxonomy to the result table (default, TRUE)}
 
-\item{addtot}{Add total OTU abundance to the result table}
+\item{addtot}{Logical; add total OTU abundance to the resulting table (default, FALSE)}
 
-\item{abund_sort}{Sort OTUs by total abundance}
+\item{sorting}{Reorder OTUs according to their total abundance ("abundance", default) or taxonomy (sorting = "taxonomy"); if reordering is not required use 'sorting = NULL'}
 }
 \value{
 Data frame with OTU taxonomy and abundance
