@@ -29,13 +29,13 @@ phyloseq_mult_raref_div <- function(physeq, SampSize = min(sample_sums(physeq)),
 
   ## Estimate richness and diversity
   phys_diversity <- function(x, indices = c("Observed", "Chao1", "ACE", "Shannon", "Simpson", "InvSimpson", "Fisher")){
-    res <- estimate_richness(x, split = T, measures = indices)
+    res <- phyloseq::estimate_richness(x, split = T, measures = indices)
     res <- dfRowName(res, name = "Sample")
     return(res)
   }
 
   if(verbose == TRUE){ cat("..Diversity esimation\n") }
-  DIV <- ldply(
+  DIV <- plyr::ldply(
     .data = phys_raref,
     .fun = phys_diversity,
     .id = "Iteration",
@@ -46,7 +46,7 @@ phyloseq_mult_raref_div <- function(physeq, SampSize = min(sample_sums(physeq)),
   colnames(DIV)[1] <- "Iteration"
 
   ## Reshape data to long-format
-  DIV.resh <- melt(
+  DIV.resh <- reshape2::melt(
     data = DIV,
     id.vars = c("Iteration", "Sample"),
     variable.name = "Index",
@@ -54,10 +54,10 @@ phyloseq_mult_raref_div <- function(physeq, SampSize = min(sample_sums(physeq)),
 
   ## Average diversity estimates over all iterations
   if(verbose == TRUE){ cat("..Averaging diversity estimates\n") }
-  DIV.means <- ddply(
-    .data=DIV.resh,
-    .variables=c("Sample", "Index"),
-    .fun=function(x) { mean_cl_boot(x$Value) })  # mean_cl_boot = ggplot2-wrapper for Hmisc
+  DIV.means <- plyr::ddply(
+    .data = DIV.resh,
+    .variables = c("Sample", "Index"),
+    .fun = function(x) { ggplot2::mean_cl_boot(x$Value) })  # mean_cl_boot = ggplot2-wrapper for Hmisc
 
   colnames(DIV.means) <- c("Sample", "Index", "Estimate", "CI.lower", "CI.upper")
 
