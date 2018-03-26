@@ -20,6 +20,7 @@ FUNGuild = Fungi + fUNctional + Guild
 }
 \examples{
 fg <- parse_funguild()
+attr(fg, "DownloadDate")  # Check when the database was downloaded
 
 }
 \references{
