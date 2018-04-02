@@ -4,8 +4,9 @@
 \alias{phyloseq_otu_occurrence}
 \title{Estimate species occurrence (within groups of samples)}
 \usage{
-phyloseq_otu_occurrence(physeq, variable = NULL, taxa_frequency = TRUE,
-  drop_zeroes = FALSE, justdf = FALSE, long = FALSE)
+phyloseq_otu_occurrence(physeq, variable = NULL,
+  taxa_frequency = "percentage", drop_zeroes = FALSE, justdf = FALSE,
+  long = FALSE)
 }
 \arguments{
 \item{physeq}{A phyloseq-class object}
