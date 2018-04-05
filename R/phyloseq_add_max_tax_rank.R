@@ -28,7 +28,7 @@ phyloseq_add_max_tax_rank <- function(physeq, abbreviate = F, ...){
   ## Replace taxonomy table with the new one
   rownames(sp_ranks) <- sp_ranks$TaxaName
   sp_ranks$TaxaName <- NULL
-  tax_table(physeq) <- tax_table(as.matrix(sp_ranks))
+  phyloseq::tax_table(physeq) <- phyloseq::tax_table( as.matrix(sp_ranks) )
 
   return(physeq)
 }
