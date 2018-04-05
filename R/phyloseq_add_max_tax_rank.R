@@ -7,7 +7,20 @@
 #' @export
 #'
 #' @examples
+#' # Load data 
+#' data("GlobalPatterns")
+#' 
+#' # Subset data to 5% of the most abundant taxa (just for the example)
+#' GP <- phyloseq_filter_top_taxa(GlobalPatterns, perc = 5)
 #'
+#' # Add the lowest level of taxonomic classification to the taxonomy table
+#' GP <- phyloseq_add_max_tax_rank(GP, abbreviate = T)
+#'
+#' # Replace taxa names with abbreviated lowest taxa ranks,
+#' # e.g., this names could be placed on ordination plot
+#' taxa_names(GP) <- as.data.frame(tax_table(GP))$LowestTaxon
+#' tail(taxa_names(GP))
+#' 
 phyloseq_add_max_tax_rank <- function(physeq, abbreviate = F, ...){
 
   ## Determine the lowest level of taxonomic classification
