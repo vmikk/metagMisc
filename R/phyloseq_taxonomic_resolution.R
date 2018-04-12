@@ -2,25 +2,20 @@
 ## Estimate taxonomic resolution of data
 phyloseq_taxonomic_resolution <- function(physeq, add_counts = TRUE, justDF = FALSE){
 
-  # require(phyloseq)
-  # require(reshape2)
-  # require(plyr)
-  # require(ggplot2)
-
   ## Determine the lowest level of taxonomic classification
   sp_ranks <- get_max_taxonomic_rank(physeq)
 
   ## Add number of reads for each taxa
-  sp_ranks$NumReads <- taxa_sums(physeq)
+  sp_ranks$NumReads <- phyloseq::taxa_sums(physeq)
 
   ## Count number of taxa vs rank
   sp_ranks_tab <- table(sp_ranks$RankName)
 
   ## Count number of reads vs rank
-  sp_ranks_count <- ddply(
-      .data=sp_ranks,
-      .variables="RankName",
-      .fun=function(z){ data.frame(NumReads = sum(z$NumReads)) })
+  sp_ranks_count <- plyr::ddply(
+      .data = sp_ranks,
+      .variables = "RankName",
+      .fun = function(z){ data.frame(NumReads = sum(z$NumReads)) })
 
   ## Merge tables
   sp_ranks_ok <- data.frame(sp_ranks_count, Count = as.vector(sp_ranks_tab))
@@ -31,7 +26,7 @@ phyloseq_taxonomic_resolution <- function(physeq, add_counts = TRUE, justDF = FA
   if(justDF == FALSE){
 
     ## Reshape data
-    sp_ranks_long <- melt(
+    sp_ranks_long <- reshape2::melt(
         data = sp_ranks_ok,
         id.vars = c("RankName", "NumReads", "Count"),
         variable.name = "DataType",
