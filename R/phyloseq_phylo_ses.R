@@ -16,7 +16,17 @@
 #' @param swapiter Number of iterations for independentswap or trialswap algorithms
 #' @param verbose Logical; if TRUE, progress messages from the function will be printed
 #' @param ... Additional arguments currently are not implemented
-#' @details Values of SES above zero indicate that the species pool of a habitat is more diverse than the regional species pool.
+#' 
+#' @details 
+#' Available metrics include:
+#' \itemize{
+#'   \item PD - Faith's phylogenetic diversity (total length of all the phylogenetic branches for a given set of taxa);
+#'   \item MPD - Mean pairwise distance between the tips from a phylogenetic tree;
+#'   \item MNTD - Mean nearest taxon distance;
+#'   \item VPD - Variance of the pairwise distances.
+#' }
+#' Values of SES above zero indicate that the species pool of a habitat is more 
+#' diverse than the regional species pool.
 #' @return Data frame.
 #' @export
 #' @seealso \code{\link{phyloseq_phylo_div}}, \code{\link{phyloseq_randomize}}, \code{\link[picante]{randomizeMatrix}}, \code{\link[picante]{ses.pd}}, \code{\link[picante]{ses.mpd}}, \code{\link[picante]{ses.mntd}}
