@@ -29,7 +29,11 @@
 #' diverse than the regional species pool.
 #' @return Data frame.
 #' @export
-#' @seealso \code{\link{phyloseq_phylo_div}}, \code{\link{phyloseq_randomize}}, \code{\link[picante]{randomizeMatrix}}, \code{\link[picante]{ses.pd}}, \code{\link[picante]{ses.mpd}}, \code{\link[picante]{ses.mntd}}
+#' @seealso \code{\link{phyloseq_phylo_div}}, \code{\link{phyloseq_randomize}}, 
+#' \code{\link[picante]{randomizeMatrix}}, \code{\link[picante]{ses.pd}}, 
+#' \code{\link[picante]{ses.mpd}}, \code{\link[picante]{ses.mntd}},
+#' \code{\link[PhyloMeasures]{pd.query}}, \code{\link[PhyloMeasures]{mpd.query}}, 
+#' \code{\link[PhyloMeasures]{mntd.query}}
 #' @examples
 #' # Load data
 #' data(esophagus)
