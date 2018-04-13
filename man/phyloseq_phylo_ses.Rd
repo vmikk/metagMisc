@@ -5,20 +5,28 @@
 \title{Estimate standardized effect sizes (SES) of phylogenetic diversity metrics (PD, MPD, MNTD, VPD) using randomization-based approach.}
 \usage{
 phyloseq_phylo_ses(physeq, measures = c("PD", "MPD", "MNTD", "VPD"),
-  null_model, nsim = 1000, swapiter = 1000, verbose = TRUE, ...)
+  null_model = "taxa.labels", package = "picante",
+  abundance_weighted = FALSE, nsim = 1000, swapiter = 1000,
+  verbose = TRUE, ...)
 }
 \arguments{
 \item{physeq}{A phyloseq-class object (phylogenetic tree is required)}
 
-\item{measures}{Character vector with diversity indices names ("PD", "MPD", "MNTD")}
+\item{measures}{Character vector with diversity indices names ("PD", "MPD", "MNTD", "VPD")}
 
 \item{null_model}{Character string indicating which null model to use (for the supported list of models see \code{\link[picante]{ses.pd}})}
+
+\item{package}{Which package to use for diversity estimation - "picante" (default) or "PhyloMeasures" (could be faster)}
+
+\item{abundance_weighted}{Logical; should diversity metrics be weighted by species abundance? (default = FALSE)}
 
 \item{nsim}{Number of randomizations for null-distribution generation}
 
 \item{swapiter}{Number of iterations for independentswap or trialswap algorithms}
 
 \item{verbose}{Logical; if TRUE, progress messages from the function will be printed}
+
+\item{...}{Additional arguments currently are not implemented}
 }
 \value{
 Data frame.
