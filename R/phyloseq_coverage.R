@@ -69,8 +69,8 @@ coverage_to_samplesize <- function(x, coverage = 0.95, add_attr = F){
 
 
 ## Perform rarefaction with 
-phyloseq_coverage_raref <- function(physeq, coverage = 0.95, iter = 1, replace = F, 
-  correct_singletons = FALSE, seeds = NULL, multithread = F, ...){
+phyloseq_coverage_raref <- function(physeq, coverage = 0.9, iter = 1, replace = F, 
+  correct_singletons = FALSE, seeds = NULL, multithread = F, drop_lowcoverage = F, ...){
   # ... passed to rarefy_even_depth
 
   ## Prepare seed values for rarefaction
@@ -84,11 +84,24 @@ phyloseq_coverage_raref <- function(physeq, coverage = 0.95, iter = 1, replace =
   ## Estimate the observed sample coverages
   SC <- ldply(.data = x, .fun = function(z){ iNEXT:::Chat.Ind(z, sum(z)) })
   colnames(SC) <- c("SampleID", "SampleCoverage")
+  SC$SampleID <- as.character(SC$SampleID)
 
   ## Data validation
   if(any(SC$SampleCoverage < coverage)){
-    stop("There are not enough data to reach the required coverage for some samples.\n")
-  }
+    if(drop_lowcoverage == FALSE){
+      stop("There are not enough data to reach the required coverage for some samples.\n")
+    }
+    
+    if(drop_lowcoverage == TRUE){
+      lowcov <- SC$SampleCoverage < coverage
+      nlow <- sum(lowcov)
+      warning("Samples with coverage lower than the selected threshold were discared (n = ", nlow, ").\n")
+
+      ## Remove samples
+      x <- x[ !lowcov ]
+      physeq <- prune_samples(SC$SampleID[ !lowcov ], physeq)
+    }
+  } # End of data validation
 
   ## Estimate the required sample sizes
   RSZ <- ldply(.data = x, .fun = coverage_to_samplesize, coverage = coverage, add_attr = F)
