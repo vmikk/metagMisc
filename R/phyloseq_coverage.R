@@ -78,11 +78,11 @@ phyloseq_coverage_raref <- function(physeq, coverage = 0.9, iter = 1, replace = 
 
   ## Prepare a list of OTU abundance vectors
   x <- prepare_inext(
-        as.data.frame(otu_table(physeq, taxa_are_rows = T)),
+        as.data.frame(phyloseq::otu_table(physeq, taxa_are_rows = T)),
         correct_singletons = correct_singletons)
 
   ## Estimate the observed sample coverages
-  SC <- ldply(.data = x, .fun = function(z){ iNEXT:::Chat.Ind(z, sum(z)) })
+  SC <- plyr::ldply(.data = x, .fun = function(z){ iNEXT:::Chat.Ind(z, sum(z)) })
   colnames(SC) <- c("SampleID", "SampleCoverage")
   SC$SampleID <- as.character(SC$SampleID)
 
@@ -99,12 +99,12 @@ phyloseq_coverage_raref <- function(physeq, coverage = 0.9, iter = 1, replace = 
 
       ## Remove samples
       x <- x[ !lowcov ]
-      physeq <- prune_samples(SC$SampleID[ !lowcov ], physeq)
+      physeq <- phyloseq::prune_samples(SC$SampleID[ !lowcov ], physeq)
     }
   } # End of data validation
 
   ## Estimate the required sample sizes
-  RSZ <- ldply(.data = x, .fun = coverage_to_samplesize, coverage = coverage, add_attr = F)
+  RSZ <- plyr::ldply(.data = x, .fun = coverage_to_samplesize, coverage = coverage, add_attr = F)
   colnames(RSZ) <- c("SampleID", "RequiredSize")
   rownames(RSZ) <- RSZ$SampleID
   RSZ$SampleID <- as.character(RSZ$SampleID)
@@ -117,7 +117,7 @@ phyloseq_coverage_raref <- function(physeq, coverage = 0.9, iter = 1, replace = 
   ## Single rarefaction
   if(iter == 1){
   
-    res <- mlply(
+    res <- plyr::mlply(
       .data = RSZ$SampleID,       # input = sample names
       .fun = function(z, ...){ 
   
@@ -128,7 +128,7 @@ phyloseq_coverage_raref <- function(physeq, coverage = 0.9, iter = 1, replace = 
         SampSize <- RSZ[z, "RequiredSize"]
   
         ## Rarefaction
-        rz <- rarefy_even_depth(pp, sample.size=SampSize, verbose = F, trimOTUs = FALSE, rngseed = seeds, ...)
+        rz <- phyloseq::rarefy_even_depth(pp, sample.size=SampSize, verbose = F, trimOTUs = FALSE, rngseed = seeds, ...)
         return(rz)
       },
       replace=replace, 
@@ -202,7 +202,7 @@ phyloseq_coverage_raref <- function(physeq, coverage = 0.9, iter = 1, replace = 
     SSP <- expand.grid(rngseed = seeds, SampleID = RSZ$SampleID, stringsAsFactors = F)
     
     ## Rarefy
-    res <- mlply(
+    res <- plyr::mlply(
       .data = SSP,
       .fun = function(rngseed = rngseed, SampleID = SampleID, ...){
  
@@ -213,7 +213,7 @@ phyloseq_coverage_raref <- function(physeq, coverage = 0.9, iter = 1, replace = 
           SampSize <- RSZ[SampleID, "RequiredSize"]
     
           ## Rarefaction
-          rz <- rarefy_even_depth(pp, sample.size=SampSize, verbose = F, trimOTUs = FALSE, rngseed = rngseed, ...)
+          rz <- phyloseq::rarefy_even_depth(pp, sample.size=SampSize, verbose = F, trimOTUs = FALSE, rngseed = rngseed, ...)
           return(rz)
         },
       .progress = progr,
@@ -226,7 +226,7 @@ phyloseq_coverage_raref <- function(physeq, coverage = 0.9, iter = 1, replace = 
     res <- split(x = res, f = SSP$rngseed)
 
     ## Merge samples (within the same iteration)
-    RES <- llply(.data = res, .fun = function(z){
+    RES <- plyr::llply(.data = res, .fun = function(z){
       tmp <- z[[1]]
       for(i in 2:length(z)){
         tmp <- phyloseq::merge_phyloseq(tmp, z[[i]])
