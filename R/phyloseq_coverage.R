@@ -1,6 +1,6 @@
 
 # Estimate the observed abundance-based sample coverage for phyloseq object
-phyloseq_coverage <- function(physeq, correct_singletons = FALSE){
+phyloseq_coverage <- function(physeq, correct_singletons = FALSE, add_attr = T){
   
   ## Prepare a list of OTU abundance vectors
   x <- prepare_inext(
@@ -10,6 +10,12 @@ phyloseq_coverage <- function(physeq, correct_singletons = FALSE){
   ## Estimate sample coverages
   res <- ldply(.data = x, .fun = function(z){ iNEXT:::Chat.Ind(z, sum(z)) })
   colnames(res) <- c("SampleID", "SampleCoverage")
+
+  ## Add attributes
+  if(add_attr){
+    attr(res, "x") <- x
+    attr(res, "correct_singletons") <- correct_singletons
+  }
 
   return(res)
 }
@@ -59,4 +65,3 @@ coverage_to_samplesize <- function(x, coverage = 0.95, add_attr = F){
   return(mm)
 }
 # Example:  coverage_to_samplesize(x, coverage = 0.9, add_attr = T)
-
