@@ -1,7 +1,23 @@
 
-# Estimate the observed abundance-based sample coverage for phyloseq object
+#' @title Estimate the observed abundance-based sample coverage for phyloseq object
+#' @description phyloseq_coverage estimates the sample completeness for the individual-based
+#' abundance data (number of sequencing reads) stored in 'phyloseq'-class objects.
+#' @param physeq A phyloseq-class object
+#' @param correct_singletons Logical; if TRUE, singleton counts will be corrected with modified Good–Turing frequency formula (Chiu, Chao 2016)
+#' @param add_attr Logical; if TRUE, additional attributes (list of species abundances and singleton correction flag) will be added to the results
+#' @details Coverage represents a measure of sample completeness and is defined as the proportion of
+#' the total number of individuals in a community that belong to the species represented in the sample.
+#' Coverage complement (1 - Coverage) gives the proportion of the community belonging to unsampled
+#' species or the "coverage deficit" (Chao, Jost, 2012).
+#' Estimation of coverage is based on the number of singletons and doubletons in the sample.
+#' @return Data frame with coverage estimates for each sample
+#' @export
+#' @references
+#' Chao A, Jost L. (2012) Coverage-based rarefaction and extrapolation: standardizing samples by completeness rather than size // Ecology 93(12): 2533–2547. DOI: 10.1890/11-1952.1
+#' @examples
+#'
 phyloseq_coverage <- function(physeq, correct_singletons = FALSE, add_attr = T){
-  
+
   ## Prepare a list of OTU abundance vectors
   x <- prepare_inext(
         as.data.frame(phyloseq::otu_table(physeq, taxa_are_rows = T)),
@@ -61,15 +77,15 @@ coverage_to_samplesize <- function(x, coverage = 0.95, add_attr = F){
     attr(mm, "ObservedCoverage") <- refC
     attr(mm, "RequestedCoverage") <- coverage
   }
-  
+
   return(mm)
 }
 # Example:  coverage_to_samplesize(x, coverage = 0.9, add_attr = T)
 
 
 
-## Perform rarefaction with 
-phyloseq_coverage_raref <- function(physeq, coverage = 0.9, iter = 1, replace = F, 
+## Perform rarefaction with
+phyloseq_coverage_raref <- function(physeq, coverage = 0.9, iter = 1, replace = F,
   correct_singletons = FALSE, seeds = NULL, multithread = F, drop_lowcoverage = F, ...){
   # ... passed to rarefy_even_depth
 
@@ -91,7 +107,7 @@ phyloseq_coverage_raref <- function(physeq, coverage = 0.9, iter = 1, replace = 
     if(drop_lowcoverage == FALSE){
       stop("There are not enough data to reach the required coverage for some samples.\n")
     }
-    
+
     if(drop_lowcoverage == TRUE){
       lowcov <- SC$SampleCoverage < coverage
       nlow <- sum(lowcov)
@@ -113,25 +129,25 @@ phyloseq_coverage_raref <- function(physeq, coverage = 0.9, iter = 1, replace = 
   phys <- phyloseq_sep_samp(physeq, drop_zeroes = FALSE)
 
   ##### Rarefy each sample
-  
+
   ## Single rarefaction
   if(iter == 1){
-  
+
     res <- plyr::mlply(
       .data = RSZ$SampleID,       # input = sample names
-      .fun = function(z, ...){ 
-  
+      .fun = function(z, ...){
+
         ## Extract phyloseq object for a single sample
         pp <- phys[[z]]
-  
+
         ## Extract the required sample size
         SampSize <- RSZ[z, "RequiredSize"]
-  
+
         ## Rarefaction
         rz <- phyloseq::rarefy_even_depth(pp, sample.size=SampSize, verbose = F, trimOTUs = FALSE, rngseed = seeds, ...)
         return(rz)
       },
-      replace=replace, 
+      replace=replace,
       ...)  # pass additional arguments to  phyloseq::rarefy_even_depth
 
 
@@ -147,7 +163,7 @@ phyloseq_coverage_raref <- function(physeq, coverage = 0.9, iter = 1, replace = 
 
   ## Multiple rarefaction
   if(iter > 1){
-  
+
     ############### Cluster setup
 
     ## Progress bar type for single-threaded plyr functions
@@ -200,18 +216,18 @@ phyloseq_coverage_raref <- function(physeq, coverage = 0.9, iter = 1, replace = 
 
     ## SampleID - Seed pairs
     SSP <- expand.grid(rngseed = seeds, SampleID = RSZ$SampleID, stringsAsFactors = F)
-    
+
     ## Rarefy
     res <- plyr::mlply(
       .data = SSP,
       .fun = function(rngseed = rngseed, SampleID = SampleID, ...){
- 
+
           ## Extract phyloseq object for a single sample
           pp <- phys[[ SampleID ]]
-    
+
           ## Extract the required sample size
           SampSize <- RSZ[SampleID, "RequiredSize"]
-    
+
           ## Rarefaction
           rz <- phyloseq::rarefy_even_depth(pp, sample.size=SampSize, verbose = F, trimOTUs = FALSE, rngseed = rngseed, ...)
           return(rz)
