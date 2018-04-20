@@ -15,6 +15,8 @@
 #' @references
 #' Chao A, Jost L. (2012) Coverage-based rarefaction and extrapolation: standardizing samples by completeness rather than size // Ecology 93(12): 2533–2547. DOI: 10.1890/11-1952.1
 #' @examples
+#' data("esophagus")
+#' phyloseq_coverage(esophagus)
 #'
 phyloseq_coverage <- function(physeq, correct_singletons = FALSE, add_attr = T){
 
