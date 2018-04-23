@@ -44,6 +44,8 @@ phyloseq_coverage <- function(physeq, correct_singletons = FALSE, add_attr = T){
 ## the code is based on iNEXT:::invChat.Ind by Johnson Hsieh (d76e3b8, Nov 12, 2016)
 # https://github.com/JohnsonHsieh/iNEXT/blob/de46aeacb4433c539b2880df376e87b44bc1723c/R/invChat.R#L1
 coverage_to_samplesize <- function(x, coverage = 0.95, add_attr = F){
+  # x = vector of species abundances
+  # coverage = the desired sample completness that we want to achieve
 
   # iNEXT:::invChat.Ind(x, C = coverage)$m
 
@@ -82,7 +84,10 @@ coverage_to_samplesize <- function(x, coverage = 0.95, add_attr = F){
 
   return(mm)
 }
-# Example:  coverage_to_samplesize(x, coverage = 0.9, add_attr = T)
+## Example:
+# abunds <- c(48,21,16,15,14,6,6,2,2,2,1,1,1,1,1)
+# coverage_to_samplesize(abunds, coverage = 0.9, add_attr = T)   # interpolated sample size
+# coverage_to_samplesize(abunds, coverage = 0.97, add_attr = T)  # extraplation
 
 
 
