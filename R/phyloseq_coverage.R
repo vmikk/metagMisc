@@ -92,7 +92,7 @@ coverage_to_samplesize <- function(x, coverage = 0.95, add_attr = F){
 
 
 ## Perform rarefaction with
-phyloseq_coverage_raref <- function(physeq, coverage = 0.9, iter = 1, replace = F,
+phyloseq_coverage_raref <- function(physeq, coverage = NULL, iter = 1, replace = F,
   correct_singletons = FALSE, seeds = NULL, multithread = F, drop_lowcoverage = F, ...){
   # ... passed to rarefy_even_depth
 
@@ -108,6 +108,12 @@ phyloseq_coverage_raref <- function(physeq, coverage = 0.9, iter = 1, replace = 
   SC <- plyr::ldply(.data = x, .fun = function(z){ iNEXT:::Chat.Ind(z, sum(z)) })
   colnames(SC) <- c("SampleID", "SampleCoverage")
   SC$SampleID <- as.character(SC$SampleID)
+
+  ## Select the lowest observed coverage
+  if(is.null(coverage)){
+    coverage <- min(SC$SampleCoverage)
+    cat("Coverage value was set to the minimum observed value across all samples (", coverage, ")\n", sep = "")
+  }
 
   ## Data validation
   if(any(SC$SampleCoverage < coverage)){
