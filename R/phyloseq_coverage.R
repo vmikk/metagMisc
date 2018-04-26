@@ -91,10 +91,30 @@ coverage_to_samplesize <- function(x, coverage = 0.95, add_attr = F){
 
 
 
-## Perform rarefaction with
+
+#' @title Coverage-based rarefaction
+#' @description This function performs coverage-based rarefaction (interpolation) based on the analytical approach proposed by Chao and Jost (2012).
+#' @param physeq A phyloseq-class object
+#' @param coverage Numeric value for a particular sample coverage (between 0 and 1)
+#' @param iter Number of rarefication iterations
+#' @param replace Logical, whether to sample with replacement (TRUE) or without replacement (FALSE, default)
+#' @param correct_singletons Logical; if TRUE, singleton counts will be corrected with modified Good–Turing frequency formula (Chiu, Chao 2016)
+#' @param seeds Integer vector used for the reproducible random subsampling (should be of the same length as the number of iterations)
+#' @param multithread Logical or integer; if TRUE, attempts to run the function on multiple cores; integer defines the number of cores to use (if it is set to TRUE, all cores will be used)
+#' @param drop_lowcoverage Logical; if TRUE, samples with coverage lower than selected value will be removed (default, FALSE)
+#' @param ... Additional arguments will be passed to \code{\link[phyloseq]{rarefy_even_depth}}
+#' @details
+#' Samples standardized by size will have different degrees of completness.
+#' When we compare samples with the same coverage, we are making sure that samples are equally complete
+#' and that the unsampled species constitute the same proportion of the total individuals in each community (Chao, Jost, 2012).
+#'
+#' @return List of rarefied phyloseq-objects (or a single phyloseq object if iter = 1)
+#' @export
+#'
+#' @examples
+#'
 phyloseq_coverage_raref <- function(physeq, coverage = NULL, iter = 1, replace = F,
   correct_singletons = FALSE, seeds = NULL, multithread = F, drop_lowcoverage = F, ...){
-  # ... passed to rarefy_even_depth
 
   ## Prepare seed values for rarefaction
   if(is.null(seeds)){ seeds <- 1:iter }
