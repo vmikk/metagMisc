@@ -112,7 +112,15 @@ coverage_to_samplesize <- function(x, coverage = 0.95, add_attr = F){
 #' @export
 #'
 #' @examples
-#'
+#' # Load data
+#' data("esophagus")
+#' 
+#' # Coverage-based rarefaction
+#' eso_raref <- phyloseq_coverage_raref(physeq = esophagus, iter = 1, coverage = 0.8)
+#' 
+#' # Perform coverage-based rarefaction multiple times (iter = 5)
+#' eso_raref2 <- phyloseq_coverage_raref(physeq = esophagus, iter = 5, coverage = 0.8)
+#' 
 phyloseq_coverage_raref <- function(physeq, coverage = NULL, iter = 1, replace = F,
   correct_singletons = FALSE, seeds = NULL, multithread = F, drop_lowcoverage = F, ...){
 
