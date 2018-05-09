@@ -52,7 +52,29 @@ phyloseq_effort_div <- function(physeq, base = "size", level = NULL, conf = 0.95
 #' @export
 #'
 #' @examples
-#'
+#' data("esophagus")
+#' # Show sequencing depth required to reach a particular sample coverage
+#' phyloseq_effort_div_rangeplot(esophagus, range = seq(from = 0.8, to = 0.97, by = 0.02),
+#'     range_type = "coverage", yvar = "seqdepth", interval = "quartiles")
+#' 
+#' # Show OTU richness (Q = 0) achieved by different sequencing efforts
+#' phyloseq_effort_div_rangeplot(esophagus, range = seq(from = 100, to = 500, by = 20),
+#'     range_type = "seqdepth", yvar = "Q0", interval = "quartiles")
+#' 
+#' 
+#' data("GlobalPatterns")
+#' # Subset data
+#' GP <- subset_samples(GlobalPatterns, SampleType %in% c("Soil", "Feces", "Skin"))
+#' GP <- phyloseq_filter_top_taxa(GP, perc = 20)
+#' 
+#' # Show sequencing depth required to reach a particular sample coverage level for different sample groups
+#' phyloseq_effort_div_rangeplot(GP, range = seq(from = 0.8, to = 0.97, by = 0.02),
+#'   variable = "SampleType", range_type = "coverage", yvar = "seqdepth", interval = "quartiles")
+#' 
+#' # Show OTU richness (Q = 0) achieved by different sequencing efforts for different sample groups
+#' phyloseq_effort_div_rangeplot(GP, range = seq(from = 100, to = 500, by = 20),
+#'    variable = "SampleType", range_type = "seqdepth", yvar = "Q0")
+#' 
 phyloseq_effort_div_rangeplot <- function(physeq, range, range_type = "coverage",
                                           variable = NULL, yvar = "seqdepth", interval = "quartiles",
                                           show_plot = TRUE, justDF = FALSE, progress = "text", ...){
