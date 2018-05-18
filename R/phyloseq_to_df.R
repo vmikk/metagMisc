@@ -33,6 +33,17 @@ phyloseq_to_df <- function(physeq, addtax = T, addtot = F, addmaxrank = F, sorti
     res <- data.frame(OTU = phyloseq::taxa_names(physeq), t(phyloseq::otu_table(physeq)), stringsAsFactors = F)
   }
 
+  ## Check if the sample names were silently corrected in the data.frame
+  if(any(!phyloseq::sample_names(physeq) %in% colnames(res)[-1])){
+    if(addtax == FALSE){
+      warning("Warning: Sample names were converted to the syntactically valid column names in data.frame. See 'make.names'.\n")
+    }
+
+    if(addtax == TRUE){
+      stop("Error: Sample names in 'physeq' could not be automatically converted to the syntactically valid column names in data.frame (see 'make.names'). Consider renaming with 'sample_names'.\n")
+    }
+  }
+
   ## Add taxonomy
   if(addtax == TRUE){
     
