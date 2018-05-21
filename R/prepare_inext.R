@@ -29,17 +29,17 @@
 #'
 prepare_inext <- function(OTUs, correct_singletons = T){
 
-    require(plyr)
+    # require(plyr)
 
     ## If input is phyloseq or otu_table - extract OTU abundances
     if(any(c("phyloseq", "otu_table") %in% class(OTUs))){
 
       ## Check the orientation of the OTU table
-      trows <- taxa_are_rows(OTUs)
+      trows <- phyloseq::taxa_are_rows(OTUs)
 
       ## Extract OTUs
       if("phyloseq" %in% class(OTUs)){
-        OTUs <- as.data.frame(otu_table(OTUs))
+        OTUs <- as.data.frame(phyloseq::otu_table(OTUs))
       }
       if("otu_table" %in% class(OTUs)){
         OTUs <- as.data.frame(OTUs)
@@ -85,7 +85,7 @@ prepare_inext <- function(OTUs, correct_singletons = T){
     }
 
     ## Extract OTU abundances
-    res <- alply(.data = as.matrix(OTUs), .margins = 2, .fun = extract_non_zero)
+    res <- plyr::alply(.data = as.matrix(OTUs), .margins = 2, .fun = extract_non_zero)
     names(res) <- as.character(attr(res, "split_labels")[,1])
 
     ## Just return vectors with OTU abundances if singleton correction is not required
@@ -115,7 +115,7 @@ prepare_inext <- function(OTUs, correct_singletons = T){
       }
 
       ## Apply correction for each abundance vector
-      res.cor <- llply(.data = res, .fun = single_est)
+      res.cor <- plyr::llply(.data = res, .fun = single_est)
       return(res.cor)
     }
 }
