@@ -1,5 +1,16 @@
 
-## Prepare frequency counts for breakaway package
+#' @title Prepare frequency counts for breakaway package
+#' @description This function prepares input data for \code{\link[breakaway]{breakaway}} package (Willis, Bunge, 2015).
+#' @param OTUs Data frame with OTU abundances (rows = species, cols = samples) or phyloseq/otu_table object
+#' @param remove_singletons Logical; if TRUE, singleton counts will be removed
+#' @details
+#' In case of sequencing errors singletons can be excluded from the data ('remove_singletons = TRUE')
+#' and species richness estimation can be performed with \code{\link[breakaway]{breakaway_nof1}} function.
+#' @return List of the sample frequency count tables for each sample.
+#' @export
+#'
+#' @examples
+#'
 prepare_breakaway <- function(OTUs, remove_singletons = FALSE){
 
   ## If input is phyloseq or otu_table - extract OTU abundances
