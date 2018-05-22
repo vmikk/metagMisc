@@ -78,7 +78,7 @@ prepare_breakaway <- function(OTUs, remove_singletons = FALSE){
   }
 
   ## Preprare frequency count table
-  fct <- llply(.data = res, .fun = freq_count, remove_singletons = remove_singletons)
+  fct <- plyr::llply(.data = res, .fun = freq_count, remove_singletons = remove_singletons)
 
   return(fct)
 }
