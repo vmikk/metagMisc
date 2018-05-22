@@ -74,6 +74,7 @@ prepare_breakaway <- function(OTUs, remove_singletons = FALSE){
     rez <- table(x)
     rez <- as.data.frame(rez)
     colnames(rez) <- c("index", "frequency")
+    rez$index <- as.numeric(as.character(rez$index))
     return(rez)
   }
 
