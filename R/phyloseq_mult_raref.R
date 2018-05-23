@@ -8,7 +8,7 @@
 #' @param replace Logical, whether to sample with replacement (TRUE) or without replacement (FALSE, default)
 #' @param multithread Logical or integer; if TRUE, attempts to run the function on multiple cores; integer defines the number of cores to use (if it is set to TRUE, all cores will be used)
 #' @param seeds Integer vector used for the reproducible random subsampling (should be of the same length as the number of iterations)
-#' @param ... Additional arguments will be passed to \code{\link{rarefy_even_depth}}
+#' @param ... Additional arguments will be passed to \code{\link[phyloseq]{rarefy_even_depth}}
 #'
 #' @details
 #' If the sample size ('SampSize') is not specified, rarefaction will be made for the depth equeal to 0.9 * minimal observed sample size.
