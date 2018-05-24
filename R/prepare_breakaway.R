@@ -10,7 +10,15 @@
 #' @export
 #'
 #' @examples
-#'
+#' data("esophagus")
+#' eso <- prepare_breakaway(esophagus)
+#' eso_nof1 <- prepare_breakaway(esophagus, remove_singletons = TRUE)
+#' 
+#' # Estimate species richness (observed + unobserved) for the second sample in esophagus data
+#' library(breakaway)
+#' breakaway(eso[[2]], plot = T)
+#' breakaway_nof1(eso_nof1[[2]], plot = T)
+#' 
 prepare_breakaway <- function(OTUs, remove_singletons = FALSE){
 
   ## If input is phyloseq or otu_table - extract OTU abundances
