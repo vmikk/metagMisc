@@ -8,17 +8,18 @@
 #' and species richness estimation can be performed with \code{\link[breakaway]{breakaway_nof1}} function.
 #' @return List of the sample frequency count tables for each sample.
 #' @export
-#'
+#' @references
+#' Willis A., Bunge J. (2015) Estimating diversity via frequency ratios // Biometrics 71(4), P. 1042–1049. DOI: 10.1111/biom.12332
 #' @examples
 #' data("esophagus")
 #' eso <- prepare_breakaway(esophagus)
 #' eso_nof1 <- prepare_breakaway(esophagus, remove_singletons = TRUE)
-#' 
+#'
 #' # Estimate species richness (observed + unobserved) for the second sample in esophagus data
 #' library(breakaway)
 #' breakaway(eso[[2]], plot = T)
 #' breakaway_nof1(eso_nof1[[2]], plot = T)
-#' 
+#'
 prepare_breakaway <- function(OTUs, remove_singletons = FALSE){
 
   ## If input is phyloseq or otu_table - extract OTU abundances
