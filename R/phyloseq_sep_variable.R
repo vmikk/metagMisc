@@ -33,6 +33,15 @@ phyloseq_sep_variable <- function(physeq, variable, drop_zeroes = T){
         stop("Grouping variable is missing from the sample data of phyloseq-object.\n")
     }
 
+    if(class(mtd[, variable]) %in% c("integer", "numeric") ){
+        if( length( unique(mtd[, variable]) ) > 5){
+          stop("Groupping variable is numeric and it has too many levels. Consider transforming it to factor.\n")
+        } else {
+          warning("Groupping variable is numeric and it was coerced to factor.\n")
+          mtd[, variable] <- factor(mtd[, variable])
+        }
+    }
+
     if(length(table(mtd[, variable])) == 1){
         cat("Warning: there is only one group of samples in the resulting list.\n")
     }
