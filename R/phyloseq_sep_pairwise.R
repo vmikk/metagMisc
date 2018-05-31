@@ -17,6 +17,12 @@ phyloseq_sep_pairwise <- function(phys, group, comparis = "all", drop_zeroes = T
   ## All possible comparisons
   if(is.character(comparis) & comparis == "all"){
     compars <- combn(x = names(phgr), m = 2)
+
+    ## Issue warning if there will be too many comparisons
+    if(ncol(compars) > 100){
+      warning("There will be too many possible pairwise comparisons (> 100). Please verify that it is intentional.\n")
+    }
+
   } else if(is.matrix(comparis)){
   ## Use the provided comparisons (e.g., not all combinations, or another order of pairs)
     ## Data validation
