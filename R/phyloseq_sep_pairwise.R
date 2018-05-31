@@ -8,7 +8,14 @@
 #' @export
 #'
 #' @examples
-#'
+#' data(enterotype)
+#' 
+#' # Split enterotype data for pairwise comparisons by sequencing technology
+#' ent <- phyloseq_sep_pairwise(enterotype, group = "SeqTech", drop_zeroes = TRUE)
+#' ent
+#' 
+#' # Perform differential abundance testing for each of the pairwise comparisons
+#' 
 phyloseq_sep_pairwise <- function(phys, group, comparis = "all", drop_zeroes = TRUE){
 
   ## Split by groups
