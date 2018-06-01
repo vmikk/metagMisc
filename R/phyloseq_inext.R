@@ -26,7 +26,11 @@
 #' Methods in Ecology and Evolution, 7: 1451-1456. DOI: 10.1111/2041-210X.12613
 #' 
 #' @examples
-#'
+#' data("esophagus")
+#' phyloseq_inext(esophagus)
+#' phyloseq_inext(esophagus, curve_type = "coverage")
+#' phyloseq_inext(esophagus, justDF = T)
+#' 
 phyloseq_inext <- function(physeq, Q = 0, curve_type = "diversity",
     correct_singletons = FALSE, endpoint=NULL, knots = 40,
     multithread = FALSE, show_CI = TRUE, show_sample_labels = TRUE,
