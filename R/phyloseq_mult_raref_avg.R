@@ -33,7 +33,7 @@ phyloseq_mult_raref_avg <- function(physeq, SampSize = NULL, iter = 1000, parall
     taxpresent <- TRUE
     physeq@tax_table <- NULL
   } else {
-    taxpresent <- FALSE   # no tax_table in pheloseq
+    taxpresent <- FALSE   # no tax_table in phyloseq
   }
 
   if(!is.null(phyloseq::phy_tree(physeq, errorIfNULL=F))){
@@ -41,7 +41,7 @@ phyloseq_mult_raref_avg <- function(physeq, SampSize = NULL, iter = 1000, parall
     phypresent <- TRUE
     physeq@phy_tree <- NULL
   } else {
-    phypresent <- FALSE   # no phy_tree in pheloseq
+    phypresent <- FALSE   # no phy_tree in phyloseq
   }
 
   if(!is.null(phyloseq::sample_data(physeq, errorIfNULL=F))){
@@ -49,7 +49,7 @@ phyloseq_mult_raref_avg <- function(physeq, SampSize = NULL, iter = 1000, parall
     sampresent <- TRUE
     physeq@sam_data <- NULL
   } else {
-    sampresent <- FALSE   # no sample_data in pheloseq
+    sampresent <- FALSE   # no sample_data in phyloseq
   }
 
 
