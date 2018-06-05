@@ -1,8 +1,16 @@
 
-## Prepare taxonomy in QIIME-style
+#' @title Prepare taxonomy in QIIME-style
+#' @description This function merges multiple columns with taxonomic ranks into a single string in QIIME-style.
+#' @param x data.frame or phyloseq with \code{\link[phyloseq]{tax_table}} slot
+#' @param dropNA Logical; if TRUE, missing tax ranks will be removed
+#' @param add_OTUID Logical; if TRUE, OTU name will be added to the first column of the resulting table
+#'
+#' @return character vector (if 'add_OTUID = FALSE') or data.frame with taxonomy annotations.
+#' @export
+#'
+#' @examples
+#'
 taxonomy_to_qiime <- function(x, dropNA = TRUE, add_OTUID = TRUE){
-  # x = data.frame or phyloseq with tax_table()
-  # dropNA = remove missing tax ranks
 
   ## If phyloseq is provided - extract OTU table
   if(class(x) %in% c("phyloseq", "taxonomyTable")){
