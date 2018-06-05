@@ -9,7 +9,20 @@
 #' @export
 #'
 #' @examples
-#'
+#' # Load data
+#' data("GlobalPatterns")
+#' 
+#' # Subset data
+#' GP <- metagMisc::phyloseq_filter_top_taxa(GlobalPatterns, n = 20)
+#' 
+#' # Prepare taxonomy in QIIME-style (result = data frame with 2 columns)
+#' qtax <- taxonomy_to_qiime(GP)
+#' head(qtax)
+#' 
+#' # Vector with OTU taxonomy
+#' qvec <- taxonomy_to_qiime(GP, add_OTUID = FALSE)
+#' head(qvec)
+#' 
 taxonomy_to_qiime <- function(x, dropNA = TRUE, add_OTUID = TRUE){
 
   ## If phyloseq is provided - extract OTU table
