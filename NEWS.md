@@ -1,4 +1,20 @@
 
+# metagMisc v.0.0.2 (git fd2697b; Oct 4, 2017)
+
+- New functions
+   * prepare_inext
+   * phyloseq_filter_sample_wise_abund_trim
+   * make_utax_taxonomy
+   * make_utax_taxonomy_batch
+   * check_tax_uniqueness
+
+- Enhancements:
+   * phyloseq_group_dissimilarity - generalized to more than 2 groups
+   * phyloseq_filter_prevalence - added conditional option (AND/OR) for abundance and prevalence filtering
+
+- Documentation updates
+
+
 # metagMisc v.0.0.1 (git 591cb8a; Aug 23, 2017)
 
 - New data-handling functions
