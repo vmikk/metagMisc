@@ -1,4 +1,29 @@
 
+# metagMisc v.0.0.4 (git b0802ea; Feb 13, 2018)
+
+- New functions
+   * phyloseq_mult_raref_div - for averaging of diversity metrics across multiple rarefaction iterations
+   * phyloseq_to_MetaCommunity - converter of phyloseq class to MetaCommunity object from entropart package
+   * phyloseq_otu_occurrence - estimates taxa occurrence or occurrence frequency
+   * phyloseq_standardize_otu_abundance - wrapper of decostand function from vegan package
+   * phyloseq_filter_top_taxa - extracts the most abundant taxa from phyloseq-objects
+   * phyloseq_add_max_tax_rank - adds the lowest level of taxonomic classification to the taxonomy table
+   * taxonomy_to_qiime - prepares taxonomy in QIIME-style
+
+- New experimental functions
+   * phyloseq_average
+   * phyloseq_mult_raref_avg
+   * This functions implements OTU abundance averaging following compositional data analysis workflow.
+
+- Bug fixes
+   * phyloseq_mult_raref - multithreading fix
+   * phyloseq_to_df - fix bug with taxonomy order
+   * parse_taxonomy_amptk_batch - fix column reordering
+   * phyloseq_transform_vst_blind - add workaround for excessive zeros
+
+- Documentation and some minor updates
+
+
 # metagMisc v.0.0.3 (git 924976f; Nov 8, 2017)
 
 - New functions
