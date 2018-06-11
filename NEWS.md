@@ -1,4 +1,24 @@
 
+# metagMisc v.0.0.3 (git 924976f; Nov 8, 2017)
+
+- New functions
+   * phyloseq_phylo_div - for phylogenetic diversity estimation
+   * phyloseq_phylo_ses - standardized effect size for phylogenetic diversity
+   * phyloseq_randomize - randomization of abundance table and phylogeny in phyloseq objects (for null model testing and simulation)
+   * mult_dissim - compute beta diversity for each rarefaction iteration
+   * mult_dist_average - average multiple distance matrices
+   * dissimilarity_to_distance - transform (non-metric) dissimilarity matrix to a weighted Euclidean distance (metric), as in Greenacre 2017
+   * add_metadata - wrapper to add sample metadata to data frames
+   * uc_to_sumaclust - convert UC files (from USEARCH or VSEARCH) to Sumaclust OTU observation maps
+
+- Enhancements
+   * phyloseq_mult_raref is able to run in parallel now; custom seeds option and rarefaction attributes were added, fixed auto-detection of rarefaction depth
+   * phyloseq_compare was completely rewritten to allow for one or multiple input phyloseq objects; additional abundance statistics were added; fixed bug with percentage estimation
+   * prevalence - mean and median OTU abundance were added
+
+- Documentation updates and some other improvements
+
+
 # metagMisc v.0.0.2 (git fd2697b; Oct 4, 2017)
 
 - New functions
