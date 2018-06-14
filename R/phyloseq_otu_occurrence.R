@@ -118,7 +118,7 @@ phyloseq_otu_occurrence <- function(physeq, variable = NULL,
   if(justdf == FALSE){
 
     ## Remove sample metadata
-    if(!is.null(phyloseq::sample_data(physeq, errorIfNULL = T))){
+    if(!is.null(phyloseq::sample_data(physeq, errorIfNULL = FALSE))){
       physeq@sam_data <- NULL
     }
 
