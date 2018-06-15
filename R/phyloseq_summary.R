@@ -80,6 +80,8 @@ phyloseq_summary <- function(physeq, ..., cols = NULL, more_stats = FALSE, long 
         data.frame(V0 = "Q3 of total OTU abundance", V1 = quantile(treads, probs = 0.75)),
         data.frame(V0 = "Max total OTU abundance", V1 = max(treads)),
         data.frame(V0 = "Coefficient of quartile variation in OTU abundance", V1 = cqv(treads)),
+        data.frame(V0 = "Number of singletons", V1 = sum(treads == 1)),
+        data.frame(V0 = "Percentage of singletons", V1 = sum(treads == 1) * 100 / length(treads)),
 
         ## Sample-wise stats
         data.frame(V0 = "Median number of reads per sample", V1 = median(sreads)),
