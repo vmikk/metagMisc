@@ -49,6 +49,9 @@ phyloseq_summary <- function(physeq, ..., cols = NULL, more_stats = FALSE, long 
     ## Number of reads per sample
     sreads <- phyloseq::sample_sums(x)
 
+    ## OTU abundance table
+    otutab <- as.data.frame(otu_table(x))
+
     ## Prepare resulting table
     res <- rbind(
       data.frame(V0 = "Number of samples", V1 = phyloseq::nsamples(x)),
@@ -90,6 +93,10 @@ phyloseq_summary <- function(physeq, ..., cols = NULL, more_stats = FALSE, long 
         data.frame(V0 = "Q3 of total sample abundance", V1 = quantile(sreads, probs = 0.75)),
         data.frame(V0 = "Max total sample abundance", V1 = max(sreads)),
         data.frame(V0 = "Coefficient of quartile variation in sample abundance", V1 = cqv(sreads)),
+
+        ## Overall stats
+        data.frame(V0 = "Data sparsity (number of zeros)", V1 = sum(otutab == 0)),
+        data.frame(V0 = "Data sparsity (percentage of zeros)", V1 = sum(otutab == 0) * 100 / prod(dim(otutab))),
 
         stringsAsFactors = F)
 
