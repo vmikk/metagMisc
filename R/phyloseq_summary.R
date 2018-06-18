@@ -52,6 +52,9 @@ phyloseq_summary <- function(physeq, ..., cols = NULL, more_stats = FALSE, long 
     ## OTU abundance table
     otutab <- as.data.frame(phyloseq::otu_table(x))
 
+    ## OTU occurrence
+    otuocc <- phyloseq_otu_occurrence(x, taxa_frequency = "percentage", variable = NULL, drop_zeroes = F, justdf = T)
+
     ## Prepare resulting table
     res <- rbind(
       data.frame(V0 = "Number of samples", V1 = phyloseq::nsamples(x)),
@@ -83,6 +86,8 @@ phyloseq_summary <- function(physeq, ..., cols = NULL, more_stats = FALSE, long 
         data.frame(V0 = "Q3 of total OTU abundance", V1 = quantile(treads, probs = 0.75)),
         data.frame(V0 = "Max total OTU abundance", V1 = max(treads)),
         data.frame(V0 = "Coefficient of quartile variation in OTU abundance", V1 = cqv(treads)),
+        data.frame(V0 = "Average OTU occurrence, percents", V1 = mean(otuocc$Occurrence) * 100),
+        data.frame(V0 = "Median OTU occurrence, percents", V1 = median(otuocc$Occurrence) * 100),
         data.frame(V0 = "Number of singletons", V1 = sum(treads == 1)),
         data.frame(V0 = "Percentage of singletons", V1 = sum(treads == 1) * 100 / length(treads)),
 
