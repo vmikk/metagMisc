@@ -15,13 +15,22 @@
 #' @export
 #'
 #' @examples
+#' # Load data
 #' data(esophagus)
+#' 
+#' # Single sample summary
+#' phyloseq_summary(esophagus, cols = "Esophagus")
+#' phyloseq_summary(esophagus, cols = "Esophagus", more_stats = T)
 #'
+#' ## Compare trimmed and raw data
 #' # Remove taxa that have less than 5 reads
 #' eso_trim <- prune_taxa(taxa_sums(esophagus) >= 5, esophagus)
 #'
-#' phyloseq_summary(esophagus, eso_trim, cols = c("Esophagus", "Trimmed esophagus"))
-#' phyloseq_summary(esophagus, eso_trim, cols = c("Esophagus", "Trimmed esophagus"), more_stats = T)
+#' phyloseq_summary(esophagus, eso_trim, cols = c("Esophagus", "Trimmed_esophagus"))
+#' phyloseq_summary(esophagus, eso_trim, cols = c("Esophagus", "Trimmed_esophagus"), more_stats = T)
+#'
+#' eso_trim2 <- phyloseq_filter_top_taxa(esophagus, perc = 20)
+#' phyloseq_summary(esophagus, eso_trim, eso_trim2, cols = c("Esophagus", "Trimmed_1", "Trimmed_2"), more_stats = T)
 #'
 phyloseq_summary <- function(physeq, ..., cols = NULL, more_stats = FALSE, long = FALSE){
 
