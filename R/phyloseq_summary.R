@@ -50,7 +50,7 @@ phyloseq_summary <- function(physeq, ..., cols = NULL, more_stats = FALSE, long 
     sreads <- phyloseq::sample_sums(x)
 
     ## OTU abundance table
-    otutab <- as.data.frame(otu_table(x))
+    otutab <- as.data.frame(phyloseq::otu_table(x))
 
     ## Prepare resulting table
     res <- rbind(
