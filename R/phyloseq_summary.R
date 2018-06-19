@@ -45,7 +45,13 @@ phyloseq_summary <- function(physeq, ..., cols = NULL, more_stats = FALSE, long 
   if(is.null(cols)){
     names(lls) <- paste("Phys", 1:length(lls), sep="")
   } else {
-    names(lls) <- cols
+
+    ## Column name verification
+    cols_new <- make.names(cols)
+    if( any(!cols_new %in% cols) ){
+      warning("Some of the column names were modified to be syntactically valid in R.\n")
+    }
+    names(lls) <- cols_new
   }
 
   ## Summary function
