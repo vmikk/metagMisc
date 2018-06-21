@@ -4,7 +4,8 @@
 #' @param x data.frame or phyloseq with \code{\link[phyloseq]{tax_table}} slot
 #' @param dropNA Logical; if TRUE, missing tax ranks will be removed
 #' @param add_OTUID Logical; if TRUE, OTU name will be added to the first column of the resulting table
-#'
+#' @param custom_tax_ranks Data frame with two columns, taxonomic ranks (with the same names as columns in x) and the corresponding single letter abbreviations
+#' 
 #' @return character vector (if 'add_OTUID = FALSE') or data.frame with taxonomy annotations.
 #' @export
 #'
