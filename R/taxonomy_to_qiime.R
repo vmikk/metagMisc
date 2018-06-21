@@ -43,6 +43,14 @@ taxonomy_to_qiime <- function(x, dropNA = TRUE, add_OTUID = TRUE, custom_tax_ran
   } else {
   ## Custom column names abbreviations
 
+    ## custom_tax_ranks validation
+    if(!class(custom_tax_ranks) %in% c("data.frame", "matrix")){
+      stop("Error: custom taxonomic ranks should be provided as data.frame.\n")
+    }
+    if(ncol(custom_tax_ranks) != 2 ){
+      stop("Error: custom taxonomic ranks should be provided as data.frame with 2 columns.\n")
+    }
+
     taxx <- custom_tax_ranks
     
     ## Convert factors to character
