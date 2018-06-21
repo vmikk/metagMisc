@@ -23,7 +23,7 @@
 #' qvec <- taxonomy_to_qiime(GP, add_OTUID = FALSE)
 #' head(qvec)
 #' 
-taxonomy_to_qiime <- function(x, dropNA = TRUE, add_OTUID = TRUE){
+taxonomy_to_qiime <- function(x, dropNA = TRUE, add_OTUID = TRUE, custom_tax_ranks = NULL){
 
   ## If phyloseq is provided - extract OTU table
   if(class(x) %in% c("phyloseq", "taxonomyTable")){
@@ -34,10 +34,22 @@ taxonomy_to_qiime <- function(x, dropNA = TRUE, add_OTUID = TRUE){
     tx <- x
   }
 
-  ## Column names abbreviations
-  tax.levels <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
-  tax.abbr <- c("k", "p", "c", "o", "f", "g", "s")
-  taxx <- data.frame(Level = c(tax.levels, tolower(tax.levels)), Abbr = tax.abbr, stringsAsFactors = F)
+  ## Default column names abbreviations
+  if(!is.null(custom_tax_ranks)){
+    tax.levels <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
+    tax.abbr <- c("k", "p", "c", "o", "f", "g", "s")
+    taxx <- data.frame(Level = c(tax.levels, tolower(tax.levels)), Abbr = tax.abbr, stringsAsFactors = F)
+  } else {
+  ## Custom column names abbreviations
+
+    taxx <- custom_tax_ranks
+    
+    ## Convert factors to character
+    taxx <- data.frame(lapply(taxx, as.character), stringsAsFactors=FALSE)
+    
+    ## Rename columns
+    colnames(taxx) <- c("Level", "Abbr")
+  }
 
   ## Rename tax columns
   colnames(tx) <- taxx[match(x = colnames(tx), table = taxx$Level), "Abbr"]
