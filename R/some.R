@@ -37,6 +37,7 @@ some <- function(x, n = 10, n_otu = 10){
       res <- phyloseq::prune_samples(1:nsamps %in% samps, x)
     } else {
       warning("Number of samples in phyloseq <= n \n")
+      res <- x
     }
  
     ## How many taxa?
