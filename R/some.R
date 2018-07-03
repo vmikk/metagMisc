@@ -9,6 +9,11 @@
 #' @return Part of the data.frame or matrix with n lines or a subset of phyloseq-object.
 #' @author Adapted from \code{some} in the car-package by John Fox.
 #' @examples
+#' # Load phyloseq data
+#' data(enterotype)
+#' some(enterotype)
+#' 
+#' # If input is data.frame or matrix
 #' x <- matrix(rnorm(500), ncol=5)
 #' some(x)
 #'
