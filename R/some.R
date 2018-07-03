@@ -1,13 +1,14 @@
 #' @title Check random lines in the data (including phyloseq objects)
 #'
 #' @description Returns several random lines from the data.frame, matrix or phyloseq.
-#' Usage is quite similar to the \code{head} or \code{tail} functions.
+#' Usage is quite similar to the \code{\link{head}} or \code{\link{tail}} functions.
 #'
-#' @param x Coluld be a "data.frame", "matrix", or "phyloseq" class
+#' @param x Coluld be a \code{\link{data.frame}}, \code{\link{matrix}}, or \code{\link[phyloseq]{phyloseq-class}} 
 #' @param n Number of records (or samples in phyloseq) that will be returned
 #' @param n_otu Number of OTUs to show (if the input is phyloseq-object)
 #' @return Part of the data.frame or matrix with n lines or a subset of phyloseq-object.
-#' @author Adapted from \code{some} in the car-package by John Fox.
+#' @export
+#' @author Adapted from \code{\link[car]{some}} in the car-package by John Fox.
 #' @examples
 #' # Load phyloseq data
 #' data(enterotype)
