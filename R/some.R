@@ -16,8 +16,13 @@ some <- function(x, n = 10, n_otu = 10){
 
   ## Input data = data.frame or matrix
   if(any(class(x) %in% c("data.frame", "matrix"))){
-    show <- sample(x = 1:nrow(x), size = n)
-    res <- x[show, ]
+    if(nrow(x) > n){
+      show <- sample(x = 1:nrow(x), size = n)
+      res <- x[show, ]
+    } else {
+      warning("Cannot take a sample larger than the population.\n")
+      res <- x
+    }
   }
 
   ## Input data = phyloseq object
