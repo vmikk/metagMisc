@@ -15,15 +15,24 @@
 #' pco <- cmdscale(d = eurodist, k = 10, eig = TRUE)
 #' eig_perc(pco$eig, positive = T, plot = T)
 #'
-eig_perc <- function(eig, positive = T, plot = F, ...){
+eig_perc <- function(eig, positive = T, plot = F, percentage = TRUE, digits = 2, ...){
 
+  ## Extract only positive eigenvalues
   if(positive == T) { eig <- eig[eig > 0] }
 
-	res <- round(eig / sum(eig), 2)
+  ## Estimate proportion of explained variance
+  res <- eig / sum(eig)
 
-	if(plot == T) {
-	  plot(res, type="b", pch=16, ylab = "Variance explained", las = 1, ...)
-	}
+  ## Convert to percetages
+  if(percentage == TRUE){ res <- res * 100 }
 
-	return(res)
+  ## Round values
+  if(!is.null(digits)){ res <- round(res, digits) }
+
+  ## Make a plot
+  if(plot == T) {
+    plot(res, type="b", pch=16, ylab = "Variance explained", las = 1, ...)
+  }
+  
+  return(res)
 }
