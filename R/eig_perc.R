@@ -3,6 +3,8 @@
 #'
 #' @param eig Numeric vector of eigenvalues (e.g., from PCA or PCoA)
 #' @param positive Logical, preserve only positive eigenvalues (if TRUE negative eigenvalues will be removed)
+#' @param percentage Logical, convert proportions (0-1) to percentages (0-100)
+#' @param digits Integer indicating the number of decimal places to be used (NULL for no rounding)
 #' @param plot Logical, show a scree plot
 #' @param ... Additinal arguments will be passed to a plot function
 #'
@@ -15,7 +17,7 @@
 #' pco <- cmdscale(d = eurodist, k = 10, eig = TRUE)
 #' eig_perc(pco$eig, positive = T, plot = T)
 #'
-eig_perc <- function(eig, positive = T, plot = F, percentage = TRUE, digits = 2, ...){
+eig_perc <- function(eig, positive = T, percentage = TRUE, digits = 2, plot = F, ...){
 
   ## Extract only positive eigenvalues
   if(positive == T) { eig <- eig[eig > 0] }
