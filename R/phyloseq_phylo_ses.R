@@ -16,8 +16,8 @@
 #' @param swapiter Number of iterations for independentswap or trialswap algorithms
 #' @param verbose Logical; if TRUE, progress messages from the function will be printed
 #' @param ... Additional arguments currently are not implemented
-#' 
-#' @details 
+#'
+#' @details
 #' Available metrics include:
 #' \itemize{
 #'   \item PD - Faith's phylogenetic diversity (total length of all the phylogenetic branches for a given set of taxa);
@@ -25,14 +25,17 @@
 #'   \item MNTD - Mean nearest taxon distance;
 #'   \item VPD - Variance of the pairwise distances.
 #' }
-#' Values of SES above zero indicate that the species pool of a habitat is more 
+#' Values of SES above zero indicate that the species pool of a habitat is more
 #' diverse than the regional species pool.
 #' @return Data frame.
+#' @references
+#' Webb C., Ackerly D., McPeek M., Donoghue M. (2002) Phylogenies and community ecology. Annual Review of Ecology and Systematics, 33, 475-505.
+#'
 #' @export
-#' @seealso \code{\link{phyloseq_phylo_div}}, \code{\link{phyloseq_randomize}}, 
-#' \code{\link[picante]{randomizeMatrix}}, \code{\link[picante]{ses.pd}}, 
+#' @seealso \code{\link{phyloseq_phylo_div}}, \code{\link{phyloseq_randomize}},
+#' \code{\link[picante]{randomizeMatrix}}, \code{\link[picante]{ses.pd}},
 #' \code{\link[picante]{ses.mpd}}, \code{\link[picante]{ses.mntd}},
-#' \code{\link[PhyloMeasures]{pd.query}}, \code{\link[PhyloMeasures]{mpd.query}}, 
+#' \code{\link[PhyloMeasures]{pd.query}}, \code{\link[PhyloMeasures]{mpd.query}},
 #' \code{\link[PhyloMeasures]{mntd.query}}
 #' @examples
 #' # Load data
@@ -50,7 +53,7 @@
 #'                    nsim = 200, swapiter = 200)  # NB. increase the number of iterations!
 #'
 phyloseq_phylo_ses <- function(physeq, measures = c("PD", "MPD", "MNTD", "VPD"),
-  null_model = "taxa.labels", package = "picante", abundance_weighted = FALSE, 
+  null_model = "taxa.labels", package = "picante", abundance_weighted = FALSE,
   nsim = 1000, swapiter = 1000, verbose = TRUE, ...){
 
   # require(plyr)
@@ -212,7 +215,7 @@ phyloseq_phylo_ses <- function(physeq, measures = c("PD", "MPD", "MNTD", "VPD"),
     .data = nmods,
     .fun = function(z, ...){ pdiv(comm = z$comm, phy = z$phy, ...) },
     pdiv_measures = measures,
-    method = package, 
+    method = package,
     abund_wei = abundance_weighted,
     .progress = progr)
 
@@ -347,7 +350,7 @@ pd_weighted <- function(samp, tree){
 
   ## Function for a single sample
   wpd <- function(smp){
-    
+
     ## Extract the names of species in a community with an abundance greater than zero
     ## and make a pruned phylogeny for that community
     tmp.tree <- geiger::treedata(tree, smp[smp > 0], warnings=F)$phy
@@ -360,15 +363,15 @@ pd_weighted <- function(samp, tree){
 
     ## Fill the third column with the length of each branch
     branches[,3] <- tmp.tree$edge.length
-    
+
     get.leaves <- function(x){ leaves.node <- geiger::tips(tmp.tree, x[2]) }
-    
+
     ## Retrieve species names subtended by each branch (i.e. ## row) in the branches matrix
     leaves <- apply(X = branches, MARGIN = 1, FUN = get.leaves)
-    
+
     ## Calculate the mean abundance (Ai) for species across each set of leaves
     for(i in 1:length(leaves)){
-      branches[i, 4] <- mean(smp[leaves[[i]]], na.rm = T) 
+      branches[i, 4] <- mean(smp[leaves[[i]]], na.rm = T)
     }
 
     ## Calculated the Weighted Faith’s Index
