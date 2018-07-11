@@ -4,12 +4,17 @@
 \alias{eig_perc}
 \title{Estimate the proportion of explained variance from the eigenvalues.}
 \usage{
-eig_perc(eig, positive = T, plot = F, ...)
+eig_perc(eig, positive = T, percentage = TRUE, digits = 2, plot = F,
+  ...)
 }
 \arguments{
 \item{eig}{Numeric vector of eigenvalues (e.g., from PCA or PCoA)}
 
 \item{positive}{Logical, preserve only positive eigenvalues (if TRUE negative eigenvalues will be removed)}
+
+\item{percentage}{Logical, convert proportions (0-1) to percentages (0-100)}
+
+\item{digits}{Integer indicating the number of decimal places to be used (NULL for no rounding)}
 
 \item{plot}{Logical, show a scree plot}
 
