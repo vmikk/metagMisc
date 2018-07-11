@@ -41,7 +41,15 @@ it is debatable that this method can provide a reasonable approximation by selec
 Currently only non-abundance-weighted estimates are implemented.
 }
 \details{
-Values of SES above zero indicate that the species pool of a habitat is more diverse than the regional species pool.
+Available metrics include:
+\itemize{
+  \item PD - Faith's phylogenetic diversity (total length of all the phylogenetic branches for a given set of taxa);
+  \item MPD - Mean pairwise distance between the tips from a phylogenetic tree;
+  \item MNTD - Mean nearest taxon distance;
+  \item VPD - Variance of the pairwise distances.
+}
+Values of SES above zero indicate that the species pool of a habitat is more
+diverse than the regional species pool.
 }
 \examples{
 # Load data
@@ -59,6 +67,13 @@ phyloseq_phylo_ses(esophagus,
                    nsim = 200, swapiter = 200)  # NB. increase the number of iterations!
 
 }
+\references{
+Webb C., Ackerly D., McPeek M., Donoghue M. (2002) Phylogenies and community ecology. Annual Review of Ecology and Systematics, 33, 475-505.
+}
 \seealso{
-\code{\link{phyloseq_phylo_div}}, \code{\link{phyloseq_randomize}}, \code{\link[picante]{randomizeMatrix}}, \code{\link[picante]{ses.pd}}, \code{\link[picante]{ses.mpd}}, \code{\link[picante]{ses.mntd}}
+\code{\link{phyloseq_phylo_div}}, \code{\link{phyloseq_randomize}},
+\code{\link[picante]{randomizeMatrix}}, \code{\link[picante]{ses.pd}},
+\code{\link[picante]{ses.mpd}}, \code{\link[picante]{ses.mntd}},
+\code{\link[PhyloMeasures]{pd.query}}, \code{\link[PhyloMeasures]{mpd.query}},
+\code{\link[PhyloMeasures]{mntd.query}}
 }
