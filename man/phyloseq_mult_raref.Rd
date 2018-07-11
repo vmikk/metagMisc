@@ -22,7 +22,7 @@ phyloseq_mult_raref(x, SampSize = NULL, MinSizeTreshold = NULL,
 
 \item{seeds}{Integer vector used for the reproducible random subsampling (should be of the same length as the number of iterations)}
 
-\item{...}{Additional arguments will be passed to \code{\link{rarefy_even_depth}}}
+\item{...}{Additional arguments will be passed to \code{\link[phyloseq]{rarefy_even_depth}}}
 }
 \value{
 List of rarefied phyloseq-objects.
