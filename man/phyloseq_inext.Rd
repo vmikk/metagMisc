@@ -40,6 +40,10 @@ phyloseq_inext(physeq, Q = 0, curve_type = "diversity",
 Plot of class 'ggplot' or 'data.frame' (if 'justDF = TRUE')
 }
 \examples{
+data("esophagus")
+phyloseq_inext(esophagus)
+phyloseq_inext(esophagus, curve_type = "coverage")
+phyloseq_inext(esophagus, justDF = T)
 
 }
 \references{
