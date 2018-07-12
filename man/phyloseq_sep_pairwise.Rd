@@ -19,5 +19,12 @@ phyloseq_sep_pairwise(phys, group, comparis = "all", drop_zeroes = TRUE)
 List with phyloseq objects (each with only two groups based on selected variable).
 }
 \examples{
+data(enterotype)
+
+# Split enterotype data for pairwise comparisons by sequencing technology
+ent <- phyloseq_sep_pairwise(enterotype, group = "SeqTech", drop_zeroes = TRUE)
+ent
+
+# Perform differential abundance testing for each of the pairwise comparisons
 
 }
