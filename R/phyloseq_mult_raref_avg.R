@@ -1,14 +1,14 @@
 
 #' @title Perform rarefaction and average relative OTU abundance
 #'
-#' @param physeq
-#' @param SampSize
-#' @param iter
-#' @param parallel
-#' @param verbose
-#' @param ... passed to phyloseq_mult_raref
+#' @param physeq A phyloseq-class object
+#' @param SampSize Rarefaction depth (number of reads to sample)
+#' @param iter Number of rarefication iterations
+#' @param parallel Logical or integer; if TRUE, attempts to run the function on multiple cores; integer defines the number of cores to use (if it is set to TRUE, all cores will be used)
+#' @param verbose Logical; if TRUE, informational messages will be shown on screen
+#' @param ... Additional arguments will be passed to \code{\link[metagMisc]{phyloseq_mult_raref}}
 #'
-#' @return
+#' @return phyloseq object with relative OTU abundance averaged across multiple rarefactions.
 #' @export
 #'
 #' @examples
@@ -20,7 +20,7 @@ phyloseq_mult_raref_avg <- function(physeq, SampSize = NULL, iter = 1000, parall
   # require(reshape2)
 
   ## Progress indicator
-  if(verbose == TRUE){ 
+  if(verbose == TRUE){
     progress <- "text"
   } else {
     progress <- "none"
