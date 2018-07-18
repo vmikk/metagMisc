@@ -95,7 +95,7 @@ adonis_pairwise <- function(x, dd, group.var, add_permdisp = TRUE, permut = 999,
 
   ## Extract adonis results
   adonis_extract <- function(z){
-    data.frame(F = z$aov.tab$F.Model[1], df = paste(z$aov.tab$Df[1:2], collapse=";"), p = z$aov.tab$Pr[1])
+    data.frame(R2 = z$aov.tab$R2[1], F = z$aov.tab$F.Model[1], df = paste(z$aov.tab$Df[1:2], collapse=";"), p = z$aov.tab$Pr[1])
   }
   ad.t <- plyr::ldply(.data = adon, .fun = adonis_extract, .id = "Comparison")
 
