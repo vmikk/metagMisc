@@ -6,8 +6,7 @@
 #' @param group.var Name of the independent variable to test (RHS in adonis formula)
 #' @param add_permdisp Logical; if TRUE (default), results of tests for homogeneity of multivariate dispersions will be added to output (see \code{\link[vegan]{betadisper}})
 #' @param permut Number of permutations required
-#' @param p.adj Logical, adjust P-values for multiple comparisons
-#' @param adj.meth Correction method from \code{\link{p.adjust}} ("holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr")
+#' @param p.adj Logical or character; if TRUE, adjust P-values for multiple comparisons with FDR; if character, specify correction method from \code{\link{p.adjust}} ("holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", or "none")
 #' @param all_results Logical, return results of adonis and data subsets for each pairwise comparison
 #' @param comparison_sep Character string to separate the levels of independent variable the in the pairwise comparison names (default, ".")
 #' @param permdisp_type Use the spatial median (default) or the group centroid for the analysis for homogeneity of multivariate dispersions (see \code{\link[vegan]{betadisper}})
@@ -30,7 +29,7 @@
 #' tst$Betadisper.tab
 #'
 adonis_pairwise <- function(x, dd, group.var, add_permdisp = TRUE, permut = 999,
-  p.adj = T, adj.meth = "fdr", all_results = T, comparison_sep = ".", permdisp_type = "median", ...){
+  p.adj = "fdr", all_results = T, comparison_sep = ".", permdisp_type = "median", ...){
 
   # require(vegan)
 
@@ -38,6 +37,26 @@ adonis_pairwise <- function(x, dd, group.var, add_permdisp = TRUE, permut = 999,
   if(!group.var %in% colnames(x)){
     stop("Check the 'group.var' value: independent variable '", group.var, "' is missing in the sample meta-data.\n")
   }
+
+  ## Check p-adjustment methods
+  if(!p.adj %in% "none" & p.adj != FALSE){
+    
+    ## Set the selected method
+    pmethod <- c("holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", TRUE)
+    if(p.adj %in% pmethod){
+      
+      ## Set the default adjustment method
+      if(p.adj == TRUE){ 
+        adj.meth <- "fdr"
+      } else {
+        adj.meth <- p.adj
+      }
+      
+    } else {
+      stop("Invalid P-adjustment method. See '?p.adjust'\n")
+    }
+  }
+
 
   VV <- which(colnames(x) %in% group.var)
 
@@ -108,7 +127,8 @@ adonis_pairwise <- function(x, dd, group.var, add_permdisp = TRUE, permut = 999,
   }
 
   ## Adjust P-values
-  if(p.adj == TRUE){
+  if(!p.adj %in% "none" & p.adj != FALSE){
+
     ad.t$p.adj <- p.adjust(ad.t$p, method = adj.meth)
 
     if(add_permdisp == TRUE){
