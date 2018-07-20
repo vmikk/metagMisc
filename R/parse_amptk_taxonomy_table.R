@@ -27,6 +27,7 @@ parse_taxonomy_amptk <- function(x){
 #' @title Parse multiple taxonomy strings from AMPtk.
 #'
 #' @param x Vector of character strings from AMPtk taxonomy
+#' @param withID Logical; set to TRUE (default) if charter strings contain sequence IDs
 #' @details
 #' This function splits AMPtk (ex-UFITS) result of taxonomic annotation by taxonomic rank and combines it into one table.
 #' The first part of taxonomy string is assumed to be an ID of the best hit (e.g., EF040844) or a taxonomic classificator (UTAX or SINTAX) followed by a semicolon.
