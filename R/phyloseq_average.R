@@ -9,6 +9,7 @@
 #' @param group Variable name in \code{\link[phyloseq]{sample_data}}) which defines sample groups for averaging (default is NULL)
 #' @param drop_group_zero Logical; indicating weather OTUs with zero abundance withing a group of samples should be removed
 #' @param progress Name of the progress bar to use ("none" or "text"; see \code{\link[plyr]{create_progress_bar}})
+#' @param verbose Logical; if TRUE (default), informational messages will be shown on screen
 #' @param ... Additional arguments may be passed to \code{\link[zCompositions]{cmultRepl}}
 #' @details
 #' Typical OTU abundance tables in metagenomic analysis usually has different
