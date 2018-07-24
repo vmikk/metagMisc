@@ -8,8 +8,8 @@
 #' @param aldex_denom Character ("all", "iqlr", "lvha"), indicating which features to use as the denominator for the geometric mean calculation (see \code{\link[ALDEx2]{aldex.clr}})
 #' @param group Variable name in \code{\link[phyloseq]{sample_data}}) which defines sample groups for averaging (default is NULL)
 #' @param drop_group_zero Logical; indicating weather OTUs with zero abundance withing a group of samples should be removed
-#' @param progress Name of the progress bar to use ("none" or "text"; see \code{\link[plyr]{create_progress_bar}})
 #' @param verbose Logical; if TRUE (default), informational messages will be shown on screen
+#' @param progress Name of the progress bar to use ("none" or "text"; see \code{\link[plyr]{create_progress_bar}})
 #' @param ... Additional arguments may be passed to \code{\link[zCompositions]{cmultRepl}}
 #' @details
 #' Typical OTU abundance tables in metagenomic analysis usually has different
@@ -48,7 +48,7 @@
 #'
 phyloseq_average <- function(physeq, avg_type = "aldex", 
     acomp_zero_impute = NULL, aldex_samples = 128, aldex_denom = "all", 
-    group = NULL, drop_group_zero = FALSE, verbose = TRUE, ...){
+    group = NULL, drop_group_zero = FALSE, verbose = TRUE, progress = NULL, ...){
 
   # require(compositions)   # for Aitchison CoDa approach
   # require(zCompositions)  # for Bayesian-multiplicative replacement
@@ -62,7 +62,7 @@ phyloseq_average <- function(physeq, avg_type = "aldex",
 
   ## Progress indicator
   if(verbose == TRUE){
-    progress <- "text"
+    if(is.null(progress)){ progress <- "text" }
   } else {
     progress <- "none"
   }
