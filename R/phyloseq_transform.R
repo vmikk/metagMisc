@@ -46,6 +46,7 @@ phyloseq_transform_css <- function(physeq, norm = TRUE, log = TRUE, ...){
 #' @param physeq A phyloseq-class object
 #' @param dropneg Logical, replace negative transformed values with 0
 #' @param dropmissing Logical, remove missing data
+#' @param ... Not yet implemented
 #@param ... Additional arguments will be passed to \code{\link{varianceStabilizingTransformation}
 #'
 #' @details For downstream analysis it could be better to use sample covariate information (blind = FALSE in \code{\link{varianceStabilizingTransformation}}).
