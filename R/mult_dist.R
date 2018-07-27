@@ -38,6 +38,7 @@ mult_dist_average <- function(dlist){
 #' @param x List of phyloseq objects (result of \code{\link{phyloseq_mult_raref}})
 #' @param method A character string with the name of supported dissimilarity index (see \code{\link{distanceMethodList}})
 #' @param average Logical; if TRUE, dissimilarity averaged over rarefication iterations will be returned; if FALSE, list of dissimilarity matrices will be returned.
+#' @param ... Additional arguments will be passed to \code{\link[phyloseq]{distance}}
 #'
 #' @return List of 'dist'-matrices (if average = FALSE) or a single 'dist' (if average = TRUE).
 #' @export
@@ -59,7 +60,7 @@ mult_dist_average <- function(dlist){
 #' eso_dis_avg <- mult_dissim(esor, method = "unifrac", average = T)
 #' eso_dis_avg    # mean unweighted UniFrac distances
 #'
-mult_dissim <- function(x, method = "bray", average = T){
+mult_dissim <- function(x, method = "bray", average = T, ...){
 
   # require(phyloseq)
   # require(plyr)
