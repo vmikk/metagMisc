@@ -3,7 +3,7 @@
 phyloseq_rename_with_tax <- function(physeq, taxrank = "Family"){
 
   ## Extract taxonomy table
-  txx <- as.data.frame(tax_table(physeq), stringsAsFactors = F)
+  txx <- as.data.frame(phyloseq::tax_table(physeq), stringsAsFactors = F)
 
   ## Check if
   if(!taxrank %in% colnames(txx)){
@@ -20,7 +20,7 @@ phyloseq_rename_with_tax <- function(physeq, taxrank = "Family"){
 
   ## Rename taxa
   # taxa_names(physeq) <- newnames[ match(x = taxa_names(physeq), table = rownames(txx)) ]  # reorder names
-  taxa_names(physeq) <- newnames   # names should be in the same order
+  phyloseq::taxa_names(physeq) <- newnames   # names should be in the same order
 
   return(physeq)
 }
