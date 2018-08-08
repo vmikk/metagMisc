@@ -1,5 +1,14 @@
 
-## Function to rename species with tax ranks
+#' @title Rename phyloseq OTUs or species with taxonomy ranks.
+#'
+#' @param physeq A phyloseq-class object
+#' @param taxrank Character, which taxonomy rank to use for renaming
+#'
+#' @return A phyloseq-class object with renamed OTUs.
+#' @export
+#'
+#' @examples
+#'
 phyloseq_rename_with_tax <- function(physeq, taxrank = "Family"){
 
   ## Extract taxonomy table
@@ -24,4 +33,3 @@ phyloseq_rename_with_tax <- function(physeq, taxrank = "Family"){
 
   return(physeq)
 }
-
