@@ -36,7 +36,7 @@ taxonomy_to_qiime <- function(x, dropNA = TRUE, add_OTUID = TRUE, custom_tax_ran
   }
 
   ## Default column names abbreviations
-  if(!is.null(custom_tax_ranks)){
+  if(is.null(custom_tax_ranks)){
     tax.levels <- c("Domain", "Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
     tax.abbr <- c("d", "k", "p", "c", "o", "f", "g", "s")
     taxx <- data.frame(Level = c(tax.levels, tolower(tax.levels)), Abbr = tax.abbr, stringsAsFactors = F)
