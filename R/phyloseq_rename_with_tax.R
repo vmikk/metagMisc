@@ -8,6 +8,16 @@
 #' @export
 #'
 #' @examples
+#' # Load data
+#' data("GlobalPatterns")
+#'
+#' # Agglomerate taxa of the same phylum
+#' GP <- tax_glom(GlobalPatterns, taxrank="Phylum")
+#' taxa_names(GP)
+#'
+#' # Assign phylum name to the agglomerated taxa
+#' GP <- phyloseq_rename_with_tax(GP, taxrank="Phylum")
+#' taxa_names(GP)
 #'
 phyloseq_rename_with_tax <- function(physeq, taxrank = "Family"){
 
