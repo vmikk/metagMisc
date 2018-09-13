@@ -1,6 +1,7 @@
 
 ## RTK-based rarefaction function
-raref_rtk <- function(physeq, SampSize = NULL, MinSizeTreshold = NULL, iter = 1000, trimOTUs = TRUE, ...){
+raref_rtk <- function(physeq, SampSize = NULL, MinSizeTreshold = NULL, 
+  iter = 1000, trimOTUs = TRUE, ...){
 
   ## Filter samples by number of reads
   if(!is.null(MinSizeTreshold)){ x <- phyloseq::prune_samples(phyloseq::sample_sums(x) >= MinSizeTreshold, x) }
