@@ -45,4 +45,6 @@ devtools::install_github("vmikk/metagMisc")
 * openssl
 
 # Acknowledgements
+`metagMisc` stands on the shoulders of numerous R-packages (see Dependencies). In particular, it would not have happened without [phyloseq](https://github.com/joey711/phyloseq/) and [vegan](https://github.com/vegandevs/vegan/) packages. Please cite R and R packages when you use them for data analysis. 
+
 The development of this software was supported by RFBR grant 16-04-01259.
