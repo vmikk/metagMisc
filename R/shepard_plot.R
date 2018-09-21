@@ -24,6 +24,12 @@
 #' shepard_plot(dis = dd, ord = scores(ord), k = 2)   # Bray-Curtis vs distance in reduced space (only first 2 dimensions)
 #' shepard_plot(dis = dd, ord = scores(ord), k = 3)   # Bray-Curtis vs distance in reduced space (first 3 dimensions)
 #'
+#' # Example with phyloseq wrappers
+#' data("GlobalPatterns")
+#' dd <- distance(GlobalPatterns, method = "unifrac", type = "samples")
+#' ord <- ordinate(GlobalPatterns, method = "NMDS", distance = dd)
+#' shepard_plot(dis = dd, ord = scores(ord))
+#'
 shepard_plot <- function(dis, ord, k=2){
 
   require(ggplot2)
