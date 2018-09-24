@@ -10,10 +10,10 @@ raref_rtk <- function(physeq, SampSize = NULL, MinSizeTreshold = NULL,
   if(is.null(SampSize)){ SampSize <- round( 0.9*min(phyloseq::sample_sums(x)) ) }
 
   ## Extract OTU abundance table (should be a matrix)
-  abunds <- as( otu_table(physeq), "matrix" )
+  abunds <- as( phyloseq::otu_table(physeq), "matrix" )
 
   ## Define margins
-  TR <- taxa_are_rows(physeq)
+  TR <- phyloseq::taxa_are_rows(physeq)
   if(TR == TRUE) { MAR <- 2 }
   if(TR == FALSE){ MAR <- 1 }
   #   columns represent single samples (margin=2)
@@ -25,11 +25,11 @@ raref_rtk <- function(physeq, SampSize = NULL, MinSizeTreshold = NULL,
 
   ## Function to replace OTU table in phyloseq object
   subst_otu_tab <- function(phys, newotu, taxrows, drop_zeros = FALSE){
-    otu_table(phys) <- otu_table(newotu, taxa_are_rows = taxrows)
+    phyloseq::otu_table(phys) <- phyloseq::otu_table(newotu, taxa_are_rows = taxrows)
 
     ## Remove OTUs from the dataset that are no longer observed in any sample 
     if(drop_zeros == TRUE){
-      phys <- prune_taxa(taxa_sums(phys) > 0, phys)
+      phys <- phyloseq::prune_taxa(phyloseq::taxa_sums(phys) > 0, phys)
     }
 
     return(phys)
