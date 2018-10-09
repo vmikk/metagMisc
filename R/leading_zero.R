@@ -1,9 +1,19 @@
 
-## Function to add or remove leading zeros to numeric vector
+#' @title Add or remove leading zeros
+#'
+#' @param x Numeric or character vector
+#' @param z Number of significant digits of the resulting number with leading zeros (if NULL, it will be detected automatically)
+#' @param mode "add" or "remove" leading zero
+#'
+#' @return vector with (mode = "add) or without (mode = "remove") leading zeros
+#' @export
+#'
+#' @examples
+#' leading_zero(1:10, z=3)
+#' leading_zero(c(1,10,100,1000,10000))
+#' leading_zero(c("001", "1001", "g01", "0abc"), mode = "remove")
+#'
 leading_zero <- function(x, z = NULL, mode = "add"){
-  # x = numeric vector
-  # z = resulting length of number
-  # mode = "add" or "remove" leading zero
 
   ## Add leading zeros
   if(mode == "add"){
@@ -11,7 +21,7 @@ leading_zero <- function(x, z = NULL, mode = "add"){
       ## Find the number of characters
       z <- nchar(as.integer(max(x)))
     }
-  
+
     zz <- paste("%0", z, "d", sep = "")
     res <- sprintf(zz, x)
   }
@@ -23,6 +33,3 @@ leading_zero <- function(x, z = NULL, mode = "add"){
 
   return(res)
 }
-# leading_zero(1:10, z=3)
-# leading_zero(c(1,10,100,1000,10000))
-# leading_zero(c("001", "1001", "g01", "0abc"), mode = "remove")
