@@ -7,6 +7,15 @@
 # - make single wrapper function for all methods ??
 
 
+phyloseq_replace_zero <- function(physeq, pseudocount = 0.65){
+  tmp <- otu_table(physeq)
+  tmp[ tmp == 0 ] <- 0.65
+  otu_table(physeq) <- tmp
+  return(physeq)
+}
+
+
+
 #' @title Cumulative sum scaling (CSS) normalization of OTU abundance table.
 #'
 #' @param physeq A phyloseq-class object
