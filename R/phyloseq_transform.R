@@ -18,9 +18,14 @@
 #' @examples
 #'
 phyloseq_replace_zero <- function(physeq, pseudocount = 0.65){
-  tmp <- otu_table(physeq)
-  tmp[ tmp == 0 ] <- 0.65
-  otu_table(physeq) <- tmp
+  ## Extract OTU table
+  tmp <- phyloseq::otu_table(physeq)
+
+  ## Replace zeros with pseudocount
+  tmp[ tmp == 0 ] <- pseudocount
+
+  ## Replace OTU table
+  phyloseq::otu_table(physeq) <- tmp
   return(physeq)
 }
 
