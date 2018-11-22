@@ -7,13 +7,22 @@
 # - make single wrapper function for all methods ??
 
 
+#' @title Replace zeros in OTU abundance
+#'
+#' @param physeq A phyloseq-class object
+#' @param pseudocount Constant value
+#'
+#' @return Phyloseq object with transformed counts in OTU table.
+#' @export
+#'
+#' @examples
+#'
 phyloseq_replace_zero <- function(physeq, pseudocount = 0.65){
   tmp <- otu_table(physeq)
   tmp[ tmp == 0 ] <- 0.65
   otu_table(physeq) <- tmp
   return(physeq)
 }
-
 
 
 #' @title Cumulative sum scaling (CSS) normalization of OTU abundance table.
@@ -32,7 +41,7 @@ phyloseq_replace_zero <- function(physeq, pseudocount = 0.65){
 #' @examples
 #'
 phyloseq_transform_css <- function(physeq, norm = TRUE, log = TRUE, ...){
-  
+
   # require(metagenomeSeq)
 
   MGS <- phyloseq::phyloseq_to_metagenomeSeq(physeq)
@@ -87,7 +96,7 @@ phyloseq_transform_vst_blind <- function(physeq, dropneg = F, dropmissing = T, .
   ## If it fails (probably because of excessive zeros) try a workaround
   ## see https://github.com/joey711/phyloseq/issues/445
   if("try-error" %in% class(dsc_tr)){
-    
+
     ## Zero-tolerant version of geometric mean
     gm_mean <- function(x, na.rm=TRUE){ exp(sum(log(x[x > 0]), na.rm=na.rm) / length(x)) }
 
@@ -104,7 +113,7 @@ phyloseq_transform_vst_blind <- function(physeq, dropneg = F, dropmissing = T, .
 
   ## Extract variance stabilized data
   otu_norm <- DESeq2::getVarianceStabilizedData(dsc)
-  
+
   ## Negative values probably correspond to "less than one count"
   ## Set to zero all values less than zero
   if(dropneg == TRUE){
