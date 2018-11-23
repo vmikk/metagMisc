@@ -10,6 +10,7 @@
 #' @title Replace zeros in OTU abundance
 #'
 #' @param physeq A phyloseq-class object
+#' @param method Which method to apply for zero replacement ("pseudocount")
 #' @param pseudocount Constant value
 #'
 #' @return Phyloseq object with transformed counts in OTU table.
