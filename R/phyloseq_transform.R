@@ -19,6 +19,7 @@
 #' @examples
 #'
 phyloseq_replace_zero <- function(physeq, method = "pseudocount", pseudocount = 0.65){
+
   ## Extract OTU table
   tmp <- phyloseq::otu_table(physeq)
 
@@ -26,6 +27,28 @@ phyloseq_replace_zero <- function(physeq, method = "pseudocount", pseudocount = 
   if(method == "pseudocount"){
     tmp[ tmp == 0 ] <- pseudocount
   }
+
+  ## Replace zeros with minimum observed OTU abundance
+  if(method == "min"){
+    trows <- taxa_are_rows(physeq)
+
+    if(trows == TRUE){
+      ## Find minimum non-zero abundances for each sample
+      mins <- apply(X = tmp, MARGIN = 2, FUN = function(z){ z <- z[z > 0]; min(z) })
+
+      ## Replace zeros with sample-specific count
+      for(i in 1:ncol(tmp)){
+        tmp[ tmp[, i] == 0, i ] <- mins[i]
+      }
+    }
+
+    if(trows == FALSE){
+      mins <- apply(X = tmp, MARGIN = 1, FUN = function(z){ z <- z[z > 0]; min(z) })
+      for(i in 1:nrow(tmp)){
+        tmp[ i, tmp[i, ] == 0 ] <- mins[i]
+      }
+    }
+  } # end of 'min' method
 
   ## Replace OTU table
   phyloseq::otu_table(physeq) <- tmp
