@@ -56,6 +56,57 @@ phyloseq_replace_zero <- function(physeq, method = "pseudocount", pseudocount = 
 }
 
 
+
+phyloseq_transform_aldex_clr <- function(physeq)
+
+  ## Extract OTU abundance table
+  OTUS <- as.data.frame(otu_table(physeq))
+
+  ## Extract meta-data
+  metad <- as(sample_data(physeq), "data.frame")
+  conds <- metad[ match(x = colnames(OTUS), table = metad$MiSeqSample), "Factory"]
+
+  ## Generate Monte Carlo samples of the Dirichlet distribution for each sample
+  ## Convert each instance using the centred log-ratio transform
+  CLRs <- aldex.clr(OTUS, conds, mc.samples = 128, denom="iqlr", verbose = TRUE)
+
+  ## Extract CLR-transformed abundances
+  exract_aldex_clr <- function(ald){
+    ## ald = result of ALDEx2::aldex.clr
+
+    ## Extract CLR-transformed Monte Carlo samples of the Dirichlet distribution for each sample.
+    dtt <- getMonteCarloInstances(ald)
+    # dtt <- ald@analysisData                      # the same
+
+    ## Combine MC instances for each sample
+    res <- mlply(
+      .data = data.frame(i = 1:ald@mc.samples),
+      .fun = function(i){
+        mcs <- llply(.data = dtt, .fun = function(z){ z[, i, drop=FALSE] })
+        rez <- do.call(cbind, mcs)
+        colnames(rez) <- names(mcs)
+        return(rez)
+      })
+
+    ## List with the same number of transformed abundandance tables as the number of Monte Carlo samples used
+    return(res)
+  }
+
+  ## Extract CLR-transformed abundances
+  CLRs_ab <- exract_aldex_clr(CLRs)
+
+  ## Take only the first MC sample
+  CLRs_ab <- CLRs_ab[[ 1 ]]
+
+  ## Replace phyloseq table
+  physeq_CLR <- physeq
+  otu_table(physeq_CLR) <- otu_table(CLRs_ab, taxa_are_rows = TRUE)
+
+  return(physeq_CLR)
+}
+
+
+
 #' @title Cumulative sum scaling (CSS) normalization of OTU abundance table.
 #'
 #' @param physeq A phyloseq-class object
