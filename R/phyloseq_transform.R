@@ -68,14 +68,14 @@ phyloseq_transform_aldex_clr <- function(physeq)
 
   ## Generate Monte Carlo samples of the Dirichlet distribution for each sample
   ## Convert each instance using the centred log-ratio transform
-  CLRs <- aldex.clr(OTUS, conds, mc.samples = 128, denom="iqlr", verbose = TRUE)
+  CLRs <- ALDEx2::aldex.clr(OTUS, conds, mc.samples = 128, denom="iqlr", verbose = TRUE)
 
   ## Extract CLR-transformed abundances
   exract_aldex_clr <- function(ald){
     ## ald = result of ALDEx2::aldex.clr
 
     ## Extract CLR-transformed Monte Carlo samples of the Dirichlet distribution for each sample.
-    dtt <- getMonteCarloInstances(ald)
+    dtt <- ALDEx2::getMonteCarloInstances(ald)
     # dtt <- ald@analysisData                      # the same
 
     ## Combine MC instances for each sample
