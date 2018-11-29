@@ -60,10 +60,10 @@ phyloseq_replace_zero <- function(physeq, method = "pseudocount", pseudocount = 
 phyloseq_transform_aldex_clr <- function(physeq)
 
   ## Extract OTU abundance table
-  OTUS <- as.data.frame(otu_table(physeq))
+  OTUS <- as.data.frame(phyloseq::otu_table(physeq))
 
   ## Extract meta-data
-  metad <- as(sample_data(physeq), "data.frame")
+  metad <- as(phyloseq::sample_data(physeq), "data.frame")
   conds <- metad[ match(x = colnames(OTUS), table = metad$MiSeqSample), "Factory"]
 
   ## Generate Monte Carlo samples of the Dirichlet distribution for each sample
@@ -79,10 +79,10 @@ phyloseq_transform_aldex_clr <- function(physeq)
     # dtt <- ald@analysisData                      # the same
 
     ## Combine MC instances for each sample
-    res <- mlply(
+    res <- plyr::mlply(
       .data = data.frame(i = 1:ald@mc.samples),
       .fun = function(i){
-        mcs <- llply(.data = dtt, .fun = function(z){ z[, i, drop=FALSE] })
+        mcs <- plyr::llply(.data = dtt, .fun = function(z){ z[, i, drop=FALSE] })
         rez <- do.call(cbind, mcs)
         colnames(rez) <- names(mcs)
         return(rez)
@@ -100,7 +100,7 @@ phyloseq_transform_aldex_clr <- function(physeq)
 
   ## Replace phyloseq table
   physeq_CLR <- physeq
-  otu_table(physeq_CLR) <- otu_table(CLRs_ab, taxa_are_rows = TRUE)
+  phyloseq::otu_table(physeq_CLR) <- phyloseq::otu_table(CLRs_ab, taxa_are_rows = TRUE)
 
   return(physeq_CLR)
 }
