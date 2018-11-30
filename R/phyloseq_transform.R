@@ -57,10 +57,16 @@ phyloseq_replace_zero <- function(physeq, method = "pseudocount", pseudocount = 
 
 
 
-phyloseq_transform_aldex_clr <- function(physeq)
+phyloseq_transform_aldex_clr <- function(physeq, iter = 1)
 
   ## Extract OTU abundance table
   OTUS <- as.data.frame(phyloseq::otu_table(physeq))
+
+  ## Transpose data
+  trow <- phyloseq::taxa_are_rows(physeq)
+  if(trow == FALSE){
+    OTUS <- t(OTUS)
+  }
 
   ## Extract meta-data
   metad <- as(phyloseq::sample_data(physeq), "data.frame")
@@ -68,7 +74,8 @@ phyloseq_transform_aldex_clr <- function(physeq)
 
   ## Generate Monte Carlo samples of the Dirichlet distribution for each sample
   ## Convert each instance using the centred log-ratio transform
-  CLRs <- ALDEx2::aldex.clr(OTUS, conds, mc.samples = 128, denom="iqlr", verbose = TRUE)
+  ## Rows should contain OTUs and columns should contain sequencing read counts
+  CLRs <- ALDEx2::aldex.clr(reads = OTUS, conditions = conds, mc.samples = 128, denom = "iqlr", verbose = TRUE)
 
   ## Extract CLR-transformed abundances
   exract_aldex_clr <- function(ald){
@@ -96,11 +103,16 @@ phyloseq_transform_aldex_clr <- function(physeq)
   CLRs_ab <- exract_aldex_clr(CLRs)
 
   ## Take only the first MC sample
-  CLRs_ab <- CLRs_ab[[ 1 ]]
+  if(iter == 1){
+    CLRs_ab <- CLRs_ab[[ 1 ]]
+  
+    ## Transpose OTU table
+    if(trows == FALSE){ CLRs_ab <- t(CLRs_ab) }
 
-  ## Replace phyloseq table
-  physeq_CLR <- physeq
-  phyloseq::otu_table(physeq_CLR) <- phyloseq::otu_table(CLRs_ab, taxa_are_rows = TRUE)
+    ## Replace phyloseq table
+    physeq_CLR <- physeq
+    phyloseq::otu_table(physeq_CLR) <- phyloseq::otu_table(CLRs_ab, taxa_are_rows = TRUE)
+  }
 
   return(physeq_CLR)
 }
