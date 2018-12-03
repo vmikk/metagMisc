@@ -102,13 +102,15 @@ phyloseq_transform_aldex_clr <- function(physeq, iter = 1)
   ## Extract CLR-transformed abundances
   CLRs_ab <- exract_aldex_clr(CLRs)
 
+  ## Transpose OTU tables
+  if(trows == FALSE){ 
+    CLRs_ab <- plyr::llply(.data = CLRs_ab, .fun = function(z){ t(z) })
+  }
+
   ## Take only the first MC sample
   if(iter == 1){
     CLRs_ab <- CLRs_ab[[ 1 ]]
   
-    ## Transpose OTU table
-    if(trows == FALSE){ CLRs_ab <- t(CLRs_ab) }
-
     ## Replace phyloseq table
     physeq_CLR <- physeq
     phyloseq::otu_table(physeq_CLR) <- phyloseq::otu_table(CLRs_ab, taxa_are_rows = TRUE)
