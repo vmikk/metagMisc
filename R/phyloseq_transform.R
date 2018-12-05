@@ -107,13 +107,22 @@ phyloseq_transform_aldex_clr <- function(physeq, iter = 1)
     CLRs_ab <- plyr::llply(.data = CLRs_ab, .fun = function(z){ t(z) })
   }
 
-  ## Take only the first MC sample
+  ## Function to replace OTU table in phyloseq object with new table
+  replace_otu_table <- function(phys, new_tab, trow = TRUE){
+    phyloseq::otu_table(phys) <- phyloseq::otu_table(new_tab, taxa_are_rows = trow)
+    return(phys)
+  }
+
+  ## Replace phyloseq tables
   if(iter == 1){
-    CLRs_ab <- CLRs_ab[[ 1 ]]
-  
-    ## Replace phyloseq table
-    physeq_CLR <- physeq
-    phyloseq::otu_table(physeq_CLR) <- phyloseq::otu_table(CLRs_ab, taxa_are_rows = TRUE)
+    ## Take only the first MC sample
+    physeq_CLR <- replace_otu_table(physeq, CLRs_ab[[ 1 ]], trows)
+  } else {
+    ## Use the specified number of MC samples
+    physeq_CLR <- list()
+    for(i in 1:iter){
+      physeq_CLR[[ i ]] <- replace_otu_table(physeq, CLRs_ab[[ i ]], trows)
+    }
   }
 
   return(physeq_CLR)
