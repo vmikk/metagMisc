@@ -75,8 +75,7 @@ phyloseq_transform_aldex_clr <- function(physeq, variable = NULL, iter = 1)
     warning("Dummy sample descriptor was used. Please consider to use one of the groupping variables from the sample metadata.\n")
   } else {
     ## Or use the provided groupping variable
-    metad <- as(phyloseq::sample_data(physeq), "data.frame")
-    conds <- metad[ , variable]
+    conds <- as.character( phyloseq::get_variable(physeq, varName = variable) )
   }
 
   ## Generate Monte Carlo samples of the Dirichlet distribution for each sample
