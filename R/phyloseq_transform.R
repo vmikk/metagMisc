@@ -57,7 +57,7 @@ phyloseq_replace_zero <- function(physeq, method = "pseudocount", pseudocount = 
 
 
 
-phyloseq_transform_aldex_clr <- function(physeq, iter = 1)
+phyloseq_transform_aldex_clr <- function(physeq, variable = NULL, iter = 1)
 
   ## Extract OTU abundance table
   OTUS <- as.data.frame(phyloseq::otu_table(physeq))
@@ -69,13 +69,20 @@ phyloseq_transform_aldex_clr <- function(physeq, iter = 1)
   }
 
   ## Extract meta-data
-  metad <- as(phyloseq::sample_data(physeq), "data.frame")
-  conds <- metad[ match(x = colnames(OTUS), table = metad$MiSeqSample), "Factory"]
+  if(is.null(variable)){
+    ## Create dummy sample descriptor
+    conds <- rep("A", phyloseq::nsamples(physeq))
+    warning("Dummy sample descriptor was used. Please consider to use one of the groupping variables from the sample metadata.\n")
+  } else {
+    ## Or use the provided groupping variable
+    metad <- as(phyloseq::sample_data(physeq), "data.frame")
+    conds <- metad[ , variable]
+  }
 
   ## Generate Monte Carlo samples of the Dirichlet distribution for each sample
   ## Convert each instance using the centred log-ratio transform
   ## Rows should contain OTUs and columns should contain sequencing read counts
-  CLRs <- ALDEx2::aldex.clr(reads = OTUS, conditions = conds, mc.samples = 128, denom = "iqlr", verbose = TRUE)
+  CLRs <- ALDEx2::aldex.clr(reads = OTUS, conds = conds, mc.samples = iter, denom = "iqlr", verbose = TRUE)
 
   ## Extract CLR-transformed abundances
   exract_aldex_clr <- function(ald){
