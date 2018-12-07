@@ -131,6 +131,10 @@ phyloseq_transform_aldex_clr <- function(physeq, variable = NULL, iter = 1)
     }
   }
 
+  ## Add aldex.clr results as attributes to the phyloseq object
+  ## Could be useful to check which OTUs were used in CLR-transformation as denominator
+  attr(res, which = "ALDEx2") <- CLRs
+
   return(physeq_CLR)
 }
 
