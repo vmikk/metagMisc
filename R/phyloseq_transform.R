@@ -68,6 +68,8 @@ phyloseq_replace_zero <- function(physeq, method = "pseudocount", pseudocount = 
 #' @return Phyloseq object with CLR-transformed OTU counts (or a list of rarefied phyloseq-objects if iter > 1).
 #' @export
 #' @seealso \code{\link[ALDEx2]{aldex.clr}}
+#' @references
+#' Fernandes DA, Reid J, Macklaim MJ, McMurrough TA, Edgell DR, Gloor BG (2014) Unifying the analysis of high-throughput sequencing datasets: characterizing RNA-seq, 16S rRNA gene sequencing and selective growth experiments by compositional data analysis // Microbiome 2:15. DOI: 10.1186/2049-2618-2-15
 #' @examples
 #'
 phyloseq_transform_aldex_clr <- function(physeq, variable = NULL, iter = 1){
