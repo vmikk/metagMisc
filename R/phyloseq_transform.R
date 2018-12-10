@@ -57,7 +57,20 @@ phyloseq_replace_zero <- function(physeq, method = "pseudocount", pseudocount = 
 
 
 
-phyloseq_transform_aldex_clr <- function(physeq, variable = NULL, iter = 1)
+#' @title ALDEx2-based centred log-ratio transformation of OTU table
+#'
+#' @param physeq A phyloseq-class object
+#' @param variable Variable name (from \code{\link[phyloseq]{sample_data}}) containing a descriptor for the samples, allowing them to be grouped and compared
+#' @param iter Number of Monte Carlo samples to use
+#' @details
+#' ALDEx2 generates Monte Carlo samples of the Dirichlet distribution for each sample and
+#' converts each instance using the centred log-ratio transformation.
+#' @return Phyloseq object with CLR-transformed OTU counts (or a list of rarefied phyloseq-objects if iter > 1).
+#' @export
+#' @seealso \code{\link[ALDEx2]{aldex.clr}}
+#' @examples
+#'
+phyloseq_transform_aldex_clr <- function(physeq, variable = NULL, iter = 1){
 
   ## Extract OTU abundance table
   OTUS <- as.data.frame(phyloseq::otu_table(physeq))
@@ -109,7 +122,7 @@ phyloseq_transform_aldex_clr <- function(physeq, variable = NULL, iter = 1)
   CLRs_ab <- exract_aldex_clr(CLRs)
 
   ## Transpose OTU tables
-  if(trows == FALSE){ 
+  if(trows == FALSE){
     CLRs_ab <- plyr::llply(.data = CLRs_ab, .fun = function(z){ t(z) })
   }
 
