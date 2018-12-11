@@ -57,3 +57,99 @@ raref_rtk <- function(physeq, SampSize = NULL, MinSizeTreshold = NULL,
 
   return(res)
 }
+
+
+## Modified RTK function that returns only rarefied matrices (without diversity estimation)
+# based on https://github.com/hildebra/Rarefaction/blob/05b8f37e27d7c023334846df8e690dbbd833a4a9/r-package/rtk/R/rarefaction.R#L13
+# Original author - Paul Saary
+rtk_mod <- function(input, repeats = 10, depth = 0, margin = 2,
+    verbose = FALSE, threads = 1, lowmem = FALSE){   # tmpdir = NULL
+
+  ## Pass 1:x to Cpp as colnames
+  removeCnames <- FALSE
+  removeRnames <- FALSE
+
+  ## Return all rarefied matrices
+  ReturnMatrix <- repeats
+  
+  ## Sort depths
+  depth <- sort(as.numeric(depth))
+
+  ## Convert dataframe to matrix
+  # if(class(input) == "data.frame"){
+  #   input <- as.matrix(input)
+  # }
+
+  ## Validate that the matrix is numeric
+  if(!is.numeric(input)){
+    stop("The supplied matrix object is not numeric. Please check your input matrix.")
+  }
+  if(any(is.na(input))){
+    stop("The input data contains NA values. Please sanitize your input first.")
+  }
+
+  if(is.null(colnames(input))){
+    colnames(input) <- paste("col ", seq(1:ncol(input)), sep="")
+    removeCnames <- TRUE
+  }
+  if(is.null(rownames(input))){
+    rownames(input) <- paste("row ", seq(1:nrow(input)), sep="")
+    removeRnames <- TRUE
+  }
+
+  ## Call the actual software
+  result <- rtk:::rcpp_rarefaction(
+    input = "",
+    rMatrix = input,
+    inColNames = colnames(input),
+    inRowNames = rownames(input),
+    repeats = repeats,
+    depth = depth,
+    NoOfMatrices = ReturnMatrix,
+    verbose = verbose,
+    threads = threads,
+    margin = margin,
+    tmpDir = "NULL",
+    lowmem = lowmem)
+  
+  ## Call the garbage collecor
+  gc()
+
+
+  result <- lapply(result, function(res){
+
+    ## Remove names, if there werent any
+    if(removeRnames == TRUE && removeCnames == TRUE){
+      res$raremat <- lapply(res$raremat, unname)
+    } else {
+      if(removeRnames == TRUE){
+        res$raremat <- lapply(res$raremat, function(x){ rownames(x) <- NULL; return(x) })
+      }
+      if(removeCnames == TRUE){
+        res$raremat <- lapply(res$raremat, function(x){ colnames(x) <- NULL; return(x) })
+      }
+    }
+
+    if(length(res$skipped) > 0){
+      warning(paste(length(res$skipped), "samples where skipped because the depth was greater than the number of elements in the sample."))
+    }
+
+    ## Remove everything except rarefied matrices
+    res <- res$raremat
+
+    return(res)
+  })
+
+
+  if(length(depth) == 1){
+    result <- result[[1]]        # only 1 sampling depth
+  } else {
+    names(result) <- depth       # multiple sampling depths
+  }
+
+  attr(result, which = "depths") <- depth
+  attr(result, which = "repeats") <- repeats
+
+  gc()
+  return(result)
+}
