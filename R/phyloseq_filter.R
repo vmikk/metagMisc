@@ -1,4 +1,27 @@
 
+# Remove samples from phyloseq object that have less than n taxa
+phyloseq_richness_filter <- function(physeq, mintaxa = 10){
+  sp <- estimate_richness(physeq, measures = "Observed")
+  samples_to_keep <- rownames(sp)[ which(sp$Observed >= mintaxa) ]
+
+
+  if(length(samples_to_keep) == 0){
+    stop("All samples will be removed.\n")
+  }
+
+  if(length(samples_to_keep) == nsamples(physeq)){
+    cat("All samples will be preserved\n")
+    res <- physeq
+  }
+
+  if(length(samples_to_keep) < nsamples(physeq)){
+    res <- prune_samples(samples = samples_to_keep, x = physeq)
+  }
+
+  return(res)
+}
+
+
 
 #' @title Remove taxa with small mean relative abundance.
 #'
