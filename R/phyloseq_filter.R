@@ -1,5 +1,14 @@
 
-# Remove samples from phyloseq object that have less than n taxa
+#' @title Remove samples from phyloseq object that have less than n taxa
+#'
+#' @param physeq A phyloseq-class object
+#' @param mintaxa Minimum number of taxa that should be present in a sample (default, 10)
+#'
+#' @return Trimmed phyloseq object (All samples will have >= N taxa)
+#' @export
+#'
+#' @examples
+#'
 phyloseq_richness_filter <- function(physeq, mintaxa = 10){
   sp <- estimate_richness(physeq, measures = "Observed")
   samples_to_keep <- rownames(sp)[ which(sp$Observed >= mintaxa) ]
@@ -255,7 +264,7 @@ phyloseq_filter_top_taxa <- function(physeq, perc = 10, n = NULL){
 #' @export
 #'
 #' @examples
-#' 
+#'
 phyloseq_filter_top_taxa_range <- function(physeq, show_plot = TRUE){
   percs <- seq(5, 95, 5)
 
