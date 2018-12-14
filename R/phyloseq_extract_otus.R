@@ -80,3 +80,35 @@ phyloseq_extract_non_shared_otus <- function(x, samp_names = sample_names(x)){
 
   return(xx)
 }
+
+
+## Add indicators of missing/appeared OTUs on a tree
+## result = list with OTU names that appeared / disappeared / remained
+phyloseq_otu_appearance <- function(phys, ref_level){
+  # ref_level = sample name(s) relative to which appearance or disappearance of OTU will be measured
+
+  ## TO DO - return phyloseq, not just OTUs
+
+  ## Remove tax & phy slots
+  if(!is.null(phy_tree(phys, errorIfNULL = F))) { phys@phy_tree <- NULL }
+  if(!is.null(tax_table(phys, errorIfNULL = F))){ phys@tax_table <- NULL }
+
+  ## Split phyloseq to reference sample(s) and all other
+  pref <- prune_samples(sample_names(phys) %in% ref_level, phys)
+  poth <- prune_samples(!sample_names(phys) %in% ref_level, phys)
+
+  ## Drop missing OTUs
+  pref <- prune_taxa(taxa_sums(pref) > 0, pref)
+  poth <- prune_taxa(taxa_sums(poth) > 0, poth)
+
+  ## Extract OTU names
+  nref <- taxa_names(pref)
+  noth <- taxa_names(poth)
+
+  res <- list()
+  res$disappeared <- nref[ !nref %in% noth ]
+  res$remained <- intersect(nref, noth)
+  res$appeared <- noth[ !noth %in% nref ]
+
+  return(res)
+}
