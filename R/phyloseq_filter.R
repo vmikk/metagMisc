@@ -8,6 +8,10 @@
 #' @export
 #'
 #' @examples
+#' data("esophagus")
+#' esophagus
+#' phyloseq_richness_filter(esophagus, mintaxa = 30)
+#' phyloseq_richness_filter(esophagus, mintaxa = 100)
 #'
 phyloseq_richness_filter <- function(physeq, mintaxa = 10){
 
