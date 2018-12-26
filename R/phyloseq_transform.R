@@ -124,7 +124,7 @@ phyloseq_transform_aldex_clr <- function(physeq, variable = NULL, iter = 1){
   CLRs_ab <- exract_aldex_clr(CLRs)
 
   ## Transpose OTU tables
-  if(trows == FALSE){
+  if(trow == FALSE){
     CLRs_ab <- plyr::llply(.data = CLRs_ab, .fun = function(z){ t(z) })
   }
 
@@ -137,18 +137,18 @@ phyloseq_transform_aldex_clr <- function(physeq, variable = NULL, iter = 1){
   ## Replace phyloseq tables
   if(iter == 1){
     ## Take only the first MC sample
-    physeq_CLR <- replace_otu_table(physeq, CLRs_ab[[ 1 ]], trows)
+    physeq_CLR <- replace_otu_table(physeq, CLRs_ab[[ 1 ]], trow)
   } else {
     ## Use the specified number of MC samples
     physeq_CLR <- list()
     for(i in 1:iter){
-      physeq_CLR[[ i ]] <- replace_otu_table(physeq, CLRs_ab[[ i ]], trows)
+      physeq_CLR[[ i ]] <- replace_otu_table(physeq, CLRs_ab[[ i ]], trow)
     }
   }
 
   ## Add aldex.clr results as attributes to the phyloseq object
   ## Could be useful to check which OTUs were used in CLR-transformation as denominator
-  attr(res, which = "ALDEx2") <- CLRs
+  attr(physeq_CLR, which = "ALDEx2") <- CLRs
 
   return(physeq_CLR)
 }
