@@ -95,20 +95,20 @@ phyloseq_extract_non_shared_otus <- function(x, samp_names = sample_names(x)){
 phyloseq_otu_appearance <- function(phys, ref_level){
 
   ## Remove tax & phy slots
-  if(!is.null(phy_tree(phys, errorIfNULL = F))) { phys@phy_tree <- NULL }
-  if(!is.null(tax_table(phys, errorIfNULL = F))){ phys@tax_table <- NULL }
+  if(!is.null(phyloseq::phy_tree(phys, errorIfNULL = F))) { phys@phy_tree <- NULL }
+  if(!is.null(phyloseq::tax_table(phys, errorIfNULL = F))){ phys@tax_table <- NULL }
 
   ## Split phyloseq to reference sample(s) and all other
-  pref <- prune_samples(sample_names(phys) %in% ref_level, phys)
-  poth <- prune_samples(!sample_names(phys) %in% ref_level, phys)
+  pref <- phyloseq::prune_samples(phyloseq::sample_names(phys) %in% ref_level, phys)
+  poth <- phyloseq::prune_samples(!phyloseq::sample_names(phys) %in% ref_level, phys)
 
   ## Drop missing OTUs
-  pref <- prune_taxa(taxa_sums(pref) > 0, pref)
-  poth <- prune_taxa(taxa_sums(poth) > 0, poth)
+  pref <- phyloseq::prune_taxa(taxa_sums(pref) > 0, pref)
+  poth <- phyloseq::prune_taxa(taxa_sums(poth) > 0, poth)
 
   ## Extract OTU names
-  nref <- taxa_names(pref)
-  noth <- taxa_names(poth)
+  nref <- phyloseq::taxa_names(pref)
+  noth <- phyloseq::taxa_names(poth)
 
   res <- list()
   res$disappeared <- nref[ !nref %in% noth ]
