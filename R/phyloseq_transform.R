@@ -169,6 +169,14 @@ phyloseq_transform_aldex_clr <- function(physeq, variable = NULL, iter = 1){
 #' Paulson et al. Nature Methods 10, 1200–1202 (2013) doi:10.1038/nmeth.2658. http://www.nature.com/nmeth/journal/v10/n12/full/nmeth.2658.html
 #' @seealso \code{\link{phyloseq_transform_vst_blind}}, \code{\link{phyloseq_transform_rlog_blind}}, \code{\link{rlog}}, \code{\link{varianceStabilizingTransformation}}
 #' @examples
+#' data("GlobalPatterns")
+#' gp_tr <- phyloseq_transform_css(GlobalPatterns)
+#' head(otu_table(gp_tr))
+#'
+#' # Ordination on CSS-transformed data
+#' plot_ordination(physeq = gp_tr, ordination = ordinate(gp_tr, method = "PCoA", distance = "bray"), color = "SampleType")
+#' # Ordination on raw data
+#' plot_ordination(physeq = GlobalPatterns, ordination = ordinate(GlobalPatterns, method = "PCoA", distance = "bray"), color = "SampleType")
 #'
 phyloseq_transform_css <- function(physeq, norm = TRUE, log = TRUE, ...){
 
