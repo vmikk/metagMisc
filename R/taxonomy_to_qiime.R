@@ -1,6 +1,6 @@
 
 #' @title Prepare taxonomy in QIIME-style
-#' @description This function merges multiple columns with taxonomic ranks into a single string in QIIME-style.
+#' @description This function merges multiple columns with taxonomic ranks into a single string formatted in QIIME style.
 #' @param x data.frame or phyloseq with \code{\link[phyloseq]{tax_table}} slot
 #' @param dropNA Logical; if TRUE, missing tax ranks will be removed
 #' @param add_OTUID Logical; if TRUE, OTU name will be added to the first column of the resulting table
