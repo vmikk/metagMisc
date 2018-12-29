@@ -4,6 +4,7 @@
 #' @param physeq A phyloseq-class object
 #' @param addtax Logical; add taxonomy to the result table (default, TRUE)
 #' @param addtot Logical; add total OTU abundance to the resulting table (default, FALSE)
+#' @param addmaxrank Logical; add the OTU classification at the lowest annotated taxonomic rank to the resulting table (default, FALSE)
 #' @param sorting Reorder OTUs according to their total abundance ("abundance", default) or taxonomy (sorting = "taxonomy"); if reordering is not required use 'sorting = NULL'
 #'
 #' @return Data frame with OTU taxonomy and abundance
@@ -46,7 +47,7 @@ phyloseq_to_df <- function(physeq, addtax = T, addtot = F, addmaxrank = F, sorti
 
   ## Add taxonomy
   if(addtax == TRUE){
-    
+
     ## Extract taxonomy table
     taxx <- as.data.frame(phyloseq::tax_table(physeq), stringsAsFactors = F)
 
@@ -68,7 +69,7 @@ phyloseq_to_df <- function(physeq, addtax = T, addtot = F, addmaxrank = F, sorti
     } else {
       ## Reorder columns (OTU name - Taxonomy - Sample Abundance)
       res <- res[, c("OTU", phyloseq::rank_names(physeq), phyloseq::sample_names(physeq))]
-    
+
     } # end of addmaxrank
   }   # end of addtax
 
