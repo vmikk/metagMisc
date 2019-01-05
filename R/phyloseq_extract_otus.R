@@ -25,16 +25,28 @@ phyloseq_extract_shared_otus <- function(x, samp_names = sample_names(x)){
 
   require(phyloseq)
 
-  # test if the sample names are valid
+  ## Test if the sample names are valid
   if( any(!samp_names %in% sample_names(x)) ){
     stop("Check the sample names, not all of them are present in the phyloseq object.\n")
   }
 
-  # extract samples
+  ## Extract samples
   xx <- prune_samples(samples = samp_names, x = x)
 
-  # subset to OTUs that are present in both samples
+  ## Count number of OTUs (non-zero)
+  n_tot_otu <- ntaxa( prune_taxa(taxa_sums(xx) > 0, xx) )
+
+  ## Subset to OTUs that are present in both samples
   xx <- filter_taxa(xx, function(z){ sum(z >= 1) == length(samp_names) }, TRUE)
+
+  ## Count number of shared OTUs
+  n_shared_otu <- ntaxa(xx)
+  shared_ratio <- n_shared_otu * 100 / n_tot_otu
+
+  ## Add attributes to the results
+  attr(xx, which = "TotalNumberOfOTUs") <- n_tot_otu
+  attr(xx, which = "NumberOfSharedOTUs") <- n_shared_otu
+  attr(xx, which = "SharedOTURatio") <- shared_ratio
 
   return(xx)
 }
