@@ -16,11 +16,8 @@
 #'
 phyloseq_ntaxa_by_tax <- function(physeq, TaxRank = "Phylum", relative = F, add_meta_data = T){
 
-    require(phyloseq)
-    require(plyr)
-
     ## Melt phyloseq data object into large data.frame
-    mm <- psmelt(physeq)
+    mm <- phyloseq::psmelt(physeq)
 
     ## Count number of OTUs for each sample
     count_otus <- function(z, TaxRank = TaxRank, relative = relative){
@@ -42,12 +39,12 @@ phyloseq_ntaxa_by_tax <- function(physeq, TaxRank = "Phylum", relative = F, add_
     }
 
     ## Count number of OTUs for each sample
-    res <- ddply(.data = mm, .variables = "Sample", .fun = count_otus, TaxRank = TaxRank, relative = relative)
+    res <- plyr::ddply(.data = mm, .variables = "Sample", .fun = count_otus, TaxRank = TaxRank, relative = relative)
 
     ## Add meta-data
     if(add_meta_data == TRUE){
       ## Extract meta-data
-      metad <- data.frame(Sample = sample_names(physeq), sample_data(physeq))
+      metad <- data.frame(Sample = phyloseq::sample_names(physeq), phyloseq::sample_data(physeq))
 
       ## Extract column names
       # main_cols <- c("OTU", "Sample", "Abundance", rank_names(x))          # 'standard' columns
