@@ -1,6 +1,19 @@
 
-## RTK-based rarefaction function
-raref_rtk <- function(physeq, SampSize = NULL, MinSizeTreshold = NULL, 
+#' @title RTK-based rarefaction
+#'
+#' @param physeq A phyloseq-class object
+#' @param SampSize Rarefaction depth (number of reads to sample)
+#' @param MinSizeTreshold Remove samples with number of reads less then this treshold
+#' @param iter Number of rarefication iterations
+#' @param trimOTUs Logical, if TRUE (default), OTUs that have a count of zero in every sample will be removed
+#' @param ... Additional arguments will be passed to \code{\link[rtk]{rtk}}
+#'
+#' @return List of rarefied phyloseq-objects.
+#' @export
+#'
+#' @examples
+#'
+raref_rtk <- function(physeq, SampSize = NULL, MinSizeTreshold = NULL,
   iter = 1000, trimOTUs = TRUE, ...){
 
   ## Filter samples by number of reads
@@ -27,7 +40,7 @@ raref_rtk <- function(physeq, SampSize = NULL, MinSizeTreshold = NULL,
   subst_otu_tab <- function(phys, newotu, taxrows, drop_zeros = FALSE){
     phyloseq::otu_table(phys) <- phyloseq::otu_table(newotu, taxa_are_rows = taxrows)
 
-    ## Remove OTUs from the dataset that are no longer observed in any sample 
+    ## Remove OTUs from the dataset that are no longer observed in any sample
     if(drop_zeros == TRUE){
       phys <- phyloseq::prune_taxa(phyloseq::taxa_sums(phys) > 0, phys)
     }
@@ -40,7 +53,7 @@ raref_rtk <- function(physeq, SampSize = NULL, MinSizeTreshold = NULL,
   if(length(SampSize) == 1){
     res <- llply(
       .data = rar,
-      .fun = function(z){ 
+      .fun = function(z){
         subst_otu_tab(phys = physeq, newotu = z, taxrows = TR, drop_zeros = trimOTUs)
       })
   }
@@ -71,7 +84,7 @@ rtk_mod <- function(input, repeats = 10, depth = 0, margin = 2,
 
   ## Return all rarefied matrices
   ReturnMatrix <- repeats
-  
+
   ## Sort depths
   depth <- sort(as.numeric(depth))
 
@@ -111,7 +124,7 @@ rtk_mod <- function(input, repeats = 10, depth = 0, margin = 2,
     margin = margin,
     tmpDir = "NULL",
     lowmem = lowmem)
-  
+
   ## Call the garbage collecor
   gc()
 
