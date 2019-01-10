@@ -12,7 +12,9 @@
 #' @export
 #'
 #' @examples
-#'
+#' data("esophagus")
+#' eso_raref <- raref_rtk(esophagus, iter = 10)
+#' 
 raref_rtk <- function(physeq, SampSize = NULL, MinSizeTreshold = NULL,
   iter = 1000, trimOTUs = TRUE, ...){
 
