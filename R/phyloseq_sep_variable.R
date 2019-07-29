@@ -26,7 +26,7 @@ phyloseq_sep_variable <- function(physeq, variable, drop_zeroes = T){
         stop("Sample data is missing in the phyloseq-object.\n")
     }
 
-    ## Extract samle meta-data
+    ## Extract sample meta-data
     mtd <- as(object = phyloseq::sample_data(physeq), Class = "data.frame")
 
     if(!variable %in% colnames(mtd)){
@@ -52,7 +52,7 @@ phyloseq_sep_variable <- function(physeq, variable, drop_zeroes = T){
         mtd,
         stringsAsFactors = F)
 
-    ## Exatract sample names by the specified variable
+    ## Extract sample names by the specified variable
     svv <- plyr::dlply(.data = smp, .variables = variable, .fun = function(z){ z$SID })
 
     ## Extract samples by groupping variable
