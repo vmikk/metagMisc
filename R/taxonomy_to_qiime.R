@@ -5,7 +5,8 @@
 #' @param dropNA Logical; if TRUE, missing tax ranks will be removed
 #' @param add_OTUID Logical; if TRUE, OTU name will be added to the first column of the resulting table
 #' @param custom_tax_ranks Data frame with two columns, taxonomic ranks (with the same names as columns in x) and the corresponding single letter abbreviations
-#' 
+#' @details
+#' If 'add_OTUID = T' and x is data.frame, the function will take OTU names from rownames of a data frame.
 #' @return character vector (if 'add_OTUID = FALSE') or data.frame with taxonomy annotations.
 #' @export
 #'
