@@ -3,7 +3,8 @@
 #' @title Parse SWARM files
 #' @description This function reads the results of SWARM clustering (*.swarms file).
 #' @param x Input file name (usually with "swarm" extension)
-#'
+#' @param otu_delimiter Character string delimiting sequence IDs within a file line (default, whitespace)
+#' 
 #' @details
 #' SWARM is a single-linkage clustering method with iterative growth process and the use of sequence abundance values to delineate OTUs.
 #' SWARM properly delineates large OTUs (high recall), and can distinguish OTUs with as little as two differences between their centers (high precision).
