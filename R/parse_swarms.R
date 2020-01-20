@@ -19,26 +19,26 @@
 #' parse_swarms("tst_1f.swarms")
 #'
 #'
-parse_swarms <- function(x){
+parse_swarms <- function(x, otu_delimiter = " "){
     require(plyr)
 
-    # load file
+    ## Load file
     sw <- readLines(x)
 
-    # Split swarm for each OTU
-    sw <- alply(.data = sw, .margins = 1, .fun = function(z){ strsplit(z, split = "; ")[[1]] })
+    ## Split swarm for each OTU
+    sw <- alply(.data = sw, .margins = 1, .fun = function(z){ strsplit(z, split = otu_delimiter)[[1]] })
 
-    # Split abundance and OTU name
+    ## Split abundance and OTU name
     sw <- llply(.data = sw, .fun = function(z){ do.call(rbind, strsplit(z, split = ";"))[,1] })
 
-    # Name OTUs as the first memeber of swarm
+    ## Name OTUs as the first member of swarm
     sw.names <- vector()
     for(i in 1:length(sw)){
         sw.names <- c( sw.names, sw[[i]][1] )
     }
     names(sw) <- sw.names
 
-    # Convert result to data.frame
+    ## Convert result to data.frame
     sw <- ldply(.data = sw, .fun = function(z){ data.frame(Query = z, stringsAsFactors = F) }, .id = "OTU")
     sw$OTU <- as.character(sw$OTU)
 
