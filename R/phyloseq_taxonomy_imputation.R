@@ -1,7 +1,8 @@
 
 ## Replace missing taxonomy
-## TO DO - replace multiple "unident" and "unident sp"
-phyloseq_taxonomy_imputation <- function(phys, unknown_taxon = "_unidentified", unknown_sp = " sp", make_unique = FALSE){
+phyloseq_taxonomy_imputation <- function(phys,
+  unknown_taxon = "_unidentified", unknown_sp = " sp",
+  make_unique = FALSE){
 
   ## If input is of class 'phyloseq'
   inp_class <- class(phys)
@@ -54,6 +55,28 @@ phyloseq_taxonomy_imputation <- function(phys, unknown_taxon = "_unidentified", 
     x <- replace_col(x, col_num = sp_id, unident = unknown_sp)
   }
 
+  ## Function to remove multiple unident strings (e.g., "_unidentified_unidentified")
+  replace_unidents <- function(tt, strr = "_unidentified", spp = " sp"){
+    ## tt = character vector
+  
+    ## Prepare regex for paterns
+    # Multiple string occurrences
+    multpatt <- paste("(", strr, ")(\\1+)", sep = "")
+    unsp <- paste(strr, spp, sep = "")
+
+    ## Replace "_unidetified_unidentified" with single occurrence
+    # gsub(x = tt, pattern = "(_unidentified)(\\1+)", replacement = "_unidentified", perl = T)
+    rez <- gsub(x = tt, pattern = multpatt, replacement = strr, perl = T)
+
+    ## Replace "_unidetified sp" with " sp"
+    rez <- gsub(x = rez, pattern = unsp, replacement = spp, perl = T)    
+
+    return(rez)
+  }
+
+  ## Remove multiple unident strings from all tax columns
+  x <- sapply(x, replace_unidents)
+
   ## Make species names unique
   if(make_unique == TRUE){
     x[, ncol(x)] <- base::make.unique(names = x[, ncol(x)], sep = ".")
@@ -63,3 +86,5 @@ phyloseq_taxonomy_imputation <- function(phys, unknown_taxon = "_unidentified", 
   phyloseq::tax_table(phys) <- phyloseq::tax_table(as.matrix(x))
   return(phys)
 }
+
+
