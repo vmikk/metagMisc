@@ -10,16 +10,63 @@
 #' @examples
 #' parse_taxonomy_amptk("k:Fungi,p:Zygomycota,o:Mortierellales,f:Mortierellaceae,g:Mortierella,s:Mortierella parvispora")
 #' parse_taxonomy_amptk("k:Fungi,p:Ascomycota,g:Chalara")
+#' parse_taxonomy_amptk("k:Fungi,p:Ascomycota,g:Chalara")
 #'
 parse_taxonomy_amptk <- function(x){
-    
-    # require(phyloseq)
 
+    ## Default tax ranks
+    Tranks = c(
+      k = "Kingdom",
+      p = "Phylum",
+      c = "Class",
+      o = "Order",
+      f = "Family",
+      g = "Genus",
+      s = "Species")
+
+    ### Old function
     ## Convert ufits taxonomic ranks to QIIME-like style
-    x <- gsub(pattern = ":", replacement = "__", x = x)
-    x <- gsub(pattern = ",", replacement = ";", x = x)
-    res <- phyloseq::parse_taxonomy_qiime(x)
-    return(res)
+    # x <- gsub(pattern = ":", replacement = "__", x = x)
+    # x <- gsub(pattern = ",", replacement = ";", x = x)
+    # res <- phyloseq::parse_taxonomy_qiime(x)
+
+    ### Updated function (without phyloseq dependency)
+    
+    ## Split string by tax ranks
+    x <- strsplit(x, ",", TRUE)[[1]]
+    
+    ## Remove leading and trailing spaces
+    x <- gsub(pattern = "^[[:space:]]{1,}", replacement = "", x = x)
+    x <- gsub(pattern = "[[:space:]]{1,}$", replacement = "", x = x)
+
+
+    if(length(x) > 0){
+
+      if(x == "No hit"){
+        res <- ""
+      } else {
+
+        ## Extract tax rank prefixes
+        ranks_prefs_found <- grep("[[:alpha:]]{1}:", x)  # match prefixes, e.g., "k:"
+        ## If no prefixes found - return dummy ranks
+        if(length(ranks_prefs_found) == 0L){
+          warning("No taxonomic ranks prefixes were found (e.g., 'k:'). Dummy ranks will be added.\n")
+          names(x) <- paste("Rank", 1:length(x), sep = "")
+          res <- x
+        } else {
+        ## Otherwise, remove prefixes and add tax ranks as names
+          res <- gsub(pattern = "[[:alpha:]]{1}:", replacement = "", x = x)
+          repranks <- Tranks[substr(x[ranks_prefs_found], 1, 1)]
+          names(res)[ranks_prefs_found[!is.na(repranks)]] <- repranks[!is.na(repranks)]
+        }
+      }
+
+    } else {
+      warning("Empty taxonomy vector encountered.")
+      res <- x
+    }
+
+  return(res)
 }
 
 
