@@ -12,17 +12,22 @@
 #' parse_taxonomy_amptk("k:Fungi,p:Ascomycota,g:Chalara")
 #' parse_taxonomy_amptk("k:Fungi,p:Ascomycota,g:Chalara")
 #'
-parse_taxonomy_amptk <- function(x){
+parse_taxonomy_amptk <- function(x, custom_ranks = NULL){
 
-    ## Default tax ranks
-    Tranks = c(
-      k = "Kingdom",
-      p = "Phylum",
-      c = "Class",
-      o = "Order",
-      f = "Family",
-      g = "Genus",
-      s = "Species")
+    ## Use default tax ranks
+    if(is.null(custom_ranks)){
+      Tranks <- c(
+        k = "Kingdom",
+        p = "Phylum",
+        c = "Class",
+        o = "Order",
+        f = "Family",
+        g = "Genus",
+        s = "Species")
+    } else {
+    ## Alternatively use the provided tax ranks
+      Tranks <- custom_ranks
+    }
 
     ### Old function
     ## Convert ufits taxonomic ranks to QIIME-like style
