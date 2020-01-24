@@ -2,6 +2,7 @@
 #' @title Parse taxonomy string from AMPtk (for single OTU)
 #'
 #' @param x Character vector of length 1 with taxonomic annotation of single OTU/species.
+#' @param custom_ranks Named vector with customized prefixes for taxonomic ranks
 #' @details This function will split
 #' @return Named character vector with taxonomic ranks of OTU or species.
 #' @export
@@ -10,8 +11,6 @@
 #' @examples
 #' parse_taxonomy_amptk("k:Fungi,p:Zygomycota,o:Mortierellales,f:Mortierellaceae,g:Mortierella,s:Mortierella parvispora")
 #' parse_taxonomy_amptk("k:Fungi,p:Ascomycota,g:Chalara")
-#' parse_taxonomy_amptk("k:Fungi,p:Ascomycota,g:Chalara")
-#'
 parse_taxonomy_amptk <- function(x, custom_ranks = NULL){
 
     ## Use default tax ranks
@@ -47,7 +46,7 @@ parse_taxonomy_amptk <- function(x, custom_ranks = NULL){
 
     if(length(x) > 0){
 
-      if(x == "No hit"){
+      if(x[1] == "No hit"){
         res <- ""
       } else {
 
