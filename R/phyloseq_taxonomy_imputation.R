@@ -88,6 +88,9 @@ phyloseq_taxonomy_imputation <- function(phys,
     x <- cbind(x, LowestTaxRank = LowestTaxRank)
   }
 
+  ## Add taxa names
+  rownames(x) <- phyloseq::taxa_names(phys)
+
   ## Replace tax_table with the modified one
   phyloseq::tax_table(phys) <- phyloseq::tax_table(as.matrix(x))
   return(phys)
