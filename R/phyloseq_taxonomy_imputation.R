@@ -2,7 +2,7 @@
 ## Replace missing taxonomy
 phyloseq_taxonomy_imputation <- function(phys,
   unknown_taxon = "_unidentified", unknown_sp = " sp",
-  make_unique = FALSE){
+  make_unique = FALSE, addmaxrank = FALSE){
 
   ## If input is of class 'phyloseq'
   inp_class <- class(phys)
@@ -80,6 +80,12 @@ phyloseq_taxonomy_imputation <- function(phys,
   ## Make species names unique
   if(make_unique == TRUE){
     x[, ncol(x)] <- base::make.unique(names = x[, ncol(x)], sep = ".")
+  }
+
+  ## Add the OTU classification at the lowest annotated taxonomic rank
+  if(addmaxrank == TRUE){
+    LowestTaxRank <- as.character( get_max_taxonomic_rank(phys, return_rank_only = TRUE) )
+    x <- cbind(x, LowestTaxRank = LowestTaxRank)
   }
 
   ## Replace tax_table with the modified one
