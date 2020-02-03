@@ -43,16 +43,18 @@ phyloseq_ntaxa_by_tax <- function(physeq, TaxRank = "Phylum", relative = F, add_
 
     ## Add meta-data
     if(add_meta_data == TRUE){
-      ## Extract meta-data
-      metad <- data.frame(Sample = phyloseq::sample_names(physeq), phyloseq::sample_data(physeq))
-
-      ## Extract column names
-      # main_cols <- c("OTU", "Sample", "Abundance", rank_names(x))          # 'standard' columns
-      # meta_cols <- colnames(mm)[ which(!colnames(mm) %in% main_cols) ]     # meta-data columns
-      main_cols <- c("Sample")                                               # 'standard' columns
-      meta_cols <- colnames(metad)[ which(!colnames(metad) %in% main_cols) ] # meta-data columns
-
-      res <- cbind(res, metad[match(x = res$Sample, table = metad$Sample), meta_cols] )
+      if(!is.null(phyloseq::sample_data(physeq, errorIfNULL = FALSE))){  # add only if metadata is present
+        ## Extract meta-data
+        metad <- data.frame(Sample = phyloseq::sample_names(physeq), phyloseq::sample_data(physeq))
+      
+        ## Extract column names
+        # main_cols <- c("OTU", "Sample", "Abundance", rank_names(x))          # 'standard' columns
+        # meta_cols <- colnames(mm)[ which(!colnames(mm) %in% main_cols) ]     # meta-data columns
+        main_cols <- c("Sample")                                               # 'standard' columns
+        meta_cols <- colnames(metad)[ which(!colnames(metad) %in% main_cols) ] # meta-data columns
+      
+        res <- cbind(res, metad[match(x = res$Sample, table = metad$Sample), meta_cols] )
+      }
     }
 
     rownames(res) <- NULL
