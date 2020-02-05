@@ -17,6 +17,9 @@ phyloseq_taxonomic_resolution <- function(physeq, add_counts = TRUE, justDF = FA
       .variables = "RankName",
       .fun = function(z){ data.frame(NumReads = sum(z$NumReads)) })
 
+  ## Match number of taxa to number of reads
+  sp_ranks_tab <- sp_ranks_tab[ match(x = sp_ranks_count$RankName, table = names(sp_ranks_tab)) ]
+
   ## Merge tables
   sp_ranks_ok <- data.frame(sp_ranks_count, Count = as.vector(sp_ranks_tab))
   sp_ranks_ok$PercNumReads <- with(sp_ranks_ok, NumReads / sum(NumReads))
