@@ -87,6 +87,17 @@ phyloseq_standardize_otu_abundance <- function(physeq, method = "total",
     }
   } # end of "rhea"
 
+  ## Wisconsin Double standardization
+  ## Species (MARGIN=2) are first standardized by maxima and then sites by site totals
+  if(method == "wisconsin"){
+
+    if(marg == 2){ mm <- c(1, 2) }
+    if(marg == 1){ mm <- c(2, 1) }
+
+    comm_std <- vegan::decostand(comm, "max", MARGIN = mm[1])
+    comm_std <- vegan::decostand(comm_std, "tot", MARGIN = mm[2])
+
+  }
 
   ## Replace old otu_table with the new one
   phyloseq::otu_table(physeq) <- phyloseq::otu_table(comm_std, taxa_are_rows = trows)
