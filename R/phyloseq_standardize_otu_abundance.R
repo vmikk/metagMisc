@@ -31,7 +31,7 @@
 #' phyloseq_standardize_otu_abundance(esophagus, method = "hellinger")
 #'
 phyloseq_standardize_otu_abundance <- function(physeq, method = "total",
-  rhea_depth = min( phyloseq::sample_sums(physeq) ), rhea_round = TRUE,
+  rhea_depth = NULL, rhea_round = TRUE, rhea_threshold = NULL,
   ...){
 
   ## Method implemente in vegan
@@ -63,6 +63,15 @@ phyloseq_standardize_otu_abundance <- function(physeq, method = "total",
 
     ## Convert data to relative abundances
     comm <- vegan::decostand(comm, method = "total", MARGIN = marg)
+
+    ## Remove OTUs with low relative abundance
+    if(!is.null(rhea_threshold)){
+
+      comm[ comm < rhea_threshold ] <- 0
+
+      ## Re-normalize by total abundance again (sample sums should be 1)
+      comm <- vegan::decostand(comm, method = "total", MARGIN = marg)
+    }
 
     ## Multiply by the desired samples size
     comm_std <- comm * rhea_depth
