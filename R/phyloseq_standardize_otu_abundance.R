@@ -36,6 +36,7 @@ phyloseq_standardize_otu_abundance <- function(physeq, method = "total",
 
   ## Method implemente in vegan
   vegan_methods <- c("total", "max", "frequency", "normalize", "range", "rank", "standardize", "pa", "chi.square", "hellinger", "log")
+  other_methods <- c("rhea", "wisconsin")
 
   ## Check the orientation of the OTU table
   trows <- phyloseq::taxa_are_rows(physeq)
