@@ -71,6 +71,9 @@ phyloseq_standardize_otu_abundance <- function(physeq, method = "total",
     ## Standardize community table with vegan
     comm_std <- vegan::decostand(comm, method, MARGIN = marg, ...)
 
+    ## Transpose table back
+    if(method == "chi.square"){ comm_std <- t(comm_std) }
+
   }
 
   ## Normalize counts via division to the sample size and then multiplication by the size of the smaller sample (or other seq depth)
