@@ -216,10 +216,38 @@ phyloseq_filter_prevalence <- function(physeq, prev.trh = 0.05, abund.trh = NULL
 #' # Compare raw and trimmed data
 #' phyloseq_compare(GlobalPatterns, GP, cols = c("GlobalPatterns", "Trimmed GlobalPatterns"))
 #'
-phyloseq_filter_sample_wise_abund_trim <- function(physeq, minabund = 10, rm_zero_OTUs = TRUE){
+phyloseq_filter_sample_wise_abund_trim <- function(physeq, minabund = 10, relabund = FALSE, rm_zero_OTUs = TRUE){
 
   ## Censore OTU abundance
-  res <- phyloseq::transform_sample_counts(physeq, function(OTU, ab = minabund){ ifelse(OTU <= ab,  0, OTU) })
+  if(relabund == FALSE){     # trim based on absolute OTU counts
+
+    res <- phyloseq::transform_sample_counts(physeq, function(OTU, ab = minabund){ ifelse(OTU <= ab,  0, OTU) })
+
+  } else {                   # trim based on relative abundances within sample, but return original counts
+
+    if(!minabund > 0 & minabund <= 1){
+      stop("Error: for relative abundance trimmin 'minabund' should be in (0,1] interval.\n")
+    }
+
+    ## Convert data to relative abundances
+    res <- phyloseq_standardize_otu_abundance(physeq, method = "total")
+
+    ## Remove relative abundances less than the threshold value
+    res <- phyloseq::transform_sample_counts(res, function(OTU, ab = minabund){ ifelse(OTU <= ab,  0, OTU) })
+
+    ## Sample sums and data orientation
+    smps <- phyloseq::sample_sums(physeq)
+    if(phyloseq::taxa_are_rows(physeq) == TRUE){
+      mar <- 2
+    } else {
+      mar <- 1
+    }
+
+    ## Convert back to counts by multiplying relative abundances by sample sums
+    phyloseq::otu_table(res) <- phyloseq::otu_table(
+      sweep(x = phyloseq::otu_table(res), MARGIN = mar, STATS = smps, FUN = `*`),
+      taxa_are_rows = phyloseq::taxa_are_rows(physeq))
+  }
 
   ## Remove zero-OTUs
   if(rm_zero_OTUs == TRUE){
