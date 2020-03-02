@@ -217,11 +217,14 @@ phyloseq_filter_prevalence <- function(physeq, prev.trh = 0.05, abund.trh = NULL
 #' # Load data
 #' data(GlobalPatterns)
 #'
-#' # Trim GlobalPatterns data (19216 taxa)
-#' GP <- phyloseq_filter_sample_wise_abund_trim(GlobalPatterns) # 10605 taxa
+#' # Trim GlobalPatterns data (19216 taxa) by removing OTUs with less that 10 reads
+#' GP1 <- phyloseq_filter_sample_wise_abund_trim(GlobalPatterns, minabund = 10) # 10605 taxa
+#'
+#' # Trim GlobalPatterns data by removing OTUs with relative abundance less than 1%
+#' GP2 <- phyloseq_filter_sample_wise_abund_trim(GlobalPatterns, minabund = 0.01, relabund = TRUE) # 258 taxa
 #'
 #' # Compare raw and trimmed data
-#' phyloseq_compare(GlobalPatterns, GP, cols = c("GlobalPatterns", "Trimmed GlobalPatterns"))
+#' phyloseq_summary(GlobalPatterns, GP1, GP2, cols = c("GlobalPatterns", "Trimmed 10 reads", "Trimmed 1 percent"))
 #'
 phyloseq_filter_sample_wise_abund_trim <- function(physeq, minabund = 10, relabund = FALSE, rm_zero_OTUs = TRUE){
 
