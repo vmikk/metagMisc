@@ -4,11 +4,10 @@ phyloseq_mult_raref_dist <- function(physeq, dissimilarity = "bray", meanfun = m
     SampSize = min(sample_sums(physeq)), iter = 1000, parallel = FALSE, verbose = TRUE, ...){
   # meanfun = The calculation to use for the average (mean or median)
 
-  ## TO DO: - add data validation (e.g. unifrac & phy_tree)
-  ## TO DO: - add ... for `phyloseq::distance` (now ... are passed to `phyloseq_mult_raref`)
-  ## TO DO: - add averaging type - mean/median:
-  ##   meanfun <- match.fun(meanfun)  # Which function to use for averaging
-  ## TO DO: - add taxa subsets (e.g. for a particular phylum)
+  ## Data validation
+  if(dissimilarity %in% c("unifrac", "wunifrac", "dpcoa") & is.null(phy_tree(physeq, errorIfNULL=F))){
+    stop("Error: the chosen dissimilarity metric requires phylogenetic tree which is absent in the input data.\n")
+  }
 
   ## Multiple rarefaction
   if(verbose == TRUE){ cat("..Multiple rarefaction\n") }
