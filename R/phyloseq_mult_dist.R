@@ -1,6 +1,6 @@
 
 ## Function to perform multiple rarefactions and average sample dissimilarity across rarefactions
-phyloseq_mult_dist <- function(physeq, dissimilarity = "bray", meanfun = mean,
+phyloseq_mult_raref_dist <- function(physeq, dissimilarity = "bray", meanfun = mean,
     SampSize = min(sample_sums(physeq)), iter = 1000, parallel = FALSE, verbose = TRUE, ...){
   # meanfun = The calculation to use for the average (mean or median)
 
