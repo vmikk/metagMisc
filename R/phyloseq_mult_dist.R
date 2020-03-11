@@ -1,6 +1,6 @@
 
 ## Function to perform multiple rarefactions and average sample dissimilarity across rarefactions
-phyloseq_mult_raref_dist <- function(physeq, dissimilarity = "bray", meanfun = mean,
+phyloseq_mult_raref_dist <- function(physeq, dissimilarity = "bray", dist_args = list(), meanfun = mean,
     SampSize = min(sample_sums(physeq)), iter = 1000, parallel = FALSE, verbose = TRUE, ...){
   # meanfun = The calculation to use for the average (mean or median)
 
@@ -17,12 +17,36 @@ phyloseq_mult_raref_dist <- function(physeq, dissimilarity = "bray", meanfun = m
   ## Estimate dissimilarities
   if(verbose == TRUE){ cat("..Dissimilarity estimation\n") }
 
-  if(length(dissimilarity) == 1){  # single dissimilarity coefficient
-    res <- mult_dissim(phys_raref, method = dissimilarity, average = T)
-  } else {                         # multiple dissimilarity coefficients (e.g., dissimilarity = c("bray", "unifrac"))
-    res <- plyr::mlply(
-        .data = data.frame(method = dissimilarity, stringsAsFactors = F),
-        .fun = function(...){ mult_dissim(phys_raref, average = T, ...) })
+  ## Single dissimilarity coefficient
+  if(length(dissimilarity) == 1){
+
+    ## Forward additional arguments to phyloseq::distance
+    dissim_args_sing <- list(phys_raref, method = dissimilarity, average = T)
+    dissim_args_sing <- c(dissim_args_sing,  as.list(dist_args))
+    
+    res <- do.call(mult_dissim, dissim_args_sing)
+    # res <- mult_dissim(phys_raref, method = dissimilarity, average = T)
+
+  ## Multiple dissimilarity coefficients (e.g., dissimilarity = c("bray", "unifrac")) for the same rarefied data
+  } else {
+
+    # res <- plyr::mlply(
+    #     .data = data.frame(method = dissimilarity, stringsAsFactors = F),
+    #     .fun = function(...){ mult_dissim(phys_raref, average = T, ...) })
+
+    res <- list()
+    for(i in 1:length(dissimilarity)){
+
+      ## Forward additional arguments to phyloseq::distance
+      dissim_args_mult <- list(phys_raref, method = dissimilarity[i], average = T)
+      dissim_args_mult <- c(dissim_args_mult, as.list(dist_args))
+
+      ## Estimate dissimilarity
+      res[[ i ]] <- do.call(mult_dissim, dissim_args_mult)
+      # rm(dissim_args_mult)
+    }
+    rm(i)
+
     names(res) <- dissimilarity
   }
 
@@ -30,6 +54,10 @@ phyloseq_mult_raref_dist <- function(physeq, dissimilarity = "bray", meanfun = m
   attributes(res) <- c(attributes(res), attributes(phys_raref)[c("RarefactionDepth", "RarefactionReplacement")])
   return(res)
 }
+## e.g.:
+phyloseq_mult_raref_dist(esophagus, iter = 5, dissimilarity = "bray")
+phyloseq_mult_raref_dist(esophagus, iter = 5, dissimilarity = "bray", dist_args = list(binary = TRUE))
+phyloseq_mult_raref_dist(esophagus, iter = 5, dissimilarity = c("bray", "jaccard"))
 
 
 #' @title Average multiple distance matrices.
