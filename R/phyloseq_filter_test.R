@@ -91,7 +91,7 @@ phyloseq_filter_test <- function(physeq, group, dist_type = "bray", filter_by_gr
 
 
     ## Remove phylogenetic tree to speed up filtering
-    if(!is.null(phy_tree(physeq, errorIfNULL = F))){
+    if(!is.null(phyloseq::phy_tree(physeq, errorIfNULL = F))){
         physeq_no_tree <- physeq
         physeq_no_tree@phy_tree <- NULL
     } else {
@@ -156,7 +156,7 @@ phyloseq_filter_test <- function(physeq, group, dist_type = "bray", filter_by_gr
 
 
     ## Add original phylogenetic tree (if present)
-    if(!is.null(phy_tree(physeq, errorIfNULL = F))){
+    if(!is.null(phyloseq::phy_tree(physeq, errorIfNULL = F))){
         RES <- llply(.data = RES, .fun = function(z){ phy_tree(z) <- phy_tree(physeq); return(z) })
     }
 
