@@ -64,24 +64,24 @@ phyloseq_phylo_div <- function(physeq, measures=c("PD", "MPD", "MNTD", "SES.PD",
 
   ## Basic metrics
   if("PD" %in% measures){
-    res <- c(res, list(PD = PhyloMeasures::pd.query(tree = phy_tree(physeq), matrix = comm, ...) ))
+    res <- c(res, list(PD = PhyloMeasures::pd.query(tree = phyloseq::phy_tree(physeq), matrix = comm, ...) ))
   }
   if("MPD" %in% measures){
-    res <- c(res, list(MPD = PhyloMeasures::mpd.query(tree = phy_tree(physeq), matrix = comm, ...) ))
+    res <- c(res, list(MPD = PhyloMeasures::mpd.query(tree = phyloseq::phy_tree(physeq), matrix = comm, ...) ))
   }
   if("MNTD" %in% measures){
-    res <- c(res, list(MNTD = PhyloMeasures::mntd.query(tree = phy_tree(physeq), matrix = comm, ...) ))
+    res <- c(res, list(MNTD = PhyloMeasures::mntd.query(tree = phyloseq::phy_tree(physeq), matrix = comm, ...) ))
   }
 
   ## Standardized effect sizes
   if("SES.PD" %in% measures){
-    res <- c(res, list(SES.PD = PhyloMeasures::pd.query(tree = phy_tree(physeq), matrix = comm, standardize = T, ...) ))
+    res <- c(res, list(SES.PD = PhyloMeasures::pd.query(tree = phyloseq::phy_tree(physeq), matrix = comm, standardize = T, ...) ))
   }
   if("SES.MPD" %in% measures){
-    res <- c(res, list(SES.MPD = PhyloMeasures::mpd.query(tree = phy_tree(physeq), matrix = comm, standardize = T, ...) ))
+    res <- c(res, list(SES.MPD = PhyloMeasures::mpd.query(tree = phyloseq::phy_tree(physeq), matrix = comm, standardize = T, ...) ))
   }
   if("SES.MNTD" %in% measures){
-    res <- c(res, list(SES.MNTD = PhyloMeasures::mntd.query(tree = phy_tree(physeq), matrix = comm, standardize = T, ...) ))
+    res <- c(res, list(SES.MNTD = PhyloMeasures::mntd.query(tree = phyloseq::phy_tree(physeq), matrix = comm, standardize = T, ...) ))
   }
 
 
