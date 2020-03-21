@@ -157,7 +157,7 @@ phyloseq_filter_test <- function(physeq, group, dist_type = "bray", filter_by_gr
 
     ## Add original phylogenetic tree (if present)
     if(!is.null(phyloseq::phy_tree(physeq, errorIfNULL = F))){
-        RES <- llply(.data = RES, .fun = function(z){ phy_tree(z) <- phy_tree(physeq); return(z) })
+        RES <- llply(.data = RES, .fun = function(z){ phyloseq::phy_tree(z) <- phyloseq::phy_tree(physeq); return(z) })
     }
 
 
