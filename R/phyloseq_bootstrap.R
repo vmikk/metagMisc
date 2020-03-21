@@ -9,21 +9,21 @@ phyloseq_bootstrap <- function(phys, n = 100, seed = NULL, other_slots = c("tax_
   ## Function to subset samples by IDs
   sample_boot <- function(ps, samp_ids, slots = other_slots){
 
-    if(taxa_are_rows(ps) == TRUE) { oo <- otu_table(ps)[, samp_ids] }
-    if(taxa_are_rows(ps) == FALSE){ oo <- otu_table(ps)[samp_ids, ] }
+    if(taxa_are_rows(ps) == TRUE) { oo <- phyloseq::otu_table(ps)[, samp_ids] }
+    if(taxa_are_rows(ps) == FALSE){ oo <- phyloseq::otu_table(ps)[samp_ids, ] }
 
-    if(!is.null(sample_data(ps, errorIfNULL=TRUE))){
-      dd <- sample_data(ps)[samp_ids, ]
-      sample_names(oo) <- sample_names(dd)
-      newps <- phyloseq(oo, dd)
+    if(!is.null(phyloseq::sample_data(ps, errorIfNULL=TRUE))){
+      dd <- phyloseq::sample_data(ps)[samp_ids, ]
+      phyloseq::sample_names(oo) <- phyloseq::sample_names(dd)
+      newps <- phyloseq::phyloseq(oo, dd)
     } else {
-      newps <- phyloseq(oo)
+      newps <- phyloseq::phyloseq(oo)
     }
 
     ## Add other slots
-    if("tax_table" %in% slots && !is.null(tax_table(ps, errorIfNULL = F))){ tax_table(newps) <- tax_table(ps) }
-    if("phy_tree" %in% slots && !is.null(phy_tree(ps, errorIfNULL = F))){ phy_tree(newps) <- phy_tree(ps) }
-    if("refseq" %in% slots && !is.null(refseq(ps, errorIfNULL = F))){ refseq(newps) <- refseq(ps) }
+    if("tax_table" %in% slots && !is.null(phyloseq::tax_table(ps, errorIfNULL = F))){ phyloseq::tax_table(newps) <- phyloseq::tax_table(ps) }
+    if("phy_tree" %in% slots && !is.null(phyloseq::phy_tree(ps, errorIfNULL = F))){ phyloseq::phy_tree(newps) <- phyloseq::phy_tree(ps) }
+    if("refseq" %in% slots && !is.null(phyloseq::refseq(ps, errorIfNULL = F))){ phyloseq::refseq(newps) <- phyloseq::refseq(ps) }
 
     return(newps)
   }
@@ -34,7 +34,7 @@ phyloseq_bootstrap <- function(phys, n = 100, seed = NULL, other_slots = c("tax_
   ## Generate bootstrapped IDs
   IDS <- plyr::rlply(
     .n = n,
-    .expr = sample(x = 1:nsamples(phys), size = nsamples(phys), replace = TRUE))
+    .expr = sample(x = 1:nsamples(phys), size = phyloseq::nsamples(phys), replace = TRUE))
 
   ## Subset p
   res <- plyr::llply(
