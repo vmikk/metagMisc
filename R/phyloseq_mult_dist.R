@@ -55,9 +55,9 @@ phyloseq_mult_raref_dist <- function(physeq, dissimilarity = "bray", dist_args =
   return(res)
 }
 ## e.g.:
-phyloseq_mult_raref_dist(esophagus, iter = 5, dissimilarity = "bray")
-phyloseq_mult_raref_dist(esophagus, iter = 5, dissimilarity = "bray", dist_args = list(binary = TRUE))
-phyloseq_mult_raref_dist(esophagus, iter = 5, dissimilarity = c("bray", "jaccard"))
+# phyloseq_mult_raref_dist(esophagus, iter = 5, dissimilarity = "bray")
+# phyloseq_mult_raref_dist(esophagus, iter = 5, dissimilarity = "bray", dist_args = list(binary = TRUE))
+# phyloseq_mult_raref_dist(esophagus, iter = 5, dissimilarity = c("bray", "jaccard"))
 
 
 #' @title Average multiple distance matrices.
