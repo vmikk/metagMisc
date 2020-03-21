@@ -5,7 +5,7 @@ phyloseq_mult_raref_dist <- function(physeq, dissimilarity = "bray", dist_args =
   # meanfun = The calculation to use for the average (mean or median)
 
   ## Data validation
-  if(dissimilarity %in% c("unifrac", "wunifrac", "dpcoa") & is.null(phy_tree(physeq, errorIfNULL=F))){
+  if(dissimilarity %in% c("unifrac", "wunifrac", "dpcoa") & is.null(phyloseq::phy_tree(physeq, errorIfNULL=F))){
     stop("Error: the chosen dissimilarity metric requires phylogenetic tree which is absent in the input data.\n")
   }
 
@@ -129,7 +129,7 @@ mult_dissim <- function(x, method = "bray", average = T, ...){
   physeq_dissim <- plyr::llply(
     .data = x,
     .fun = function(z, ...){ phyloseq::distance(physeq = z, type = "samples", ...) },
-    method = method,
+    method = method, ...,
     .progress = "text")
 
   if(average == TRUE){
