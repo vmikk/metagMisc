@@ -54,8 +54,10 @@ phyloseq_group_dissimilarity <- function(physeq, group = NULL, between_groups = 
     physeq_split <- phyloseq_sep_variable(physeq, variable = group, drop_zeroes = T)
 
     ## Estimate within-group pairwise dissimilarities
-    dd <- llply(.data = physeq_split, .fun = function(z, ...){
-        phyloseq::distance(z, method = method, type = "samples", ...) })
+    dd <- llply(
+      .data = physeq_split,
+      .fun = function(z, ...){ phyloseq::distance(z, method = method, type = "samples", ...) },
+      ...)
 
     ## Convert dist to data frame
     ddm <- ldply(.data = dd, .fun = function(z){ data.frame(Dist = as.vector(z)) }, .id = "Group")
