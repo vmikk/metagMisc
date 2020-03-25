@@ -52,12 +52,19 @@ phyloseq_mult_raref_dist <- function(physeq, dissimilarity = "bray", dist_args =
 
   ## Add rarefaction attributes to the results
   attributes(res) <- c(attributes(res), attributes(phys_raref)[c("RarefactionDepth", "RarefactionReplacement")])
+
+  ## Add distance attributes (if the custom settings were used)
+  if(length(dist_args) > 0){
+    attr(res, which = "DistanceProperties") <- dist_args
+  }
+
   return(res)
 }
 ## e.g.:
 # phyloseq_mult_raref_dist(esophagus, iter = 5, dissimilarity = "bray")
 # phyloseq_mult_raref_dist(esophagus, iter = 5, dissimilarity = "bray", dist_args = list(binary = TRUE))
 # phyloseq_mult_raref_dist(esophagus, iter = 5, dissimilarity = c("bray", "jaccard"))
+
 
 
 #' @title Average multiple distance matrices.
