@@ -10,7 +10,7 @@
 #' @param all_results Logical, return results of adonis and data subsets for each pairwise comparison
 #' @param comparison_sep Character string to separate the levels of independent variable the in the pairwise comparison names (default, ".")
 #' @param permdisp_type Use the spatial median (default) or the group centroid for the analysis for homogeneity of multivariate dispersions (see \code{\link[vegan]{betadisper}})
-#' @param ... Additional arguments will be passed to \code{\link[vegan]{adonis}}
+#' @param ... Additional arguments will be passed to \code{\link[vegan]{adonis}} and \code{\link[vegan]{permutest}}
 #'
 #' @return List with adinonis and betadisper results.
 #' @export
@@ -99,8 +99,8 @@ adonis_pairwise <- function(x, dd, group.var, add_permdisp = TRUE, permut = 999,
 
     ## Multivariate homogeneity of groups dispersions (betadisper) and permutation test
     if(add_permdisp == TRUE){
-      permd[[i]] <- vegan::betadisper(d = dd.subs[[i]], group = dd.groups[[i]], type = permdisp_type, ...)
-      permdt[[i]] <- vegan::permutest(permd[[i]], permutations = permut, pairwise = FALSE)
+      permd[[i]] <- vegan::betadisper(d = dd.subs[[i]], group = dd.groups[[i]], type = permdisp_type)
+      permdt[[i]] <- vegan::permutest(permd[[i]], permutations = permut, pairwise = FALSE, ...)
     }
   }
 
