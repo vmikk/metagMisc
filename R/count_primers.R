@@ -1,17 +1,19 @@
 
 ## Count primers (counts number of reads in which the primer is found)
 # https://benjjneb.github.io/dada2/ITS_workflow.html
-count_primers <- function(fq, FWD = "GTGARTCATCGAATCTTTG", REV = "TCCTCCGCTTATTGATATGC"){
+count_primers <- function(fq,
+  FWD = "GTGARTCATCGAATCTTTG", REV = "TCCTCCGCTTATTGATATGC",
+  mismatch = 0){
 
   ## Function to count number of matches
-  primerHits <- function(primer, fn) {
+  primerHits <- function(primer, fn, mism = 0) {
     # e.g. primer = "GTGARTCATCGAATCTTTG", fn = "R1.fastq.gz"
 
     ## Read FASTQ file (-> ShortReadQ) and convert to DNAStringSet
     fn <- ShortRead::sread( ShortRead::readFastq(fn) )
 
     ## Search primer
-    nhits <- Biostrings::vcountPattern(primer, fn, fixed = FALSE)
+    nhits <- Biostrings::vcountPattern(primer, fn, max.mismatch = mism, fixed = FALSE)
     
     return(sum(nhits > 0))
   }
