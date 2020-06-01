@@ -3,7 +3,7 @@
 #' @description This function will resample an OTU table such that all samples have the same library size. Resampling will be performed multiple times.
 #' @param x A phyloseq-class object
 #' @param SampSize Rarefaction depth (number of reads to sample)
-#' @param MinSizeTreshold Remove samples with number of reads less then this treshold
+#' @param MinSizeTreshold Remove samples with number of reads less than this threshold
 #' @param iter Number of rarefication iterations
 #' @param replace Logical, whether to sample with replacement (TRUE) or without replacement (FALSE, default)
 #' @param multithread Logical or integer; if TRUE, attempts to run the function on multiple cores; integer defines the number of cores to use (if it is set to TRUE, all cores will be used)
