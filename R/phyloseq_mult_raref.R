@@ -3,7 +3,7 @@
 #' @description This function will resample an OTU table such that all samples have the same library size. Resampling will be performed multiple times.
 #' @param x A phyloseq-class object
 #' @param SampSize Rarefaction depth (number of reads to sample)
-#' @param MinSizeTreshold Remove samples with number of reads less than this threshold
+#' @param MinSizeThreshold Remove samples with number of reads less than this threshold
 #' @param iter Number of rarefication iterations
 #' @param replace Logical, whether to sample with replacement (TRUE) or without replacement (FALSE, default)
 #' @param multithread Logical or integer; if TRUE, attempts to run the function on multiple cores; integer defines the number of cores to use (if it is set to TRUE, all cores will be used)
@@ -23,14 +23,14 @@
 #' eso_raref <- phyloseq_mult_raref(esophagus, iter = 10)
 #'
 #' # Discard samples with number of reads < 210 and perform resampling with replacement
-#' eso_raref_t <- phyloseq_mult_raref(esophagus, replace = T, MinSizeTreshold = 210, SampSize = 210, iter = 10)
+#' eso_raref_t <- phyloseq_mult_raref(esophagus, replace = T, MinSizeThreshold = 210, SampSize = 210, iter = 10)
 #' sample_sums(esophagus)
 #' sample_sums(eso_raref_t[[1]])
 #'
 #' # Do not remove OTUs from the dataset that are no longer observed in any sample (have a count of zero in every sample)
-#' phyloseq_mult_raref(esophagus, trimOTUs = F, replace = T, MinSizeTreshold = 210, SampSize = 210, iter = 10)
+#' phyloseq_mult_raref(esophagus, trimOTUs = F, replace = T, MinSizeThreshold = 210, SampSize = 210, iter = 10)
 #'
-phyloseq_mult_raref <- function(x, SampSize = NULL, MinSizeTreshold = NULL, iter = 1000, replace = F, multithread = F, seeds = NULL, ...){
+phyloseq_mult_raref <- function(x, SampSize = NULL, MinSizeThreshold = NULL, iter = 1000, replace = F, multithread = F, seeds = NULL, ...){
 
   # require(plyr)
   # require(phyloseq)
@@ -43,7 +43,7 @@ phyloseq_mult_raref <- function(x, SampSize = NULL, MinSizeTreshold = NULL, iter
   }
 
   ## Filter samples by number of reads
-  if(!is.null(MinSizeTreshold)){ x <- phyloseq::prune_samples(phyloseq::sample_sums(x) >= MinSizeTreshold, x) }
+  if(!is.null(MinSizeThreshold)){ x <- phyloseq::prune_samples(phyloseq::sample_sums(x) >= MinSizeThreshold, x) }
 
   ## Define rarefication depth
   if(is.null(SampSize)){ SampSize <- round( 0.9*min(phyloseq::sample_sums(x)) ) }
