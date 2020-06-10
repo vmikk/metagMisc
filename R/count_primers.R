@@ -5,12 +5,18 @@ count_primers <- function(fq,
   FWD = "GTGARTCATCGAATCTTTG", REV = "TCCTCCGCTTATTGATATGC",
   mismatch = 0){
 
-  ## Function to count number of matches
-  primerHits <- function(primer, fn, mism = 0) {
-    # e.g. primer = "GTGARTCATCGAATCTTTG", fn = "R1.fastq.gz"
+  ## Function to load data
+  read_fq <- function(fn){
+    # e.g., fn = "R1.fastq.gz"
 
     ## Read FASTQ file (-> ShortReadQ) and convert to DNAStringSet
     fn <- ShortRead::sread( ShortRead::readFastq(fn) )
+    return(fn)
+  }
+
+  ## Function to count number of matches
+  primerHits <- function(primer, fn, mism = 0) {
+    # e.g., primer = "GTGARTCATCGAATCTTTG", fn = read_fq("R1.fastq.gz")
 
     ## Search primer
     nhits <- Biostrings::vcountPattern(primer, fn, max.mismatch = mism, fixed = FALSE)
@@ -35,12 +41,16 @@ count_primers <- function(fq,
   FWD.orients <- allOrients(FWD)
   REV.orients <- allOrients(REV)
 
+  ## Load data
+  fq1 <- read_fq(fq[1])
+  fq2 <- read_fq(fq[2])
+
   ## Count number of primer occurrences
   rez <- rbind(
-    FWD.ForwardReads = sapply(FWD.orients, primerHits, fn = fq[1]), 
-    FWD.ReverseReads = sapply(FWD.orients, primerHits, fn = fq[2]), 
-    REV.ForwardReads = sapply(REV.orients, primerHits, fn = fq[1]), 
-    REV.ReverseReads = sapply(REV.orients, primerHits, fn = fq[2])
+    FWD.ForwardReads = sapply(FWD.orients, primerHits, fn = fq1), 
+    FWD.ReverseReads = sapply(FWD.orients, primerHits, fn = fq2), 
+    REV.ForwardReads = sapply(REV.orients, primerHits, fn = fq1), 
+    REV.ReverseReads = sapply(REV.orients, primerHits, fn = fq2)
     )
 
   return(rez)
