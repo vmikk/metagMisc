@@ -3,14 +3,23 @@
 # https://benjjneb.github.io/dada2/ITS_workflow.html
 count_primers <- function(fq,
   FWD = "GTGARTCATCGAATCTTTG", REV = "TCCTCCGCTTATTGATATGC",
-  mismatch = 0){
+  mismatch = 0, nreads = NULL){
 
   ## Function to load data
-  read_fq <- function(fn){
+  read_fq <- function(fn, subs = NULL){
     # e.g., fn = "R1.fastq.gz"
 
-    ## Read FASTQ file (-> ShortReadQ) and convert to DNAStringSet
-    fn <- ShortRead::sread( ShortRead::readFastq(fn) )
+    ## Read FASTQ file (-> ShortReadQ)
+    fn <- ShortRead::readFastq(fn)
+
+    ## Subset reads
+    if(!is.null(subs)){
+      fn <- fn[1:subs]
+    }
+
+    ## Convert to DNAStringSet
+    fn <- ShortRead::sread(fn)
+
     return(fn)
   }
 
@@ -42,8 +51,8 @@ count_primers <- function(fq,
   REV.orients <- allOrients(REV)
 
   ## Load data
-  fq1 <- read_fq(fq[1])
-  fq2 <- read_fq(fq[2])
+  fq1 <- read_fq(fq[1], subs = nreads)
+  fq2 <- read_fq(fq[2], subs = nreads)
 
   ## Count number of primer occurrences
   rez <- rbind(
