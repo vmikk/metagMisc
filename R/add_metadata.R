@@ -46,7 +46,7 @@ add_metadata <- function(x, metad, xid = NULL, mid = NULL, drop_mid = T){
   if(!xid %in% colnames(x)){ stop("Error: '", xid, "' column is missing in the main data.\n", sep="") }
   if(!mid %in% colnames(metad)){ stop("Error: '", mid, "' column is missing in the metadata.\n", sep="") }
 
-  if(nrow(x) != length(unique(x[, xid]))){ stop("Error: Row identifiers are not unique in 'x'.\n") }
+  # if(nrow(x) != length(unique(x[, xid]))){ stop("Error: Row identifiers are not unique in 'x'.\n") }
   if(nrow(metad) != length(unique(metad[, mid]))){ stop("Error: Row identifiers are not unique in 'metad'.\n") }
 
 
