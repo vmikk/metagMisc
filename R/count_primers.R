@@ -52,15 +52,25 @@ count_primers <- function(fq,
 
   ## Load data
   fq1 <- read_fq(fq[1], subs = nreads)
-  fq2 <- read_fq(fq[2], subs = nreads)
+  if( length(fq) == 2 ){
+    fq2 <- read_fq(fq[2], subs = nreads)
+  }
 
   ## Count number of primer occurrences
-  rez <- rbind(
-    FWD.ForwardReads = sapply(FWD.orients, primerHits, fn = fq1), 
-    FWD.ReverseReads = sapply(FWD.orients, primerHits, fn = fq2), 
-    REV.ForwardReads = sapply(REV.orients, primerHits, fn = fq1), 
-    REV.ReverseReads = sapply(REV.orients, primerHits, fn = fq2)
-    )
+  if( length(fq) == 2 ){
+    rez <- rbind(
+      FWD.ForwardReads = sapply(FWD.orients, primerHits, fn = fq1), 
+      FWD.ReverseReads = sapply(FWD.orients, primerHits, fn = fq2), 
+      REV.ForwardReads = sapply(REV.orients, primerHits, fn = fq1), 
+      REV.ReverseReads = sapply(REV.orients, primerHits, fn = fq2)
+      )
+  }
+  if( length(fq) == 1 ){
+    rez <- rbind(
+      FWD = sapply(FWD.orients, primerHits, fn = fq1), 
+      REV = sapply(REV.orients, primerHits, fn = fq1)
+      )
+  }
 
   return(rez)
 }
