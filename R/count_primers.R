@@ -14,6 +14,7 @@ count_primers <- function(fq,
 
     ## Subset reads
     if(!is.null(subs)){
+      if(subs > length(fn)){ subs <- length(fn) } # limit number of reads to all reads
       fn <- fn[1:subs]
     }
 
