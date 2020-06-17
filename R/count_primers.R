@@ -9,19 +9,26 @@ count_primers <- function(fq,
   read_fq <- function(fn, subs = NULL){
     # e.g., fn = "R1.fastq.gz"
 
-    ## Read FASTQ file (-> ShortReadQ)
-    fn <- ShortRead::readFastq(fn)
+    ## Load data
+    if(grepl(pattern = "fastq$|fastq.gz$|fq$|fq.gz$", x = fn)){
+      ## Read FASTQ file (-> ShortReadQ)
+      ff <- ShortRead::readFastq(fn)
+    }
+    if(grepl(pattern = "fasta$|fasta.gz$|fa$|fa.gz$", x = fn)){
+      ## Read FASTA file (-> ShortRead)
+      ff <- ShortRead::readFasta(fn)
+    }
 
     ## Subset reads
     if(!is.null(subs)){
-      if(subs > length(fn)){ subs <- length(fn) } # limit number of reads to all reads
-      fn <- fn[1:subs]
+      if(subs > length(ff)){ subs <- length(ff) } # limit number of reads to all reads
+      ff <- ff[1:subs]
     }
 
     ## Convert to DNAStringSet
-    fn <- ShortRead::sread(fn)
+    ff <- ShortRead::sread(ff)
 
-    return(fn)
+    return(ff)
   }
 
   ## Function to count number of matches
@@ -76,3 +83,4 @@ count_primers <- function(fq,
   return(rez)
 }
 # e.g., count_primers(fq = c("s1_R1.fastq.gz", "s1_R2.fastq.gz"))
+# e.g., count_primers(fq = c("s1_R1.fasta", "s1_R2.fasta"))
