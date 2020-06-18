@@ -51,7 +51,7 @@ parse_taxonomy_amptk <- function(x, custom_ranks = NULL){
       } else {
 
         ## Extract tax rank prefixes
-        ranks_prefs_found <- grep("[[:alpha:]]{1}:", x)  # match prefixes, e.g., "k:"
+        ranks_prefs_found <- grep("^[[:alpha:]]{1,}:", x)  # match prefixes, e.g., "k:"
         ## If no prefixes found - return dummy ranks
         if(length(ranks_prefs_found) == 0L){
           warning("No taxonomic ranks prefixes were found (e.g., 'k:'). Dummy ranks will be added.\n")
@@ -59,8 +59,10 @@ parse_taxonomy_amptk <- function(x, custom_ranks = NULL){
           res <- x
         } else {
         ## Otherwise, remove prefixes and add tax ranks as names
-          res <- gsub(pattern = "[[:alpha:]]{1}:", replacement = "", x = x)
-          repranks <- Tranks[substr(x[ranks_prefs_found], 1, 1)]
+          res <- gsub(pattern = "^[[:alpha:]]{1,}:", replacement = "", x = x)
+          rnks <- regmatches(m = regexpr("^[[:alpha:]]{1,}:", x), x = x)
+          rnks <- gsub(pattern = ":", replacement = "", x = rnks)
+          repranks <- Tranks[rnks]
           names(res)[ranks_prefs_found[!is.na(repranks)]] <- repranks[!is.na(repranks)]
         }
       }
