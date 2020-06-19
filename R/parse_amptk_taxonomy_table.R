@@ -11,6 +11,11 @@
 #' @examples
 #' parse_taxonomy_amptk("k:Fungi,p:Zygomycota,o:Mortierellales,f:Mortierellaceae,g:Mortierella,s:Mortierella parvispora")
 #' parse_taxonomy_amptk("k:Fungi,p:Ascomycota,g:Chalara")
+#'
+#' # With customized ranks
+#' parse_taxonomy_amptk(
+#'  x = "do:Eukaryota,su:Amorphea,cd:Obazoa,gr:Opisthokonta,sg:Holomycota(Nucletmycea),ki:Fungi,sk:Dikarya,ph:Ascomycota,sd:Saccharomycotina,cl:Saccharomycetes,sc:Saccharomycetidae,or:Saccharomycetales,fa:Saccharomycetaceae,ge:Saccharomyces,sp:Saccharomyces cerevisiae,st:Saccharomyces cerevisiae var boulardii",
+#'  custom_ranks = c(do = "Domain", su = "Supergroup", cd = "Clade", gr = "Group", sg = "Subgroup", ki = "Kingdom", sk = "Subkingdom", ph = "Phylum", sd = "Subdivision", cl = "Class", sc = "Subclass", or = "Order", fa = "Family", ge = "Genus", sp = "Species", st = "Strain"))
 parse_taxonomy_amptk <- function(x, custom_ranks = NULL){
 
     ## Use default tax ranks
