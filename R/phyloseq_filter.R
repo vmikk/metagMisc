@@ -150,7 +150,9 @@ phyloseq_filter_prevalence <- function(physeq, prev.trh = 0.05, abund.trh = NULL
 
   ## Threshold validation
   if(prev.trh > 1 | prev.trh < 0){ stop("Prevalence threshold should be non-negative value in the range of [0, 1].\n") }
-  if(abund.trh <= 0){ stop("Abundance threshold should be non-negative value larger 0.\n") }
+  if(!is.null(abund.trh)){ 
+    if(abund.trh <= 0){ stop("Abundance threshold should be non-negative value larger 0.\n") }
+  }
 
   ## Check for the low-prevalence species (compute the total and average prevalences of the features in each phylum)
   prevdf_smr <- function(prevdf){
