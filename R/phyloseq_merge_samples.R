@@ -3,6 +3,12 @@
 ## NB. sample metadata of the first ID from `samples_to_merge` will be used as a representative for a group
 phyloseq_merge_samples <- function(phys, samples_to_merge, new_id = NULL){
 
+  ## Check if more than one sample name was provided
+  if(length(unique(samples_to_merge)) <= 1){
+    warning("Nothing to merge. Please provide several sample IDs that should be merged.\n")
+    return(phys)
+  }
+
   ## Split phyloseq into samples that should be merged and the rest
   ps_m <- prune_samples(sample_names(phys) %in% samples_to_merge, phys)
   ps_r <- prune_samples(!sample_names(phys) %in% samples_to_merge, phys)
