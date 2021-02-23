@@ -9,6 +9,11 @@ phyloseq_merge_samples <- function(phys, samples_to_merge, new_id = NULL){
     return(phys)
   }
 
+  ## Check if valid sample names were provided
+  if(any(!samples_to_merge %in% sample_names(phys))){ 
+    stop("Provided sample IDs are missing in the phyloseq object.\n")
+  }
+
   ## Split phyloseq into samples that should be merged and the rest
   ps_m <- prune_samples(sample_names(phys) %in% samples_to_merge, phys)
   ps_r <- prune_samples(!sample_names(phys) %in% samples_to_merge, phys)
