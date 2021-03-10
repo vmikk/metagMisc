@@ -1,6 +1,17 @@
 
-## Merge samples by name
-## NB. sample metadata of the first ID from `samples_to_merge` will be used as a representative for a group
+#' @title Merge samples by name
+#' @description This function will merge samples (specified by their names) in a phyloseq-object.
+#' @param phys A phyloseq-class object
+#' @param samples_to_merge Character vector of sample names that should be merged
+#' @param new_id Name of the new sample
+#'
+#' @return Phyloseq-object.
+#' @export
+#' @details
+#' Sample metadata of the first ID from `samples_to_merge` will be used as a representative for a group.
+#'
+#' @examples
+#'
 phyloseq_merge_samples <- function(phys, samples_to_merge, new_id = NULL){
 
   ## Check if more than one sample name was provided
@@ -10,12 +21,12 @@ phyloseq_merge_samples <- function(phys, samples_to_merge, new_id = NULL){
   }
 
   ## Check if valid sample names were provided
-  if(any(!samples_to_merge %in% sample_names(phys))){ 
+  if(any(!samples_to_merge %in% sample_names(phys))){
     stop("Provided sample IDs are missing in the phyloseq object.\n")
   }
 
   ## Check new sample ID
-  if(!is.null(new_id) & length(new_id) != 1){ 
+  if(!is.null(new_id) & length(new_id) != 1){
     stop("Error: please provide a single value for a new sample name.\n")
   }
 
