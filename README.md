@@ -1,7 +1,12 @@
-# metagMisc
+# metagMisc <img src='figures/Logo_metagMisc.png' align="right" height="139" />
+
+<!-- badges: start -->
+
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.571403.svg)](https://doi.org/10.5281/zenodo.571403)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/metagMisc)](https://cran.r-project.org/package=metagMisc)
 [![Latest Github release](https://img.shields.io/github/release/vmikk/metagMisc.svg)](https://github.com/vmikk/metagMisc/releases/latest)
+
+<!-- badges: end -->
 
 Miscellaneous functions for metagenomic analysis.
 
