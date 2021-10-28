@@ -33,9 +33,11 @@
 #' parse_uc("usearch_OTUs.uc", map_only = F)
 #' parse_uc("usearch_OTUs.uc", map_only = T)
 #'
-parse_uc <- function(x, map_only = F){
+parse_uc <- function(x, map_only = F, package = "base"){
 
-      ## Read file
+  ## Load data with built-in R commands  
+  if(package == "base"){
+    ## Read file
     ii <- read.delim(x, header = F, stringsAsFactors = F)
 
     ## Remove redundant S-records
@@ -54,6 +56,7 @@ parse_uc <- function(x, map_only = F){
     if(map_only == TRUE){
         ii <- ii[, which(colnames(ii) %in% c("Query", "OTU"))]
     }
-
-    return(ii)
+  }
+  
+  return(ii)
 }
