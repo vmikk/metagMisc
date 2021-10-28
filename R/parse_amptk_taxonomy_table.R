@@ -21,6 +21,7 @@ parse_taxonomy_amptk <- function(x, custom_ranks = NULL){
     ## Use default tax ranks
     if(is.null(custom_ranks)){
       Tranks <- c(
+        d = "Domain",
         k = "Kingdom",
         p = "Phylum",
         c = "Class",
