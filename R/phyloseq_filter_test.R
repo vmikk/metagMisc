@@ -1,5 +1,5 @@
 
-## Automatic threshold selection for unabundat OTU trimming from phyloseq object
+## Automatic threshold selection for unabundant OTU trimming from phyloseq object
 ## based on a multivariate standard error estimation
 phyloseq_filter_test <- function(physeq, group, dist_type = "bray", filter_by_group = TRUE, nresamp = 1000, ...){
     require(plyr)
