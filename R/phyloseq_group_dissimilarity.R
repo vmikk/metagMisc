@@ -60,7 +60,9 @@ phyloseq_group_dissimilarity <- function(physeq, group = NULL, between_groups = 
       ...)
 
     ## Convert dist to data frame
-    ddm <- ldply(.data = dd, .fun = function(z){ data.frame(Dist = as.vector(z)) }, .id = "Group")
+    ddm <- ldply(.data = dd, .fun = function(z){ 
+      data.frame(Dist = as.vector(z), Comparison = "within-group")
+      }, .id = "Group")
 
     ## Estimate between-group dissimilarities
     if(between_groups == TRUE){
@@ -92,7 +94,7 @@ phyloseq_group_dissimilarity <- function(physeq, group = NULL, between_groups = 
       ddl$Group <- aaply(.data = grr, .margins = 1, .fun = paste, collapse = "-")
 
       ## Add to the main table
-      ddm <- rbind(ddm, data.frame(Group = ddl$Group, Dist = ddl$value))
+      ddm <- rbind(ddm, data.frame(Group = ddl$Group, Dist = ddl$value, Comparison = "between-groups"))
 
     } # end of between_groups
 
