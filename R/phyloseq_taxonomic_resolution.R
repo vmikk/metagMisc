@@ -1,5 +1,18 @@
 
-## Estimate taxonomic resolution of data
+#' @title Estimate taxonomic resolution of data
+#'
+#' @param physeq A phyloseq-class object
+#' @param add_counts Logical, add read and OTU counts on top of the bars (default, TRUE)
+#' @param justDF Logical, just return the data.frame, do not plot (default, FALSE)
+#'
+#' @return ggplot-object (if justDF = FALSE) or a data.frame (if justDF = TRUE).
+#' @details This function counts the number of OTUs and reads annotated 
+#' at the lowest level of taxonomic classification and shows it on a barplot.
+#' @export
+#'
+#' @seealso \code{\link{get_max_taxonomic_rank}}
+#' @examples
+#'
 phyloseq_taxonomic_resolution <- function(physeq, add_counts = TRUE, justDF = FALSE){
 
   ## Determine the lowest level of taxonomic classification
