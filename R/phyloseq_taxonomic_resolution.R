@@ -62,7 +62,7 @@ phyloseq_taxonomic_resolution <- function(physeq, add_counts = TRUE, justDF = FA
     pp <- ggplot(data = sp_ranks_long, aes(x = RankName, y = Perc, fill = DataType)) +
       geom_bar(stat = "identity", position = position_dodge()) +
       scale_fill_manual(
-          values = c("#B47846", "#4682B4"),  # steelblue + complementary color
+          values = c("#F6A600", "#E25822"),  # orangeyellow + reddishorange
           labels = c("Reads", "OTUs"),
           name = "") +
       labs(x = "Lowest taxonomic rank", y = "Percentage of data")
