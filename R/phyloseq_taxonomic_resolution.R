@@ -12,7 +12,11 @@
 #'
 #' @seealso \code{\link{get_max_taxonomic_rank}}
 #' @examples
-#'
+#' data(GlobalPatterns)
+#' gpt <- phyloseq_taxonomic_resolution(GlobalPatterns)
+#' gpt
+#' gpt$data_wide
+#' 
 phyloseq_taxonomic_resolution <- function(physeq, add_counts = TRUE, justDF = FALSE){
 
   ## Determine the lowest level of taxonomic classification
