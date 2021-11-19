@@ -1,5 +1,22 @@
 
-## Estimate standardized effect size (SES) and p-value
+#' @title Estimate standardized effect size (SES) and p-value
+#'
+#' @param obs Single value of the observed statistics
+#' @param sim Numeric vector of simulated values (null distribution)
+#' @param alternative Character string specifying the alternative hypothesis; "greater", "less", or "two-sided" (default)
+#'
+#' @return Data frame with the effect size estimate (SES) and p-value (Pval).
+#' @export
+#'
+#' @details
+#' Standardized effect size (SES) represents Z-score, and is calculated as
+#' (observed - mean_simulated) / standard_deviation_simulated.
+#' SES values more extreme than +/-1.96 belong to the outer 5% of the null distribution
+#' and thus are significant at alpha=0.05 with two-sided hypothesis test.
+#'
+#' @examples
+#' SES(2, 1:10)
+#'
 SES <- function(obs, sim, alternative = "two-sided"){
 
   ## Check fo NA values in sim
