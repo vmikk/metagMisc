@@ -25,14 +25,23 @@ SES <- function(obs, sim, alternative = "two-sided"){
     sim <- na.omit(sim)
   }
 
+  ## Function to estimate skewness of 
+  skewness <- function(x){
+    n <- length(x)
+    m <- mean(x)
+    res <- (sum((x-m)^3)/n)/(sum((x-m)^2)/n)^(3/2)
+    return(res)
+  }
+
   ## Estimate SES and simulation summary
   res <- data.frame(
     Obs = obs,
     SES = (obs - mean(sim)) / sd(sim),
-    Sim.mean = mean(sim),
+    Sim.Mean = mean(sim),
     Sim.Q1 = stats::quantile(sim, probs = 0.25),
     Sim.Q3 = stats::quantile(sim, probs = 0.75),
-    Sim.Var = var(sim)
+    Sim.Var = var(sim),
+    Sim.Skewness = skewness(sim)
     )
 
   ## Estimate P-value (based on ade4::as.randtest)
