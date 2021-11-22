@@ -44,6 +44,10 @@ SES <- function(obs, sim, alternative = "two-sided"){
     Sim.Skewness = skewness(sim)
     )
 
+  if(abs(res$Sim.Skewness) > 0.8){
+    warning("Warning: null-distribution is asymmetric (skewed), SES value could be misleading.\n")
+  }
+
   ## Estimate P-value (based on ade4::as.randtest)
   if(alternative == "greater"){
     res$Pvalue <- (sum(sim >= obs) + 1)/(length(sim) + 1)
