@@ -25,7 +25,7 @@ SES <- function(obs, sim, alternative = "two-sided"){
     sim <- na.omit(sim)
   }
 
-  ## Function to estimate skewness of 
+  ## Function to estimate skewness of null-distribution
   skewness <- function(x){
     n <- length(x)
     m <- mean(x)
@@ -39,6 +39,7 @@ SES <- function(obs, sim, alternative = "two-sided"){
     SES = (obs - mean(sim)) / sd(sim),
     Sim.Mean = mean(sim),
     Sim.Q1 = stats::quantile(sim, probs = 0.25),
+    Sim.Median = median(sim),
     Sim.Q3 = stats::quantile(sim, probs = 0.75),
     Sim.Var = var(sim),
     Sim.Skewness = skewness(sim)
