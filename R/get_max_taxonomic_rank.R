@@ -15,7 +15,7 @@
 #' summary(taxx$RankName)
 #'
 #' # data frame as input
-#' taxtbl <- tax_table(GlobalPatterns)
+#' taxtbl <- as.data.frame(tax_table(GlobalPatterns))
 #' taxx <- get_max_taxonomic_rank(taxtbl)
 #' summary(taxx$RankName)
 #'
