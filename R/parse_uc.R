@@ -4,6 +4,7 @@
 #'
 #' @param x File name (typically with .uc extension)
 #' @param map_only Logical, return only mapping (correspondence of query and cluster)
+#' @param package Which package to use ("base" or "data.table")
 #'
 #' @details USEARCH cluster format (UC) is a tab-separated text file.
 #' Description of the UC file format (from USEARCH web-site: http://www.drive5.com/usearch/manual/opt_uc.html):
