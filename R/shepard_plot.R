@@ -4,6 +4,7 @@
 #' @param dis Original dissimilarity matrix (class "dist")
 #' @param ord Ordination scores (class "matrix" or "data.frame") or (class "dist")
 #' @param k Number of dimensions (default, 2) that will be taken into account (only if the ordination scores were provided in 'ord')
+#' @param show Logical; show the resulting plot on screen
 #'
 #' @details This function compares original dissimilarities among the objects with Euclidean distances in reduced space obtained with ordination (object scores or coordinates of the objects in the reduced space).
 #' If the points are close to diagonal then the projection in reduced space accounts for a high fraction of the variance.
@@ -30,7 +31,7 @@
 #' ord <- ordinate(GlobalPatterns, method = "NMDS", distance = dd)
 #' shepard_plot(dis = dd, ord = scores(ord))
 #'
-shepard_plot <- function(dis, ord, k=2){
+shepard_plot <- function(dis, ord, k=2, show = TRUE){
 
   require(ggplot2)
 
@@ -57,6 +58,6 @@ shepard_plot <- function(dis, ord, k=2){
     theme_classic() +
     labs(x = "Distance in multidimensional space", y = "Distance in reduced space")
 
-  print(pp)
+  if(show == TRUE){ print(pp) }
   invisible(pp)
 }
