@@ -3,7 +3,7 @@
 #'
 #' @param physeq A phyloseq-class object
 #' @param SampSize Rarefaction depth (number of reads to sample)
-#' @param MinSizeTreshold Remove samples with number of reads less then this treshold
+#' @param MinSizeThreshold Remove samples with number of reads less than this threshold
 #' @param iter Number of rarefication iterations
 #' @param trimOTUs Logical, if TRUE (default), OTUs that have a count of zero in every sample will be removed
 #' @param ... Additional arguments will be passed to \code{\link[rtk]{rtk}}
@@ -19,11 +19,11 @@
 #' system.time( GPr <- raref_rtk(GlobalPatterns, SampSize = 5000, iter = 10, trimOTUs = T) )
 #' system.time( GPr <- phyloseq_mult_raref(GlobalPatterns, SampSize = 5000, iter = 10, trimOTUs = T) )
 #' 
-raref_rtk <- function(physeq, SampSize = NULL, MinSizeTreshold = NULL,
+raref_rtk <- function(physeq, SampSize = NULL, MinSizeThreshold = NULL,
   iter = 1000, trimOTUs = TRUE, ...){
 
   ## Filter samples by number of reads
-  if(!is.null(MinSizeTreshold)){ x <- phyloseq::prune_samples(phyloseq::sample_sums(x) >= MinSizeTreshold, x) }
+  if(!is.null(MinSizeThreshold)){ x <- phyloseq::prune_samples(phyloseq::sample_sums(x) >= MinSizeThreshold, x) }
 
   ## Define rarefication depth
   if(is.null(SampSize)){ SampSize <- round( 0.9*min(phyloseq::sample_sums(x)) ) }
