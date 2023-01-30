@@ -58,11 +58,25 @@ parse_uc <- function(x, map_only = F, package = "data.table", rm_dups = TRUE){
     ## OTU name = query name for centroids
     ii$OTU[which(ii$V1 == "C")] <- ii$Query[which(ii$V1 %in% c("S", "C"))]
 
+    ## Check for duplicates
+    tmp <- ii[ , c("Query", "OTU")]
+    dups <- duplicated(tmp)
+    if(any(dups)){
+      cat("Warning: duplicated rows found!\n")
+
+      ## Remove duplicated seqs
+      if(rm_dups == TRUE){
+        cat("..", sum(dups), " duplicates removed\n")
+        ii <- ii[ - which(dups), ]
+      }
+    }
+
     if(map_only == TRUE){
         ii <- ii[, which(colnames(ii) %in% c("Query", "OTU"))]
     }
-  }
-  
+  } # end of `base` package
+
+
   ## Load data with `data.table` package
   if(package == "data.table"){
     ## Read file
