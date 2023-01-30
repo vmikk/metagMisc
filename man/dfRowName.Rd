@@ -16,6 +16,9 @@ dfRowName(x, name = "Rows", stringsAsFactors = FALSE)
 \value{
 Data frame
 }
+\description{
+Transfer rownames of data frame to a new column (for data export)
+}
 \examples{
 x <- as.data.frame(matrix(sample(1:100, 100), nrow = 10, dimnames = list(paste("row", 1:10, sep=""), paste("col", 1:10, sep=""))))
 x

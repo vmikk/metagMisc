@@ -4,8 +4,7 @@
 \alias{eig_perc}
 \title{Estimate the proportion of explained variance from the eigenvalues.}
 \usage{
-eig_perc(eig, positive = T, percentage = TRUE, digits = 2, plot = F,
-  ...)
+eig_perc(eig, positive = T, percentage = TRUE, digits = 2, plot = F, ...)
 }
 \arguments{
 \item{eig}{Numeric vector of eigenvalues (e.g., from PCA or PCoA)}
@@ -22,6 +21,9 @@ eig_perc(eig, positive = T, percentage = TRUE, digits = 2, plot = F,
 }
 \value{
 Numeric vector of the amounts of total variance captured by principal components or principal coordinates.
+}
+\description{
+Estimate the proportion of explained variance from the eigenvalues.
 }
 \details{
 Negative eigenvalue could be generated in the analysis of semi- or non-metric dissimilarity measures.

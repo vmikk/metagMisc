@@ -19,6 +19,3 @@ Subsetted data frame
 \description{
 This functions filters CAZy annotations based on the total abundance and occurence of CAZy genes across organisms. In other words, it removes CAZy annotations with low abundance.
 }
-\examples{
-
-}

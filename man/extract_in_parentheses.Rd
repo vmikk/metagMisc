@@ -12,6 +12,9 @@ extract_in_parentheses(x)
 \value{
 Part(s) of the input character string that was constrained in the parentheses.
 }
+\description{
+Extract information inside the parentheses from a character string.
+}
 \examples{
 extract_in_parentheses("abc (11\%) xyz")
 extract_in_parentheses("Lorem ipsum (dolor sit amet), consectetur adipiscing elit, (sed do eiusmod) tempor incididunt ut (labore et dolore) magna aliqua")

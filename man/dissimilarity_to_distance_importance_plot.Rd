@@ -4,8 +4,11 @@
 \alias{dissimilarity_to_distance_importance_plot}
 \title{Display species importance plot based on a weighted Euclidean distance transformation of dissimilarities.}
 \usage{
-dissimilarity_to_distance_importance_plot(x, scaled_weights = TRUE,
-  mark_removed = TRUE)
+dissimilarity_to_distance_importance_plot(
+  x,
+  scaled_weights = TRUE,
+  mark_removed = TRUE
+)
 }
 \arguments{
 \item{x}{Result of \code{\link{dissimilarity_to_distance}} function}
@@ -16,6 +19,9 @@ dissimilarity_to_distance_importance_plot(x, scaled_weights = TRUE,
 }
 \value{
 ggplot-object.
+}
+\description{
+Display species importance plot based on a weighted Euclidean distance transformation of dissimilarities.
 }
 \details{
 Species importance measures the contribution of individual species to the overall dissimilarity between the samples.

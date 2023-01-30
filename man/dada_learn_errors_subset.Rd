@@ -4,8 +4,13 @@
 \alias{dada_learn_errors_subset}
 \title{DADA2 learning the error rates based on a subset of data}
 \usage{
-dada_learn_errors_subset(filts, n = 25, samps = NULL, multitr = TRUE,
-  verbose = TRUE)
+dada_learn_errors_subset(
+  filts,
+  n = 25,
+  samps = NULL,
+  multitr = TRUE,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{filts}{character vector with the names of pre-filtered fastq or fastq.gz files}

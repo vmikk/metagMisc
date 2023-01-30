@@ -4,9 +4,16 @@
 \alias{dissimilarity_to_distance}
 \title{Transform (non-metric) dissimilarity matrix to a weighted Euclidean distance (metric).}
 \usage{
-dissimilarity_to_distance(datt, dist_type = "bray", dst = NULL,
-  drop_species = F, importance_percentile = 0.02, show_plot = T,
-  ndim = NULL, ...)
+dissimilarity_to_distance(
+  datt,
+  dist_type = "bray",
+  dst = NULL,
+  drop_species = F,
+  importance_percentile = 0.02,
+  show_plot = T,
+  ndim = NULL,
+  ...
+)
 }
 \arguments{
 \item{datt}{Data frame with species abundance (species = columns, samples = rows)}

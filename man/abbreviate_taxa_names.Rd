@@ -4,8 +4,7 @@
 \alias{abbreviate_taxa_names}
 \title{Abbreviate taxa names}
 \usage{
-abbreviate_taxa_names(names, nlet = 3, totl = 7, sep = "_",
-  seconditem = F)
+abbreviate_taxa_names(names, nlet = 3, totl = 7, sep = "_", seconditem = F)
 }
 \arguments{
 \item{names}{Character vector of species names}

@@ -20,6 +20,9 @@ bubble_plot(x, transp = 0.9, circ = 16, add.dendro = FALSE, ...)
 \value{
 Invisibly returns a plot ('ggplot' class).
 }
+\description{
+Bubble plot
+}
 \examples{
 x <- as.data.frame(matrix(runif(n = 100, min = 0, max = 100), nrow = 10))
 rownames(x) <- paste("sp", 1:nrow(x), sep="")

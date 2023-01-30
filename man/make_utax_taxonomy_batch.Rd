@@ -16,6 +16,9 @@ make_utax_taxonomy_batch(x, as_vector = T, ...)
 \value{
 Vector or a data frame with taxonomy strings in USEARCH format.
 }
+\description{
+Prepare taxonomy annotations in SINTAX or UTAX style for multiple species.
+}
 \examples{
 # Create dummy data (each row = species)
 datt <- data.frame(

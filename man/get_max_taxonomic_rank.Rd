@@ -14,6 +14,9 @@ get_max_taxonomic_rank(x, return_rank_only = FALSE)
 \value{
 Data frame with taxonomy and additional column containing the name of the lowest level of taxonomic classification. Alternatively, if 'return_rank_only = TRUE', a vector of the lowest taxonomic ranks for each OTU.
 }
+\description{
+Determine the lowest level of taxonomic classification
+}
 \details{
 This function will find the last non-NA column in the taxonomy table and return
 }
@@ -25,7 +28,7 @@ taxx <- get_max_taxonomic_rank(GlobalPatterns)
 summary(taxx$RankName)
 
 # data frame as input
-taxtbl <- tax_table(GlobalPatterns)
+taxtbl <- as.data.frame(tax_table(GlobalPatterns))
 taxx <- get_max_taxonomic_rank(taxtbl)
 summary(taxx$RankName)
 

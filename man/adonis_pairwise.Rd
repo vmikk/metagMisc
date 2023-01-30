@@ -4,9 +4,18 @@
 \alias{adonis_pairwise}
 \title{Pairwise comparisons for permutational multivariate analysis of variance using distance matrices}
 \usage{
-adonis_pairwise(x, dd, group.var, add_permdisp = TRUE, permut = 999,
-  p.adj = T, adj.meth = "fdr", all_results = T, comparison_sep = ".",
-  permdisp_type = "median", ...)
+adonis_pairwise(
+  x,
+  dd,
+  group.var,
+  add_permdisp = TRUE,
+  permut = 999,
+  p.adj = "fdr",
+  all_results = T,
+  comparison_sep = ".",
+  permdisp_type = "median",
+  ...
+)
 }
 \arguments{
 \item{x}{Sample meta-data (data frame for the independent variables)}
@@ -19,9 +28,7 @@ adonis_pairwise(x, dd, group.var, add_permdisp = TRUE, permut = 999,
 
 \item{permut}{Number of permutations required}
 
-\item{p.adj}{Logical, adjust P-values for multiple comparisons}
-
-\item{adj.meth}{Correction method from \code{\link{p.adjust}} ("holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr")}
+\item{p.adj}{Logical or character; if TRUE, adjust P-values for multiple comparisons with FDR; if character, specify correction method from \code{\link{p.adjust}} ("holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", or "none")}
 
 \item{all_results}{Logical, return results of adonis and data subsets for each pairwise comparison}
 
@@ -29,10 +36,13 @@ adonis_pairwise(x, dd, group.var, add_permdisp = TRUE, permut = 999,
 
 \item{permdisp_type}{Use the spatial median (default) or the group centroid for the analysis for homogeneity of multivariate dispersions (see \code{\link[vegan]{betadisper}})}
 
-\item{...}{Additional arguments will be passed to \code{\link[vegan]{adonis}}}
+\item{...}{Additional arguments will be passed to \code{\link[vegan]{adonis}} and \code{\link[vegan]{permutest}}}
 }
 \value{
 List with adinonis and betadisper results.
+}
+\description{
+Pairwise comparisons for permutational multivariate analysis of variance using distance matrices
 }
 \examples{
 library(vegan)
