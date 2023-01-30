@@ -35,7 +35,7 @@
 #' parse_uc("usearch_OTUs.uc", map_only = F)
 #' parse_uc("usearch_OTUs.uc", map_only = T)
 #'
-parse_uc <- function(x, map_only = F, package = "base", rm_dups = TRUE){
+parse_uc <- function(x, map_only = F, package = "data.table", rm_dups = TRUE){
 
   ## Load data with built-in R commands  
   if(package == "base"){
