@@ -5,6 +5,7 @@
 #' @param x File name (typically with .uc extension)
 #' @param map_only Logical, return only mapping (correspondence of query and cluster)
 #' @param package Which package to use ("base" or "data.table")
+#' @param rm_dups  Logical, remove duplicated entries (default, TRUE)
 #'
 #' @details USEARCH cluster format (UC) is a tab-separated text file.
 #' Description of the UC file format (from USEARCH web-site: http://www.drive5.com/usearch/manual/opt_uc.html):
@@ -34,7 +35,7 @@
 #' parse_uc("usearch_OTUs.uc", map_only = F)
 #' parse_uc("usearch_OTUs.uc", map_only = T)
 #'
-parse_uc <- function(x, map_only = F, package = "base"){
+parse_uc <- function(x, map_only = F, package = "base", rm_dups = TRUE){
 
   ## Load data with built-in R commands  
   if(package == "base"){
@@ -75,6 +76,18 @@ parse_uc <- function(x, map_only = F, package = "base"){
 
     ## OTU name = query name for centroids
     ii[V1 == "C", OTU := Query ]
+
+    ## Check for duplicates
+    if(nrow(ii[, .(Query, OTU)]) != nrow(unique(ii[, .(Query, OTU)]))){
+      cat("Warning: duplicated rows found!\n")
+
+      ## Remove duplicated seqs
+      if(rm_dups == TRUE){
+        dups <- duplicated(ii[, .(Query, OTU)])
+        cat("..", sum(dups), " duplicates removed\n")
+        ii <- ii[ ! dups ]
+      }
+    }
 
     ## Subset to Query - OTU names only
     if(map_only == TRUE){
