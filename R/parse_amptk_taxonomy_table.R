@@ -87,6 +87,7 @@ parse_taxonomy_amptk <- function(x, custom_ranks = NULL){
 #'
 #' @param x Vector of character strings from AMPtk taxonomy
 #' @param withID Logical; set to TRUE (default) if charter strings contain sequence IDs
+#' @param multithread Logical; run the function in parallel
 #' @details
 #' This function splits AMPtk (ex-UFITS) result of taxonomic annotation by taxonomic rank and combines it into one table.
 #' The first part of taxonomy string is assumed to be an ID of the best hit (e.g., EF040844) or a taxonomic classificator (UTAX or SINTAX) followed by a semicolon.
@@ -120,35 +121,93 @@ parse_taxonomy_amptk <- function(x, custom_ranks = NULL){
 #'
 #' parse_taxonomy_amptk_batch(tax2, withID = FALSE)
 #'
-parse_taxonomy_amptk_batch <- function(x, withID = TRUE){
+parse_taxonomy_amptk_batch <- function(x, withID = TRUE, multithread = FALSE){
     
     # require(plyr)
 
-    if(withID == TRUE){
-      ## Split OTUId to SequenceId (e.g., JQ976006) or MethodId (UTAX,SINTAX) + Taxonomy
-      res <- strsplit(x, split = ";")
-      res <- do.call(rbind, res)
+  ###############
+  ############### Cluster setup
+  ###############
 
-      # Prepare list of taxonomic assignments
-      res <- plyr::alply(.data = res[, 2], .margins = 1, .fun = parse_taxonomy_amptk)
-    } else {
-      # Prepare list of taxonomic assignments
-      res <- plyr::alply(.data = x, .margins = 1, .fun = parse_taxonomy_amptk)
+  ## Progress bar type for single-threaded plyr functions
+  progr <- "text"
+  parall <- FALSE
+
+  ## Check if foreach and doParallel packages are available
+  if(multithread){
+    if(!requireNamespace("foreach", quietly = TRUE)){ stop("foreach package required for parallel plyr operation.\n") }
+    if(!requireNamespace("doParallel", quietly = TRUE)){ stop("doParallel package is required.\n") }
+  }
+
+  ## Check the platform type and specify the number of cores to use
+  if(multithread && .Platform$OS.type == "unix"){
+    ncores <- parallel::detectCores()
+    if(is.numeric(multithread)){ ncores <- multithread }
+    if(is.na(ncores) | is.null(ncores)){ ncores <- 1 }
+  } else {
+    ncores <- 1
+    if(multithread && .Platform$OS.type=="windows"){
+      warning("Multithreading has been DISABLED, as forking is not supported on .Platform$OS.type 'windows'.\n")
     }
+  }
 
-    # Convert each vector to matrix
-    res <- plyr::llply(.data = res, .fun = function(x){ t(as.matrix(x)) })
+  ## Setup cluster
+  if(ncores > 1){
 
-    # Prepare table
-    res <- data.frame( do.call(rbind.fill.matrix, res), stringsAsFactors = F)
+    ## plyr arguments for parallel execution
+    progr <- "none"
+    parall <- TRUE
 
-    # Sort columns
-    if(ncol(res) > 1){
-      tax.levels <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
-      tax.levels <- data.frame(Level = tax.levels, Rank = 1:length(tax.levels))
-    
-      mm <- match(x = colnames(res), table = tax.levels$Level)
-      res <- res[, as.character(tax.levels$Level[sort(mm)]) ]
-    }
-    return(res)
+    ## Disable load balancing
+    paropts <- list(preschedule=TRUE)
+
+    ## Start the cluster
+    cl <- parallel::makeCluster(ncores)
+
+    ## Register the parallel backend
+    doParallel::registerDoParallel(cl)
+
+    ## Load packages on cluster nodes
+    parallel::clusterEvalQ(cl, library("phyloseq"))
+
+    ## Send useful objects to the workers
+    vars <- c("parse_taxonomy_amptk")
+    parallel::clusterExport(cl=cl, varlist=vars, envir = environment())
+  }
+
+
+  ###############
+  ############### Parsing
+  ###############
+
+  if(withID == TRUE){
+    ## Split OTUId to SequenceId (e.g., JQ976006) or MethodId (UTAX,SINTAX) + Taxonomy
+    res <- strsplit(x, split = ";")
+    res <- do.call(rbind, res)
+
+    # Prepare list of taxonomic assignments
+    res <- plyr::alply(.data = res[, 2], .margins = 1, 
+      .fun = parse_taxonomy_amptk, .progress = progr, .parallel = parall)
+  } else {
+    # Prepare list of taxonomic assignments
+    res <- plyr::alply(.data = x, .margins = 1,
+      .fun = parse_taxonomy_amptk, .progress = progr, .parallel = parall)
+  }
+
+  # Convert each vector to matrix
+  res <- plyr::llply(.data = res, .fun = function(x){ t(as.matrix(x)) })
+
+  # Prepare table
+  res <- data.frame( do.call(rbind.fill.matrix, res), stringsAsFactors = F)
+
+  # Sort columns
+  if(ncol(res) > 1){
+    tax.levels <- c("Domain", "Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
+    tax.levels <- data.frame(Level = tax.levels, Rank = 1:length(tax.levels))
+  
+    mm <- match(x = colnames(res), table = tax.levels$Level)
+    res <- res[, as.character(tax.levels$Level[sort(mm)]) ]
+  }
+
+  return(res)
 }
