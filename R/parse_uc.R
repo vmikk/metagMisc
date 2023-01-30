@@ -58,5 +58,28 @@ parse_uc <- function(x, map_only = F, package = "base"){
     }
   }
   
+  ## Load data with `data.table` package
+  if(package == "data.table"){
+    ## Read file
+    ii <- fread(file = x, header = FALSE, sep = "\t")
+
+    ## Remove redundant S-records
+    ii <- ii[ V1 != "S" ]
+
+    ## Split Query name
+    ii[, Query := tstrsplit(V9, ";", keep = 1) ]
+
+    ## Split OTU name
+    ii[, OTU := tstrsplit(V10, ";", keep = 1) ]
+
+    ## OTU name = query name for centroids
+    ii[V1 == "C", OTU := Query ]
+
+    ## Subset to Query - OTU names only
+    if(map_only == TRUE){
+      ii <- ii[, .(Query, OTU)]
+    }
+  }
+
   return(ii)
 }
