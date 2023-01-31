@@ -12,16 +12,17 @@ phyloseq_transform_vst_blind(physeq, dropneg = F, dropmissing = T, ...)
 \item{dropneg}{Logical, replace negative transformed values with 0}
 
 \item{dropmissing}{Logical, remove missing data}
+
+\item{...}{Not yet implemented}
 }
 \value{
 Phyloseq object with transformed counts in OTU table.
 }
+\description{
+Variance stabilizing transformation (VST) of OTU abundance table.
+}
 \details{
 For downstream analysis it could be better to use sample covariate information (blind = FALSE in \code{\link{varianceStabilizingTransformation}}).
-}
-\examples{
-
-
 }
 \seealso{
 \code{\link{phyloseq_transform_rlog_blind}}, \code{\link{phyloseq_transform_css}}, \code{\link{varianceStabilizingTransformation}}, \code{\link{rlog}}

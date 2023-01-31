@@ -18,6 +18,9 @@ The first element of a vector is a name of the representative sequence of this O
 which occurs twice in this vector (i.e., there are two identical sequence IDs in a vector
 for OTUs that are represented by only one sequence).
 }
+\description{
+Convert UC file (clustering output from USEARCH and VSEARCH) to Sumaclust OTU observation map
+}
 \examples{
 ## OTU clustering with Sumaclust
 ## OTU observation map is written to 'sumaclust_map.txt'

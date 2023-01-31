@@ -4,7 +4,7 @@
 \alias{shepard_plot}
 \title{Plot Shepard diagram}
 \usage{
-shepard_plot(dis, ord, k = 2)
+shepard_plot(dis, ord, k = 2, show = TRUE)
 }
 \arguments{
 \item{dis}{Original dissimilarity matrix (class "dist")}
@@ -12,6 +12,8 @@ shepard_plot(dis, ord, k = 2)
 \item{ord}{Ordination scores (class "matrix" or "data.frame") or (class "dist")}
 
 \item{k}{Number of dimensions (default, 2) that will be taken into account (only if the ordination scores were provided in 'ord')}
+
+\item{show}{Logical; show the resulting plot on screen}
 }
 \value{
 Invisible returns ggplot-object.
@@ -34,6 +36,12 @@ dd.ord <- dist( scores(ord) )                        # Euclidean distance in red
 shepard_plot(dis = dd, ord = dd.ord)               # Bray-Curtis vs distance in reduced space (k-dimensional)
 shepard_plot(dis = dd, ord = scores(ord), k = 2)   # Bray-Curtis vs distance in reduced space (only first 2 dimensions)
 shepard_plot(dis = dd, ord = scores(ord), k = 3)   # Bray-Curtis vs distance in reduced space (first 3 dimensions)
+
+# Example with phyloseq wrappers
+data("GlobalPatterns")
+dd <- distance(GlobalPatterns, method = "unifrac", type = "samples")
+ord <- ordinate(GlobalPatterns, method = "NMDS", distance = dd)
+shepard_plot(dis = dd, ord = scores(ord))
 
 }
 \references{

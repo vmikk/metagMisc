@@ -14,6 +14,9 @@ physeq_transform_anderson_log(physeq, ...)
 \value{
 Phyloseq object with log-transformed counts in OTU table.
 }
+\description{
+Log-transformation of OTU abundance table.
+}
 \details{
 Logarithmic transformation as suggested by Anderson et al. (2006) will be applied to the OTU table in phyloseq-object. First, non-integer data will be divided by smallest positive value. Second, log(x) + 1 for x > 0.
 Default value of the logarithm base ("logbase" parameter) is 2.

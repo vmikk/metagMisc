@@ -18,12 +18,11 @@ phyloseq_transform_rlog_blind(physeq, dropneg = F, dropmissing = T, ...)
 \value{
 Phyloseq object with transformed counts in OTU table.
 }
+\description{
+Regularized-log (rlog) transformation of OTU abundance table.
+}
 \details{
 rlog transformation (this function) is preferable to the vst (\code{\link{phyloseq_transform_vst_blind}}) if the size factors vary widely.
-}
-\examples{
-
-
 }
 \seealso{
 \code{\link{phyloseq_transform_vst_blind}}, \code{\link{phyloseq_transform_css}}, \code{\link{rlog}}, \code{\link{varianceStabilizingTransformation}}

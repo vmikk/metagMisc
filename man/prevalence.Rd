@@ -14,6 +14,9 @@ prevalence(physeq, add_tax = TRUE)
 \value{
 Data frame
 }
+\description{
+Compute prevalence and abundance summary of each species/OTU.
+}
 \examples{
 data(esophagus)
 prevalence(esophagus)

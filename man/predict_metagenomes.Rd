@@ -4,8 +4,13 @@
 \alias{predict_metagenomes}
 \title{Produce the actual metagenome functional predictions.}
 \usage{
-predict_metagenomes(otu_tab, func_tab, NSTI_present = TRUE,
-  rel_abund = TRUE, add_sub_tabs = FALSE)
+predict_metagenomes(
+  otu_tab,
+  func_tab,
+  NSTI_present = TRUE,
+  rel_abund = TRUE,
+  add_sub_tabs = FALSE
+)
 }
 \arguments{
 \item{otu_tab}{Data frame with OTU abundances (rows = OTUs, columns = Samples, first column = OTU names)}
@@ -20,6 +25,9 @@ predict_metagenomes(otu_tab, func_tab, NSTI_present = TRUE,
 }
 \value{
 Data frame with samples as rows and features as columns.
+}
+\description{
+Produce the actual metagenome functional predictions.
 }
 \details{
 This function is analogous to the 'predict_metagenomes.py' from PICRUSt.

@@ -4,8 +4,7 @@
 \alias{taxonomy_to_qiime}
 \title{Prepare taxonomy in QIIME-style}
 \usage{
-taxonomy_to_qiime(x, dropNA = TRUE, add_OTUID = TRUE,
-  custom_tax_ranks = NULL)
+taxonomy_to_qiime(x, dropNA = TRUE, add_OTUID = TRUE, custom_tax_ranks = NULL)
 }
 \arguments{
 \item{x}{data.frame or phyloseq with \code{\link[phyloseq]{tax_table}} slot}
@@ -20,7 +19,10 @@ taxonomy_to_qiime(x, dropNA = TRUE, add_OTUID = TRUE,
 character vector (if 'add_OTUID = FALSE') or data.frame with taxonomy annotations.
 }
 \description{
-This function merges multiple columns with taxonomic ranks into a single string in QIIME-style.
+This function merges multiple columns with taxonomic ranks into a single string formatted in QIIME style.
+}
+\details{
+If 'add_OTUID = T' and x is data.frame, the function will take OTU names from rownames of a data frame.
 }
 \examples{
 # Load data
