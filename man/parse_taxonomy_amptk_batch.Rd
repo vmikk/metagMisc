@@ -4,13 +4,20 @@
 \alias{parse_taxonomy_amptk_batch}
 \title{Parse multiple taxonomy strings from AMPtk.}
 \usage{
-parse_taxonomy_amptk_batch(x, withID = TRUE)
+parse_taxonomy_amptk_batch(x, withID = TRUE, multithread = FALSE)
 }
 \arguments{
 \item{x}{Vector of character strings from AMPtk taxonomy}
+
+\item{withID}{Logical; set to TRUE (default) if charter strings contain sequence IDs}
+
+\item{multithread}{Logical; run the function in parallel}
 }
 \value{
 Data frame with OTUs or species as rows and their taxonomic ranks as columns.
+}
+\description{
+Parse multiple taxonomy strings from AMPtk.
 }
 \details{
 This function splits AMPtk (ex-UFITS) result of taxonomic annotation by taxonomic rank and combines it into one table.

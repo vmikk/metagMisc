@@ -14,6 +14,9 @@ parse_silva_tax(x, db)
 \value{
 Named charcter vector with taxonomic annotation (names = rank designations).
 }
+\description{
+Split single SILVA taxonomic annotation to taxonomic ranks.
+}
 \details{
 This function will split the taxonomic annotation based on the SILVA database and assign a corresponding taxonomic rank to the obtained parts.
 }

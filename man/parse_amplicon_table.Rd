@@ -4,8 +4,13 @@
 \alias{parse_amplicon_table}
 \title{Parse amplicon table}
 \usage{
-parse_amplicon_table(amp = otu.tab, tax = blast, tax_type = "BLAST",
-  add.tax.to.data = TRUE, tax.db)
+parse_amplicon_table(
+  amp = otu.tab,
+  tax = blast,
+  tax_type = "BLAST",
+  add.tax.to.data = TRUE,
+  tax.db
+)
 }
 \arguments{
 \item{amp}{File name with OTU table (generated with VSEARCH or USEARCH)}
@@ -21,6 +26,6 @@ parse_amplicon_table(amp = otu.tab, tax = blast, tax_type = "BLAST",
 \value{
 list
 }
-\examples{
-
+\description{
+Parse amplicon table
 }

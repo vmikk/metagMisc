@@ -4,8 +4,7 @@
 \alias{parse_funguild}
 \title{Parse FUNGuild database}
 \usage{
-parse_funguild(url = "http://www.stbates.org/funguild_db.php",
-  tax_name = TRUE)
+parse_funguild(url = "http://www.stbates.org/funguild_db.php", tax_name = TRUE)
 }
 \arguments{
 \item{url}{Funguild databse link}

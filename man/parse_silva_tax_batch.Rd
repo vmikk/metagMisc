@@ -14,6 +14,9 @@ parse_silva_tax_batch(x, db)
 \value{
 Data frame with OTUs or species as rows and their taxonomic ranks as columns.
 }
+\description{
+Split vector of SILVA taxonomic annotations and prepare taxonomy table.
+}
 \examples{
 # Download taxonomic rank designations for all taxonomic paths used in the SILVA taxonomies
 tax.db <- read.delim("https://www.arb-silva.de/fileadmin/silva_databases/release_128/Exports/taxonomy/tax_slv_ssu_128.txt", header = F, stringsAsFactors = F)

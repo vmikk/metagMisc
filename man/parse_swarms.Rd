@@ -4,10 +4,12 @@
 \alias{parse_swarms}
 \title{Parse SWARM files}
 \usage{
-parse_swarms(x)
+parse_swarms(x, otu_delimiter = " ")
 }
 \arguments{
 \item{x}{Input file name (usually with "swarm" extension)}
+
+\item{otu_delimiter}{Character string delimiting sequence IDs within a file line (default, whitespace)}
 }
 \value{
 data frame with two columns: OTU name and sequences names that belongs to this OTU.

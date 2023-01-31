@@ -4,13 +4,18 @@
 \alias{parse_taxonomy_amptk}
 \title{Parse taxonomy string from AMPtk (for single OTU)}
 \usage{
-parse_taxonomy_amptk(x)
+parse_taxonomy_amptk(x, custom_ranks = NULL)
 }
 \arguments{
 \item{x}{Character vector of length 1 with taxonomic annotation of single OTU/species.}
+
+\item{custom_ranks}{Named vector with customized prefixes for taxonomic ranks}
 }
 \value{
 Named character vector with taxonomic ranks of OTU or species.
+}
+\description{
+Parse taxonomy string from AMPtk (for single OTU)
 }
 \details{
 This function will split
@@ -19,6 +24,10 @@ This function will split
 parse_taxonomy_amptk("k:Fungi,p:Zygomycota,o:Mortierellales,f:Mortierellaceae,g:Mortierella,s:Mortierella parvispora")
 parse_taxonomy_amptk("k:Fungi,p:Ascomycota,g:Chalara")
 
+# With customized ranks
+parse_taxonomy_amptk(
+ x = "do:Eukaryota,su:Amorphea,cd:Obazoa,gr:Opisthokonta,sg:Holomycota(Nucletmycea),ki:Fungi,sk:Dikarya,ph:Ascomycota,sd:Saccharomycotina,cl:Saccharomycetes,sc:Saccharomycetidae,or:Saccharomycetales,fa:Saccharomycetaceae,ge:Saccharomyces,sp:Saccharomyces cerevisiae,st:Saccharomyces cerevisiae var boulardii",
+ custom_ranks = c(do = "Domain", su = "Supergroup", cd = "Clade", gr = "Group", sg = "Subgroup", ki = "Kingdom", sk = "Subkingdom", ph = "Phylum", sd = "Subdivision", cl = "Class", sc = "Subclass", or = "Order", fa = "Family", ge = "Genus", sp = "Species", st = "Strain"))
 }
 \references{
 AMPtk: Amplicon ToolKit for NGS data (formally UFITS): https://github.com/nextgenusfs/amptk

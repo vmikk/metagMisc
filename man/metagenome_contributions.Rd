@@ -4,8 +4,15 @@
 \alias{metagenome_contributions}
 \title{Partition metagenome functional contributions according to function, OTU, and sample.}
 \usage{
-metagenome_contributions(otu_tab, func_tab, tax_tab = NULL, features = NULL,
-  NSTI_present = TRUE, rel_abund = TRUE, remove_zero_contributions = TRUE)
+metagenome_contributions(
+  otu_tab,
+  func_tab,
+  tax_tab = NULL,
+  features = NULL,
+  NSTI_present = TRUE,
+  rel_abund = TRUE,
+  remove_zero_contributions = TRUE
+)
 }
 \arguments{
 \item{otu_tab}{Data frame with OTU abundances (rows = OTUs, columns = Samples, first column = OTU names)}
