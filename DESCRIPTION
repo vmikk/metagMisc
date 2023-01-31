@@ -3,14 +3,15 @@ Title: Miscellaneous functions for metagenomic analysis
 Version: 0.0.4
 Authors@R: person("Vladimir", "Mikryukov", email = "vmikryukov@gmail.com", role = c("aut", "cre"))
 Description: metagMisc package contains miscellaneous functions for metagenomic analysis, including data transformations, several parsers (for USERCH UC-format; BLAST, SINA and STAMPA outputs, etc.), taxonomy handlers (SILVA, QIIME, AMPTk), phyloseq-shortcuts (multiple rarefaction, phyloseq splitting and exporting), and DADA2-shortcuts (error rate estimation on the subset of data, export of denoised amplicons in fasta).
-Depends: R (>= 3.3.1)
+Depends: R (>= 4.1.0)
 Imports:
-    ggplot2 (>= 2.2.0),
-    phyloseq (>= 1.19.0),
+    data.table (>= 1.14.6),
     plyr (>= 1.8.0),
-    reshape2 (>= 1.4.2),
     vegan (>= 2.4-0)
 Suggests:
+    reshape2 (>= 1.4.2),
+    ggplot2 (>= 2.2.0),
+    phyloseq (>= 1.19.0),
     breakaway (>= 4.3),
     compositions (>= 1.40-1),
     dada2 (>= 1.3.3),
