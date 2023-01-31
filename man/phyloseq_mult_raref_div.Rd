@@ -4,9 +4,15 @@
 \alias{phyloseq_mult_raref_div}
 \title{Average diversity estimates across multiple rarefaction iterations.}
 \usage{
-phyloseq_mult_raref_div(physeq, SampSize = min(sample_sums(physeq)),
-  iter = 1000, divindex = c("Observed", "Shannon"), parallel = FALSE,
-  verbose = TRUE, ...)
+phyloseq_mult_raref_div(
+  physeq,
+  SampSize = min(sample_sums(physeq)),
+  iter = 1000,
+  divindex = c("Observed", "Shannon"),
+  parallel = FALSE,
+  verbose = TRUE,
+  ...
+)
 }
 \arguments{
 \item{physeq}{A phyloseq-class object}

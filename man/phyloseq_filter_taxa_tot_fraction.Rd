@@ -14,6 +14,9 @@ phyloseq_filter_taxa_tot_fraction(physeq, frac = 0.01)
 \value{
 Phyloseq object with a subset of taxa.
 }
+\description{
+Remove taxa with abundance less then a certain fraction of total abundance.
+}
 \details{
 If frac = 0.0001, this will retain all OTU's that have at least a 0.01\% total abundance in the OTU table.
 If you wanted to retain OTUs with at least 1\% total abundance, you must specify, 0.01.

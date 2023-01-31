@@ -4,12 +4,43 @@
 \alias{phyloseq_mult_raref_avg}
 \title{Perform rarefaction and average relative OTU abundance}
 \usage{
-phyloseq_mult_raref_avg(physeq, SampSize = NULL, iter = 1000,
-  parallel = FALSE, verbose = TRUE, ...)
+phyloseq_mult_raref_avg(
+  physeq,
+  SampSize = NULL,
+  iter = 1000,
+  parallel = FALSE,
+  verbose = TRUE,
+  ...
+)
 }
 \arguments{
-\item{...}{passed to phyloseq_mult_raref}
+\item{physeq}{A phyloseq-class object}
+
+\item{SampSize}{Rarefaction depth (number of reads to sample)}
+
+\item{iter}{Number of rarefication iterations}
+
+\item{parallel}{Logical or integer; if TRUE, attempts to run the function on multiple cores; integer defines the number of cores to use (if it is set to TRUE, all cores will be used)}
+
+\item{verbose}{Logical; if TRUE, informational messages will be shown on screen}
+
+\item{...}{Additional arguments will be passed to \code{\link[metagMisc]{phyloseq_mult_raref}}}
+}
+\value{
+phyloseq object with relative OTU abundance averaged across multiple rarefactions.
+}
+\description{
+Perform rarefaction and average relative OTU abundance
 }
 \examples{
+# Load data
+data(GlobalPatterns)
+
+# Subset data for faster processing
+GP <- prune_taxa(taxa_sums(GlobalPatterns) >= 100, GlobalPatterns)
+
+# Perform multiple rarefaction and average relative OTU abundances across rarefaction iterations
+res <- phyloseq_mult_raref_avg(GP)
+res
 
 }

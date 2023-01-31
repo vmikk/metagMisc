@@ -4,15 +4,23 @@
 \alias{phyloseq_mult_raref}
 \title{Multiple rarefaction of phyloseq-object}
 \usage{
-phyloseq_mult_raref(x, SampSize = NULL, MinSizeTreshold = NULL,
-  iter = 1000, replace = F, multithread = F, seeds = NULL, ...)
+phyloseq_mult_raref(
+  x,
+  SampSize = NULL,
+  MinSizeThreshold = NULL,
+  iter = 1000,
+  replace = F,
+  multithread = F,
+  seeds = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{A phyloseq-class object}
 
 \item{SampSize}{Rarefaction depth (number of reads to sample)}
 
-\item{MinSizeTreshold}{Remove samples with number of reads less then this treshold}
+\item{MinSizeThreshold}{Remove samples with number of reads less than this threshold}
 
 \item{iter}{Number of rarefication iterations}
 
@@ -39,12 +47,12 @@ data("esophagus")
 eso_raref <- phyloseq_mult_raref(esophagus, iter = 10)
 
 # Discard samples with number of reads < 210 and perform resampling with replacement
-eso_raref_t <- phyloseq_mult_raref(esophagus, replace = T, MinSizeTreshold = 210, SampSize = 210, iter = 10)
+eso_raref_t <- phyloseq_mult_raref(esophagus, replace = T, MinSizeThreshold = 210, SampSize = 210, iter = 10)
 sample_sums(esophagus)
 sample_sums(eso_raref_t[[1]])
 
 # Do not remove OTUs from the dataset that are no longer observed in any sample (have a count of zero in every sample)
-phyloseq_mult_raref(esophagus, trimOTUs = F, replace = T, MinSizeTreshold = 210, SampSize = 210, iter = 10)
+phyloseq_mult_raref(esophagus, trimOTUs = F, replace = T, MinSizeThreshold = 210, SampSize = 210, iter = 10)
 
 }
 \seealso{

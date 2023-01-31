@@ -16,6 +16,6 @@ phyloseq_filter_top_taxa(physeq, perc = 10, n = NULL)
 \value{
 Phyloseq object with a filtered data.
 }
-\examples{
-
+\description{
+Extract the most abundant taxa.
 }

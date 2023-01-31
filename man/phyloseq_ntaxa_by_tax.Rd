@@ -4,8 +4,12 @@
 \alias{phyloseq_ntaxa_by_tax}
 \title{Count number of OTUs by taxonomic rank for each sample.}
 \usage{
-phyloseq_ntaxa_by_tax(physeq, TaxRank = "Phylum", relative = F,
-  add_meta_data = T)
+phyloseq_ntaxa_by_tax(
+  physeq,
+  TaxRank = "Phylum",
+  relative = F,
+  add_meta_data = T
+)
 }
 \arguments{
 \item{physeq}{A phyloseq-class object}
@@ -18,6 +22,9 @@ phyloseq_ntaxa_by_tax(physeq, TaxRank = "Phylum", relative = F,
 }
 \value{
 Data frame with OTU counts (columns: Sample, TaxRank, N.OTU + optional sample metadata).
+}
+\description{
+Count number of OTUs by taxonomic rank for each sample.
 }
 \details{
 This function will split phyloseq object by the specified taxonomic rank

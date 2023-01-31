@@ -4,9 +4,16 @@
 \alias{phyloseq_group_dissimilarity}
 \title{Pairwise dissimilarity boxplots.}
 \usage{
-phyloseq_group_dissimilarity(physeq, group = NULL, between_groups = TRUE,
-  method = "bray", method_title = FALSE, notch = TRUE, justDF = FALSE,
-  ...)
+phyloseq_group_dissimilarity(
+  physeq,
+  group = NULL,
+  between_groups = TRUE,
+  method = "bray",
+  method_title = FALSE,
+  notch = TRUE,
+  justDF = FALSE,
+  ...
+)
 }
 \arguments{
 \item{physeq}{A phyloseq-class object}
@@ -27,6 +34,9 @@ phyloseq_group_dissimilarity(physeq, group = NULL, between_groups = TRUE,
 }
 \value{
 ggplot2-object or data.frame (if justDF = TRUE).
+}
+\description{
+Pairwise dissimilarity boxplots.
 }
 \details{
 If the notches of two boxplots do not overlap this indicates that the two medians differ.

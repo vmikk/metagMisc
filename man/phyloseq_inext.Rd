@@ -4,10 +4,21 @@
 \alias{phyloseq_inext}
 \title{Estimate interpolated and extrapolated Hill numbers and sample coverage and construct rarefaction curve.}
 \usage{
-phyloseq_inext(physeq, Q = 0, curve_type = "diversity",
-  correct_singletons = FALSE, endpoint = NULL, knots = 40,
-  multithread = FALSE, show_CI = TRUE, show_sample_labels = TRUE,
-  show_plot = TRUE, justDF = FALSE, add_raw_data = TRUE, ...)
+phyloseq_inext(
+  physeq,
+  Q = 0,
+  curve_type = "diversity",
+  correct_singletons = FALSE,
+  endpoint = NULL,
+  knots = 40,
+  multithread = FALSE,
+  show_CI = TRUE,
+  show_sample_labels = TRUE,
+  show_plot = TRUE,
+  justDF = FALSE,
+  add_raw_data = TRUE,
+  ...
+)
 }
 \arguments{
 \item{physeq}{A phyloseq-class object}
@@ -38,6 +49,9 @@ phyloseq_inext(physeq, Q = 0, curve_type = "diversity",
 }
 \value{
 Plot of class 'ggplot' or 'data.frame' (if 'justDF = TRUE')
+}
+\description{
+Estimate interpolated and extrapolated Hill numbers and sample coverage and construct rarefaction curve.
 }
 \examples{
 data("esophagus")
