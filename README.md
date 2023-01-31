@@ -8,9 +8,11 @@
 
 <!-- badges: end -->
 
-Miscellaneous functions for metagenomic analysis.
+Miscellaneous functions for metagenomic analysis.  
 
-The repository is currently in **ALPHA** state. Nothing is guaranteed and the material is subject to change without a notice (e.g., function names or arguments).
+metagMisc package contains miscellaneous functions for metabarcoding and metagenomic analysis, including data transformations, several parsers (for USERCH UC-format; BLAST, SINA and STAMPA outputs, etc.), taxonomy handlers (SILVA, QIIME, AMPTk), phyloseq-shortcuts (multiple rarefaction, phyloseq splitting and exporting), and DADA2-shortcuts (error rate estimation on the subset of data, export of denoised amplicons in fasta).  
+
+The repository is currently in **ALPHA** state. Nothing is guaranteed and the material is subject to change without a notice (e.g., function names or arguments).  
 
 # Getting started
 
