@@ -4,9 +4,18 @@
 \alias{phyloseq_effort_div_rangeplot}
 \title{Vizualize OTU diversity and richness for a particular sequencing depth or sample coverage ranges}
 \usage{
-phyloseq_effort_div_rangeplot(physeq, range, range_type = "coverage",
-  variable = NULL, yvar = "seqdepth", interval = "quartiles",
-  show_plot = TRUE, justDF = FALSE, progress = "text", ...)
+phyloseq_effort_div_rangeplot(
+  physeq,
+  range,
+  range_type = "coverage",
+  variable = NULL,
+  yvar = "seqdepth",
+  interval = "quartiles",
+  show_plot = TRUE,
+  justDF = FALSE,
+  progress = "text",
+  ...
+)
 }
 \arguments{
 \item{physeq}{A phyloseq-class object}

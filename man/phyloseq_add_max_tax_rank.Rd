@@ -16,6 +16,9 @@ phyloseq_add_max_tax_rank(physeq, abbreviate = F, ...)
 \value{
 Phyloseq object with modified taxonomy table.
 }
+\description{
+Add the lowest level of taxonomic classification to the taxonomy table of phyloseq-class object.
+}
 \examples{
 # Load data 
 data("GlobalPatterns")

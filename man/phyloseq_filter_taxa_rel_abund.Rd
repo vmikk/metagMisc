@@ -14,6 +14,9 @@ phyloseq_filter_taxa_rel_abund(physeq, frac = 1e-04)
 \value{
 Phyloseq object with a subset of taxa.
 }
+\description{
+Remove taxa with small mean relative abundance.
+}
 \details{
 This function searches for taxa with small mean relative abundance and removes them. Result will be returned with original counts in the abundance table.
 }

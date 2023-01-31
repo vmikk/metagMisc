@@ -4,9 +4,18 @@
 \alias{phyloseq_average}
 \title{Average relative OTU abundances.}
 \usage{
-phyloseq_average(physeq, avg_type = "aldex", acomp_zero_impute = NULL,
-  aldex_samples = 128, aldex_denom = "all", group = NULL,
-  drop_group_zero = FALSE, verbose = TRUE, ...)
+phyloseq_average(
+  physeq,
+  avg_type = "aldex",
+  acomp_zero_impute = NULL,
+  aldex_samples = 128,
+  aldex_denom = "all",
+  group = NULL,
+  drop_group_zero = FALSE,
+  verbose = TRUE,
+  progress = NULL,
+  ...
+)
 }
 \arguments{
 \item{physeq}{A phyloseq-class object}
@@ -23,9 +32,11 @@ phyloseq_average(physeq, avg_type = "aldex", acomp_zero_impute = NULL,
 
 \item{drop_group_zero}{Logical; indicating weather OTUs with zero abundance withing a group of samples should be removed}
 
-\item{...}{Additional arguments may be passed to \code{\link[zCompositions]{cmultRepl}}}
+\item{verbose}{Logical; if TRUE (default), informational messages will be shown on screen}
 
 \item{progress}{Name of the progress bar to use ("none" or "text"; see \code{\link[plyr]{create_progress_bar}})}
+
+\item{...}{Additional arguments may be passed to \code{\link[zCompositions]{cmultRepl}}}
 }
 \value{
 phyloseq object with OTU relative abundance averaged over samples (all together or within a group).
@@ -57,9 +68,6 @@ In case of structural zeroes in OTU abundance table (e.g., absence of OTU
 within a group assumes that it is not observed due to some biological pattern
 and is not caused by a detection limit) "drop_group_zero" argument may be set
 to "TRUE" to avoid zero replacement.
-}
-\examples{
-
 }
 \references{
 Gloor GB, Macklaim JM, Pawlowsky-Glahn V and Egozcue JJ (2017) Microbiome Datasets Are Compositional: And This Is Not Optional. Front. Microbiol. 8:2224. doi: 10.3389/fmicb.2017.02224

@@ -4,9 +4,17 @@
 \alias{phyloseq_coverage_raref}
 \title{Coverage-based rarefaction}
 \usage{
-phyloseq_coverage_raref(physeq, coverage = NULL, iter = 1, replace = F,
-  correct_singletons = FALSE, seeds = NULL, multithread = F,
-  drop_lowcoverage = F, ...)
+phyloseq_coverage_raref(
+  physeq,
+  coverage = NULL,
+  iter = 1,
+  replace = F,
+  correct_singletons = FALSE,
+  seeds = NULL,
+  multithread = F,
+  drop_lowcoverage = F,
+  ...
+)
 }
 \arguments{
 \item{physeq}{A phyloseq-class object}

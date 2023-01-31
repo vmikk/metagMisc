@@ -4,13 +4,19 @@
 \alias{phyloseq_filter_sample_wise_abund_trim}
 \title{Filter rare OTUs based on minimum abundance threshold.}
 \usage{
-phyloseq_filter_sample_wise_abund_trim(physeq, minabund = 10,
-  rm_zero_OTUs = TRUE)
+phyloseq_filter_sample_wise_abund_trim(
+  physeq,
+  minabund = 10,
+  relabund = FALSE,
+  rm_zero_OTUs = TRUE
+)
 }
 \arguments{
 \item{physeq}{A phyloseq-class object}
 
 \item{minabund}{Abundance threshold (default, 10)}
+
+\item{relabund}{Logical; perform trimming based on relative abundances (default, FALSE)}
 
 \item{rm_zero_OTUs}{Logical, remove OTUs with zero total abundance}
 }
@@ -21,16 +27,23 @@ Phyloseq object with a filtered data.
 This function performs sample-wise OTU abundance trimming.
 }
 \details{
-OTUs can be considered as rare if they comprise fewer than X (e.g., 10) sequences within a sample. This function is intented to censore OTU abundance (unsing an arbitrary threshold) on a sample-wise basis.
+OTUs can be considered as rare if they comprise fewer than X (e.g., 10) sequences within a sample. 
+This function is intented to censore OTU abundance (unsing an arbitrary threshold) on a sample-wise basis. 
+
+Trimming can be performed based on relative abundances of OTUs within a sample (`relabund = TRUE`), but the orginal OTU count will be returned. 
+For this purpose `minabund` parameter should be provided in a range of (0,1] (e.g., use `minabund = 0.1, relabund = TRUE` to remove OTUs with relative abundance < 10% in each sample).
 }
 \examples{
 # Load data
 data(GlobalPatterns)
 
-# Trim GlobalPatterns data (19216 taxa)
-GP <- phyloseq_filter_sample_wise_abund_trim(GlobalPatterns) # 10605 taxa
+# Trim GlobalPatterns data (19216 taxa) by removing OTUs with less that 10 reads
+GP1 <- phyloseq_filter_sample_wise_abund_trim(GlobalPatterns, minabund = 10) # 10605 taxa
+
+# Trim GlobalPatterns data by removing OTUs with relative abundance less than 1\%
+GP2 <- phyloseq_filter_sample_wise_abund_trim(GlobalPatterns, minabund = 0.01, relabund = TRUE) # 258 taxa
 
 # Compare raw and trimmed data
-phyloseq_compare(GlobalPatterns, GP, cols = c("GlobalPatterns", "Trimmed GlobalPatterns"))
+phyloseq_summary(GlobalPatterns, GP1, GP2, cols = c("GlobalPatterns", "Trimmed 10 reads", "Trimmed 1 percent"))
 
 }

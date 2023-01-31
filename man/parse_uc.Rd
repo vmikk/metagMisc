@@ -4,15 +4,22 @@
 \alias{parse_uc}
 \title{Parse UC files (clustering output from USEARCH, VSEARCH, SWARM)}
 \usage{
-parse_uc(x, map_only = F)
+parse_uc(x, map_only = F, package = "data.table", rm_dups = TRUE)
 }
 \arguments{
 \item{x}{File name (typically with .uc extension)}
 
 \item{map_only}{Logical, return only mapping (correspondence of query and cluster)}
+
+\item{package}{Which package to use ("base" or "data.table")}
+
+\item{rm_dups}{Logical, remove duplicated entries (default, TRUE)}
 }
 \value{
 Data frame.
+}
+\description{
+Parse UC files (clustering output from USEARCH, VSEARCH, SWARM)
 }
 \details{
 USEARCH cluster format (UC) is a tab-separated text file.

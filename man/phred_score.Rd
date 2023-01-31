@@ -12,6 +12,9 @@ phred_score(p)
 \value{
 Phred Q-Score
 }
+\description{
+Estimate Phred Quality Score score from probability of an error
+}
 \examples{
 phred_score(c(0.001, 0.01, 0.05, 0.1))
 

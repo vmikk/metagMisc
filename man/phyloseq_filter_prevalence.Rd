@@ -4,8 +4,13 @@
 \alias{phyloseq_filter_prevalence}
 \title{Filter low-prevalence OTUs.}
 \usage{
-phyloseq_filter_prevalence(physeq, prev.trh = 0.05, abund.trh = NULL,
-  threshold_condition = "OR", abund.type = "total")
+phyloseq_filter_prevalence(
+  physeq,
+  prev.trh = 0.05,
+  abund.trh = NULL,
+  threshold_condition = "OR",
+  abund.type = "total"
+)
 }
 \arguments{
 \item{physeq}{A phyloseq-class object}

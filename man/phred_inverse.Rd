@@ -12,6 +12,9 @@ phred_inverse(q)
 \value{
 Probability that the base is called wrong.
 }
+\description{
+Estimate probability of an error based on the Phred-score.
+}
 \examples{
 phred_inverse()
 phred_inverse(30)
