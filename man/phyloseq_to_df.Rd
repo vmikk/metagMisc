@@ -4,8 +4,13 @@
 \alias{phyloseq_to_df}
 \title{Convert phyloseq object to data frame (for exporting).}
 \usage{
-phyloseq_to_df(physeq, addtax = T, addtot = F, addmaxrank = F,
-  sorting = "abundance")
+phyloseq_to_df(
+  physeq,
+  addtax = T,
+  addtot = F,
+  addmaxrank = F,
+  sorting = "abundance"
+)
 }
 \arguments{
 \item{physeq}{A phyloseq-class object}
@@ -14,10 +19,15 @@ phyloseq_to_df(physeq, addtax = T, addtot = F, addmaxrank = F,
 
 \item{addtot}{Logical; add total OTU abundance to the resulting table (default, FALSE)}
 
+\item{addmaxrank}{Logical; add the OTU classification at the lowest annotated taxonomic rank to the resulting table (default, FALSE)}
+
 \item{sorting}{Reorder OTUs according to their total abundance ("abundance", default) or taxonomy (sorting = "taxonomy"); if reordering is not required use 'sorting = NULL'}
 }
 \value{
 Data frame with OTU taxonomy and abundance
+}
+\description{
+Convert phyloseq object to data frame (for exporting).
 }
 \examples{
 data(GlobalPatterns)

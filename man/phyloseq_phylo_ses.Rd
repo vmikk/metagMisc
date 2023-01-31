@@ -4,10 +4,17 @@
 \alias{phyloseq_phylo_ses}
 \title{Estimate standardized effect sizes (SES) of phylogenetic diversity metrics (PD, MPD, MNTD, VPD) using randomization-based approach.}
 \usage{
-phyloseq_phylo_ses(physeq, measures = c("PD", "MPD", "MNTD", "VPD"),
-  null_model = "taxa.labels", package = "picante",
-  abundance_weighted = FALSE, nsim = 1000, swapiter = 1000,
-  verbose = TRUE, ...)
+phyloseq_phylo_ses(
+  physeq,
+  measures = c("PD", "MPD", "MNTD", "VPD"),
+  null_model = "taxa.labels",
+  package = "picante",
+  abundance_weighted = FALSE,
+  nsim = 1000,
+  swapiter = 1000,
+  verbose = TRUE,
+  ...
+)
 }
 \arguments{
 \item{physeq}{A phyloseq-class object (phylogenetic tree is required)}

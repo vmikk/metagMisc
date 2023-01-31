@@ -18,6 +18,9 @@ phyloseq_randomize(physeq, null_model = "phylogeny.pool", verbose = T, ...)
 \value{
 A phyloseq-class object with randomized abundance table and/or phylogeny.
 }
+\description{
+Randomize abundance table and phylogeny in phyloseq objects (for null model testing and simulation).
+}
 \details{
 Currently only null models from picante package are implemented.
 }

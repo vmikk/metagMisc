@@ -4,12 +4,19 @@
 \alias{phyloseq_standardize_otu_abundance}
 \title{Standardize OTU abundance table}
 \usage{
-phyloseq_standardize_otu_abundance(physeq, method = "total", ...)
+phyloseq_standardize_otu_abundance(
+  physeq,
+  method = "total",
+  rhea_depth = NULL,
+  rhea_round = TRUE,
+  rhea_threshold = NULL,
+  ...
+)
 }
 \arguments{
 \item{physeq}{A phyloseq-class object}
 
-\item{method}{Standardization method (see \code{\link[vegan]{decostand}} for available options)}
+\item{method}{Standardization method}
 
 \item{...}{Additional parameters may be passed to vegan \code{\link[vegan]{decostand}} function}
 }
@@ -18,6 +25,26 @@ phyloseq object with standardized OTU table.
 }
 \description{
 Standardize phyloseq OTU table with with methods from \code{\link[vegan]{decostand}} from vegan package.
+}
+\details{
+Supported methods:
+\itemize{
+\item \strong{"total"} - convert data to relative abundances (divide by sample total);
+\item \strong{"pa"} - convert OTU abundances to presence/absence scale (0/1);
+\item \strong{"log"} - logarithmic transformation as suggested by Anderson et al. (2006): log (x) + 1 for x > 0, zeros are left as zeros, logarithm base = 2. Please note this is not log(x+1);
+\item \strong{"hellinger"} - square root of method = "total" (Legendre & Gallagher 2001);
+\item \strong{"max"} - divide by sample maximum;
+\item \strong{"frequency"} - divide by sample total and multiply by the number of non-zero items, so that the average of non-zero entries is one;
+\item \strong{"normalize"} - make sample sum of squares equal to one;
+\item \strong{"range"} - standardize values into range 0 ... 1. If all values are constant, they will be transformed to 0;
+\item \strong{"rank"} - replace abundance values by their increasing ranks leaving zeros unchanged. Average ranks are used for tied values;
+\item \strong{"rrank"} - replace abundance values by relative ranks with maximum 1. Average ranks are used for tied values;
+\item \strong{"standardize"} - scale OTU abundances within sample to zero mean and unit variance;
+\item \strong{"wisconsin"} - Wisconsin double standardization where species are first standardized by maxima and then sites by site totals;
+\item \strong{"chi.square"} - divide by sample sums and square root of OTU sums, and adjust for square root of matrix total (Legendre & Gallagher 2001). When used with the Euclidean distance, the distances should be similar to the Chi-square distance used in correspondence analysis.
+}
+
+For the implementation of "total", "max", "frequency", "normalize", "range", "rank", "standardize", "pa", "chi.square", "hellinger", "log" methods see \code{\link[vegan]{decostand}}.
 }
 \examples{
 # Load data

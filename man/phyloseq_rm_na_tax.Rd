@@ -12,6 +12,9 @@ phyloseq_rm_na_tax(physeq)
 \value{
 Phyloseq object.
 }
+\description{
+Remove unused taxonomy levels from phyloseq-object.
+}
 \details{
 This function is particularly useful after \code{\link{tax_glom}}.
 

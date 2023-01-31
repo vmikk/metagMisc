@@ -4,8 +4,7 @@
 \alias{phyloseq_summary}
 \title{Summary for phyloseq objects.}
 \usage{
-phyloseq_summary(physeq, ..., cols = NULL, more_stats = FALSE,
-  long = FALSE)
+phyloseq_summary(physeq, ..., cols = NULL, more_stats = FALSE, long = FALSE)
 }
 \arguments{
 \item{physeq}{A phyloseq-class object}

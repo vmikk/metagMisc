@@ -18,6 +18,9 @@ phyloseq_sep_pairwise(phys, group, comparis = "all", drop_zeroes = TRUE)
 \value{
 List with phyloseq objects (each with only two groups based on selected variable).
 }
+\description{
+Split phyloseq-class object for pairwise comparisons by sample-level variable.
+}
 \examples{
 data(enterotype)
 

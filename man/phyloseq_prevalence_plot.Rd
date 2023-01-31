@@ -4,8 +4,14 @@
 \alias{phyloseq_prevalence_plot}
 \title{Prevalence plot (total OTU abundance vs OTU prevalence).}
 \usage{
-phyloseq_prevalence_plot(physeq, prev.trh = NULL, taxcolor = NULL,
-  facet = FALSE, point_alpha = 0.7, showplot = T)
+phyloseq_prevalence_plot(
+  physeq,
+  prev.trh = NULL,
+  taxcolor = NULL,
+  facet = FALSE,
+  point_alpha = 0.7,
+  showplot = T
+)
 }
 \arguments{
 \item{physeq}{A phyloseq-class object}

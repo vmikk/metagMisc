@@ -4,8 +4,11 @@
 \alias{phyloseq_phylo_div}
 \title{Estimate phylogenetic diversity (PD), mean pairwise distance (MPD), and mean nearest taxon distance (MNTD).}
 \usage{
-phyloseq_phylo_div(physeq, measures = c("PD", "MPD", "MNTD", "SES.PD",
-  "SES.MPD", "SES.MNTD"), ...)
+phyloseq_phylo_div(
+  physeq,
+  measures = c("PD", "MPD", "MNTD", "SES.PD", "SES.MPD", "SES.MNTD"),
+  ...
+)
 }
 \arguments{
 \item{physeq}{A phyloseq-class object (phylogenetic tree is required)}

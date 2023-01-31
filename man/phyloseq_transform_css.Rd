@@ -18,10 +18,21 @@ phyloseq_transform_css(physeq, norm = TRUE, log = TRUE, ...)
 \value{
 Phyloseq object with transformed counts in OTU table.
 }
+\description{
+Cumulative sum scaling (CSS) normalization of OTU abundance table.
+}
 \details{
 Median scaling factor across samples will be used as default.
 }
 \examples{
+data("GlobalPatterns")
+gp_tr <- phyloseq_transform_css(GlobalPatterns)
+head(otu_table(gp_tr))
+
+# Ordination on CSS-transformed data
+plot_ordination(physeq = gp_tr, ordination = ordinate(gp_tr, method = "PCoA", distance = "bray"), color = "SampleType")
+# Ordination on raw data
+plot_ordination(physeq = GlobalPatterns, ordination = ordinate(GlobalPatterns, method = "PCoA", distance = "bray"), color = "SampleType")
 
 }
 \references{
