@@ -19,6 +19,7 @@ Suggests:
     entropart (>= 1.4-8),
     geiger (>= 2.0.6),
     iNEXT (>= 2.0.14),
+    Matrix (>= 1.5-0),
     metagenomeSeq (>= 1.16.0),
     openssl (>= 0.9.6),
     picante (>= 1.6-2),
