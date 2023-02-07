@@ -8,6 +8,27 @@
 #' @param physeq A phyloseq-class object
 #' @param use_Matrix Logical, use sparse matrix class to perform the analysis (default, TRUE)
 #'
+#' @details
+#' This function uses the sparse matrix class implemented in the package
+#' \code{\link[Matrix]{Matrix}} to improve computational speed and
+#' decrease memory footprint.
+#'
+#' @return
+#' The function's output is a list containing three matrices
+#' (rows and columns correspond to samples):
+#'
+#' \itemize{
+##'  \item{\strong{"shared"}}{ - The number of shared OTUs between the samples}
+##'
+##'  \item{\strong{"nonshared_total"}}{ - The number of non-shared OTUs between the samples.
+##'   This matrix contains the total number of non-shared OTUs between the two samples.
+##'   The matrix is symmetric, meaning that the values in the matrix are equal on both sides of the diagonal.}
+##'
+##'  \item{\strong{"nonshared_asymmetric"}}{ - The number of non-shared OTUs between the samples.
+##'    The matrix is asymmetric, with the upper and lower triangular parts of
+##'    the matrix representing the number of unique OTUs present only in one of the two samples.}
+##' }
+#'
 #' @export
 #' @examples
 #' data(esophagus)
