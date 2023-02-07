@@ -9,6 +9,17 @@
 #' @param use_Matrix Logical, use sparse matrix class to perform the analysis (default, TRUE)
 #'
 #' @export
+#' @examples
+#' data(esophagus)
+#'
+#' # Count number of shared and non-shared OTUs
+#' ps <- phyloseq_num_shared_otus(esophagus)
+#' ps
+#'
+#' # The same, but using base-R matrix class (not recommended for large data)
+#' ps <- phyloseq_num_shared_otus(esophagus, use_Matrix = FALSE)
+#' ps
+#'
 phyloseq_num_shared_otus <- function(physeq, use_Matrix = TRUE){
 
   require(phyloseq)
