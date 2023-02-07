@@ -30,6 +30,8 @@
 ##' }
 #'
 #' @export
+#' @importFrom Matrix Matrix t diag
+#'
 #' @seealso
 #' \code{\link[metagMisc]{phyloseq_extract_shared_otus}},
 #' \code{\link[metagMisc]{phyloseq_extract_non_shared_otus}}
