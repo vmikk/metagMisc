@@ -30,6 +30,10 @@
 ##' }
 #'
 #' @export
+#' @seealso
+#' \code{\link[metagMisc]{phyloseq_extract_shared_otus}},
+#' \code{\link[metagMisc]{phyloseq_extract_non_shared_otus}}
+#'
 #' @examples
 #' data(esophagus)
 #'
@@ -40,6 +44,10 @@
 #' # The same, but using base-R matrix class (not recommended for large data)
 #' ps <- phyloseq_num_shared_otus(esophagus, use_Matrix = FALSE)
 #' ps
+#'
+#' # To obtain a list of shared or non-shared OTUs between a pair of samples, use
+#' phyloseq_extract_shared_otus(x = esophagus, samp_names = c("B", "C"))
+#' phyloseq_extract_non_shared_otus(x = esophagus, samp_names = c("B", "C"))
 #'
 phyloseq_num_shared_otus <- function(physeq, use_Matrix = TRUE){
 
