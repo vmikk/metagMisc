@@ -96,7 +96,11 @@ phyloseq_extract_non_shared_otus <- function(x, samp_names = sample_names(x)){
   xx <- prune_samples(samples = samp_names, x = x)
 
   # subset to OTUs that are present only in 1 sample
-  xx <- filter_taxa(xx, function(z){ sum(z >= 1) == 1 }, TRUE)
+  xx <- try( filter_taxa(xx, function(z){ sum(z >= 1) == 1 }, TRUE) )
+
+  if("try-error" %in% class(xx)){
+    cat("WARNING: no shared OTUs found!\n")
+  }
 
   return(xx)
 }
