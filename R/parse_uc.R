@@ -78,12 +78,12 @@ parse_uc <- function(x, map_only = F, package = "data.table", rm_dups = TRUE){
 
 
   ## Load data with `data.table` package
-  if(package == "data.table"){
+  if(package %in% "data.table"){
     ## Read file
     ii <- fread(file = x, header = FALSE, sep = "\t")
 
     ## Remove redundant S-records
-    ii <- ii[ V1 != "S" ]
+    ii <- ii[ ! V1 %in% "S" ]
 
     ## Split Query name
     ii[, Query := tstrsplit(V9, ";", keep = 1) ]
@@ -92,7 +92,7 @@ parse_uc <- function(x, map_only = F, package = "data.table", rm_dups = TRUE){
     ii[, OTU := tstrsplit(V10, ";", keep = 1) ]
 
     ## OTU name = query name for centroids
-    ii[V1 == "C", OTU := Query ]
+    ii[ V1 %in% "C", OTU := Query ]
 
     ## Check for duplicates
     if(nrow(ii[, .(Query, OTU)]) != nrow(unique(ii[, .(Query, OTU)]))){
