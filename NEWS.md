@@ -34,6 +34,12 @@
    * `zero_pad` - pads a number with leading zeros
    * `package_availability` - checks the availability of dependencies
    * `vegdist_zero` - Bray-Curtis index with double-zero support
+
+- Bug fixes
+   * `phyloseq_extract_shared_otus` and `phyloseq_extract_non_shared_otus` - issue warning in the case if no OTUs were found
+   * `get_max_taxonomic_rank` - data types bug
+   * `phyloseq_average` - progress bar fixed
+   * `parse_uc` - fixed a column name problem
 # metagMisc v.0.0.4 (git b0802ea; Feb 13, 2018)
 
 - New functions
