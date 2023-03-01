@@ -31,24 +31,32 @@ phyloseq_extract_shared_otus <- function(x, samp_names = sample_names(x)){
   }
 
   ## Extract samples
-  xx <- prune_samples(samples = samp_names, x = x)
+  if(length(unique(samp_names)) != length(unique(sample_names(x)))){
+    x <- prune_samples(samples = samp_names, x = x)
+  }
 
   ## Count number of OTUs (non-zero)
-  n_tot_otu <- ntaxa( prune_taxa(taxa_sums(xx) > 0, xx) )
+  n_tot_otu <- ntaxa( prune_taxa(taxa_sums(x) > 0, x) )
 
   ## Subset to OTUs that are present in both samples
-  xx <- filter_taxa(xx, function(z){ sum(z >= 1) == length(samp_names) }, TRUE)
+  x <- try( filter_taxa(x, function(z){ sum(z >= 1) == length(samp_names) }, TRUE) )
 
   ## Count number of shared OTUs
-  n_shared_otu <- ntaxa(xx)
+  if(! "try-error" %in% class(x)){
+    n_shared_otu <- ntaxa(x)
+  } else {
+    cat("WARNING: no shared OTUs found!\n")
+    n_shared_otu <- 0
+  }
+  
   shared_ratio <- n_shared_otu * 100 / n_tot_otu
 
   ## Add attributes to the results
-  attr(xx, which = "TotalNumberOfOTUs") <- n_tot_otu
-  attr(xx, which = "NumberOfSharedOTUs") <- n_shared_otu
-  attr(xx, which = "SharedOTURatio") <- shared_ratio
+  attr(x, which = "TotalNumberOfOTUs")  <- n_tot_otu
+  attr(x, which = "NumberOfSharedOTUs") <- n_shared_otu
+  attr(x, which = "SharedOTURatio") <- shared_ratio
 
-  return(xx)
+  return(x)
 }
 
 
