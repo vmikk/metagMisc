@@ -16,7 +16,7 @@ parse_uc(x, map_only = F, package = "data.table", rm_dups = TRUE)
 \item{rm_dups}{Logical, remove duplicated entries (default, TRUE)}
 }
 \value{
-Data frame.
+Data.frame or data.table.
 }
 \description{
 Parse UC files (clustering output from USEARCH, VSEARCH, SWARM)
