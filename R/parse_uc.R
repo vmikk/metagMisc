@@ -38,7 +38,7 @@
 parse_uc <- function(x, map_only = F, package = "data.table", rm_dups = TRUE){
 
   ## Load data with built-in R commands  
-  if(package == "base"){
+  if(package %in% "base"){
 
     cat("Option to use the `base` package will be duplicated in future releas of metagMisc!\n")
 
