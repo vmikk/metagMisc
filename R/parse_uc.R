@@ -26,8 +26,9 @@
 #' C       Cluster record (clustering only). The 3rd field is set to the cluster size (number of sequences in the cluster) and the 9th field is set to the label of the centroid sequence.
 #' N       No hit (for database search without clustering only). Indicates that no accepts were found. In the case of clustering, a query with no hits becomes the centroid of a new cluster and generates an S record instead of an N record.
 #'
-#' @return Data frame.
+#' @return Data.frame or data.table.
 #' @export
+#' @import data.table
 #'
 #' @references
 #' http://www.drive5.com/usearch/manual/opt_uc.html
