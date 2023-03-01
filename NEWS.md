@@ -1,4 +1,39 @@
 
+# metagMisc v.0.5.0 (git xxxx; Mar xx, 2023)
+
+- New functions
+   * make rarefaction based on [RTK](https://github.com/hildebra/Rarefaction)
+   * `phyloseq_num_shared_otus.R` - estimation of the number of shared and non-shared OTUs between all pairwise combinations of samples
+   * `phyloseq_bootstrap` - bootstraps samples in phyloseq object
+   * `phyloseq_combine_samples` - sums OTU abundances of replicates or sample groups into a single sample
+   * `phyloseq_coverage` - estimates the observed abundance-based sample coverage
+   * `coverage_to_samplesize` - estimates the required sample size for a particular coverage
+   * `phyloseq_coverage_raref` - coverage-based rarefaction
+   * `phyloseq_effort_div` - computes OTU diversity for a particular sample size or coverage
+   * `phyloseq_effort_div_rangeplot` - vizualization of OTU diversity and richness for a particular sequencing depth or sample coverage ranges
+   * `phyloseq_otu_appearance` - determines which OTUs appeared or disappeared in comparison with reference sample group
+   * `phyloseq_richness_filter` - removes samples from phyloseq object that have less than `n` taxa
+   * `phyloseq_inext` - estimates interpolated and extrapolated Hill numbers and sample coverage and constructs rarefaction curve
+   * `phyloseq_merge_samples` - merges samples by name
+   * `phyloseq_mult_raref_dist` - performs multiple rarefactions and averages sample dissimilarity across rarefactions
+   * `phyloseq_rename_with_tax` - renames phyloseq OTUs or species with taxonomy ranks
+   * `phyloseq_sep_pairwise` - splits phyloseq-class object for pairwise comparisons by sample-level variable
+   * `phyloseq_taxonomic_resolution` - summarizes taxonomic resolution of the data
+   * `phyloseq_taxonomy_imputation` - replaces missing taxonomy with higher ranks
+   * `phyloseq_replace_zero` - replaces zeros in OTU abundance with psudocount or min observed abundnce
+   * `phyloseq_transform_aldex_clr` - performs ALDEx2-based centred log-ratio transformation of OTU table
+   * `prepare_breakaway` - prepares frequency counts for `breakaway` package
+   * `raref_rtk` - `RTK`-based rarefaction
+   * `SES` - standardized effect size estimation
+   * `centroid_coords` - coordinates of centroids and medoids
+   * `chunk` - split vector into chunks of equal size
+   * `chunk_table` - split data.table into chunks
+   * `count_primers` - counts number of reads in which the primer is found
+   * `jaccard_bray` - converts between Bray-Curtis and Jaccard dissimilarity indicies
+   * `leading_zero` - adds or removes leading zeros
+   * `zero_pad` - pads a number with leading zeros
+   * `package_availability` - checks the availability of dependencies
+   * `vegdist_zero` - Bray-Curtis index with double-zero support
 # metagMisc v.0.0.4 (git b0802ea; Feb 13, 2018)
 
 - New functions
