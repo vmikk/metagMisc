@@ -12,6 +12,12 @@ read_m8 <- function(x, blast_colz = NULL, package = "data.table"){
   if(package == "data.table"){
     res <- fread(file = x, header = FALSE, sep = "\t")
   }
+
+  ## Load data with `readr` package
+  if(package == "readr"){
+    res <- readr::read_tsv(file = x, col_names = FALSE)
+  }
+
   ## Add header
   ## Standard BLAST m8 format (-outfmt 6)
   if(is.null(blast_colz)){
