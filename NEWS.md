@@ -24,6 +24,8 @@
    * `phyloseq_transform_aldex_clr` - performs ALDEx2-based centred log-ratio transformation of OTU table
    * `prepare_breakaway` - prepares frequency counts for `breakaway` package
    * `raref_rtk` - `RTK`-based rarefaction
+   * `read_m8` - reads the standard BLAST m8 format (`-outfmt 6`)
+   * `blast_to_wide` - converts BLAST results to a wide table
    * `SES` - standardized effect size estimation
    * `centroid_coords` - coordinates of centroids and medoids
    * `chunk` - split vector into chunks of equal size
