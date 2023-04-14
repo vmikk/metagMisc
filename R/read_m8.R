@@ -1,5 +1,18 @@
 
-## Function to read BLAST output
+#' @title Read BLAST output
+#' @description
+#' This function loads BLAST results saved in a tabular output format 6
+#' (`-outfmt 6`; 12 columns).
+#'
+#' @param x Input file name
+#' @param blast_colz Vector with column names (optional)
+#' @param package Package to use for data preparation (default, "data.table")
+#'
+#' @return data.table / data.frame / tibble (depending on the `package` parameter)
+#' @export
+#'
+#' @examples
+#'
 read_m8 <- function(x, blast_colz = NULL, package = "data.table"){
 
   ## Load data with built-in R commands
