@@ -35,7 +35,7 @@ read_m8 <- function(x, blast_colz = NULL, package = "data.table"){
   ## Standard BLAST m8 format (-outfmt 6)
   if(is.null(blast_colz)){
     blast_colz <- c(
-      "QueryName", "MatchID", "SeqIdentity", "AlignLen", "MismatchN", "GapOpenings",
+      "QueryName", "TargetName", "SeqIdentity", "AlignLen", "MismatchN", "GapOpenings",
       "QueryStart", "QueryEnd", "TargetStart", "TargetEnd", "Evalue", "BitScore")
   } # otherwise use user-provided column names
 
