@@ -39,7 +39,15 @@ blast_to_wide <- function(blst, max_hits = 10, taxonomy = NULL, seqs = NULL, ref
       cat("Warning: not all BLAST targets are in the `refs`.\n")
     }
     if(verbose == TRUE){ cat("..Adding reference length to the table\n") }
-    blst <- tibble::add_column(blst, TargetLen = Biostrings::width(refs[blst$AccID]), .after = "QueryLength")
+
+    if("AccID" %in% colnames(blst)){
+      ## If target headers were split, use Accession ID from query sequences
+      blst <- tibble::add_column(blst, TargetLen = Biostrings::width(refs[blst$AccID]), .after = "QueryLength")
+    } else {
+      ## Use original (full) target header
+      blst <- tibble::add_column(blst, TargetLen = Biostrings::width(refs[blst$TargetName]), .after = "QueryLength")
+    }
+
   }
 
   ## Estimate query coverage = (query-to - query-from + 1)/ query-len
@@ -62,8 +70,9 @@ blast_to_wide <- function(blst, max_hits = 10, taxonomy = NULL, seqs = NULL, ref
   blst <- blst[ HitNum <= max_hits ]
 
 
-  ## Measure variables for melting
-  varz <- c("AccID", "SeqIdentity", "AlignLen", "MismatchN", "GapOpenings", "QueryStart", "QueryEnd", "TargetStart", "TargetEnd")
+  ## Merge variables for melting
+  varz <- c("SeqIdentity", "AlignLen", "MismatchN", "GapOpenings", "QueryStart", "QueryEnd", "TargetStart", "TargetEnd")
+  if("AccID" %in% colnames(blst)){ varz <- c("AccID", varz) }  # if headers were split
   if(!is.null(seqs)){ varz <- c(varz, "QueryLength") }
   if(!is.null(refs)){ varz <- c(varz, "TargetLen") }
   if(!is.null(seqs)){ varz <- c(varz, "QueryCoverage") }
@@ -75,13 +84,18 @@ blast_to_wide <- function(blst, max_hits = 10, taxonomy = NULL, seqs = NULL, ref
 
     ## If not tax ranks provided - use the default ones
     if(is.null(taxonomy)){
-      taxonomy <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
+      if("AccID" %in% colnames(blst)){
+        taxonomy <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
+      } else {
+        taxonomy <- "TargetName"
+      }
     }
 
     ## Remove missing tax ranks
-    if(verbose == TRUE){ cat("..Subsetting taxonomy\n") }
-    taxonomy <- taxonomy[ which(taxonomy %in% colnames(blst)) ]
-
+    if(!"TargetName" %in% taxonomy){
+        if(verbose == TRUE){ cat("..Subsetting taxonomy\n") }
+        taxonomy <- taxonomy[ which(taxonomy %in% colnames(blst)) ]
+    }
     varz <- c(varz, taxonomy)
   }
 
@@ -157,6 +171,7 @@ blast_to_wide <- function(blst, max_hits = 10, taxonomy = NULL, seqs = NULL, ref
 
   ## Reorder columns in data.table
   col_order <- c(col_order, clz)
+  col_order <- col_order[ col_order %in% colnames(blst_wide) ]
   setcolorder(blst_wide, col_order)
 
   if(verbose == TRUE){ cat("..All done\n") }
