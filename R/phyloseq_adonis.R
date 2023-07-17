@@ -1,7 +1,29 @@
-## Adonis for phyloseq objects
+
+#' @title Permutational multivariate analysis of variance using distance matrices (PERMANOVA) for phyloseq objects
+#'
+#' @param physeq A phyloseq-class object
+#' @param group.var Variable name (contained in \code{\link{sample_data}}) to test (RHS in adonis formula)
+#' @param method Distance/dissimilarity method (as character string; see \code{\link{distanceMethodList}})
+#' @param pairwise Logical, perform pairwise adonis (dafault, FALSE)
+#' @param add_permdisp Logical; if TRUE (default), results of tests for homogeneity of multivariate dispersions will be added to output (see \code{\link[vegan]{betadisper}})
+#' @param permut Number of permutations required
+#' @param permdisp_type Use the spatial median (default) or the group centroid for the analysis for homogeneity of multivariate dispersions (see \code{\link[vegan]{betadisper}})
+#' @param p.adj Logical or character; if TRUE, adjust P-values for multiple comparisons with FDR; if character, specify correction method from \code{\link{p.adjust}} ("holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", or "none")
+#' @param all_results Logical, return results of adonis and data subsets for each pairwise comparison
+#' @param comparison_sep Character string to separate the levels of independent variable the in the pairwise comparison names (default, ".")
+#' @param ... Additional arguments will be passed to \code{\link[vegan]{adonis}} and \code{\link[vegan]{permutest}}
+#'
+#' @details Currently, only categorical variables (factors) are supported in `group.var`.
+#' @return List with adonis and permdisp results
+#' @export
+#' @seealso \code{\link[vegan]{adonis}}, \code{\link[vegan]{betadisper}}, \code{\link[metagMisc]{adonis_pairwise}}
+#' @examples
+#' data("GlobalPatterns")
+#' phyloseq_adonis(physeq = GlobalPatterns, group.var = "SampleType", all_results = FALSE, pairwise = TRUE, permut = 20)
+#'
 phyloseq_adonis <- function(physeq, group.var = NULL, method = "bray",
   pairwise = FALSE, add_permdisp = TRUE, permut = 999, permdisp_type = "median",
-  p.adj = TRUE, adj.meth = "fdr", all_results = TRUE, comparison_sep = ".", ...){
+  p.adj = "fdr", all_results = TRUE, comparison_sep = ".", ...){
 
   ## Currently, independent variables can be only for factors !
 
