@@ -95,7 +95,7 @@ adonis_pairwise <- function(x, dd, group.var, add_permdisp = TRUE, permut = 999,
   for(i in 1:length(dd.subs)){
 
     ## Multivariate analysis of variance (adonis)
-    adon[[i]] <- vegan::adonis(dd.subs[[i]] ~ dd.groups[[i]], permutations = permut, ...)
+    adon[[i]] <- vegan::adonis2(dd.subs[[i]] ~ dd.groups[[i]], permutations = permut, ...)
 
     ## Multivariate homogeneity of groups dispersions (betadisper) and permutation test
     if(add_permdisp == TRUE){
@@ -114,7 +114,11 @@ adonis_pairwise <- function(x, dd, group.var, add_permdisp = TRUE, permut = 999,
 
   ## Extract adonis results
   adonis_extract <- function(z){
-    data.frame(R2 = z$aov.tab$R2[1], F = z$aov.tab$F.Model[1], df = paste(z$aov.tab$Df[1:2], collapse=";"), p = z$aov.tab$Pr[1])
+    data.frame(
+      R2 = z$R2[1],
+      F = z$F[1],
+      df = paste(z$Df[1:2], collapse=";"),
+      p = z$Pr[1])
   }
   ad.t <- plyr::ldply(.data = adon, .fun = adonis_extract, .id = "Comparison")
 
