@@ -22,7 +22,7 @@ phyloseq_adonis <- function(physeq, group.var = NULL, method = "bray",
   } else {
 
     ## Multivariate analysis of variance (adonis)
-    adon <- vegan::adonis(as.formula( paste("dd ~ ", group.var, sep = "") ),
+    adon <- vegan::adonis2(as.formula( paste("dd ~ ", group.var, sep = "") ),
       data = metad, permutations = permut)
 
     ## Multivariate homogeneity of groups dispersions (betadisper) and permutation test
@@ -34,8 +34,10 @@ phyloseq_adonis <- function(physeq, group.var = NULL, method = "bray",
     ## Extract adonis results
     ad.t <- data.frame(
       Factor = group.var,
-      R2 = adon$aov.tab$R2[1], F = adon$aov.tab$F.Model[1],
-      df = paste(adon$aov.tab$Df[1:2], collapse=";"), p = adon$aov.tab$Pr[1])
+      R2 = adon$R2[1],
+      F  = adon$F[1],
+      df = paste(adon$Df[1:2], collapse=";"),
+      p  = adon$Pr[1])
 
     ## Extract permutest results
     if(add_permdisp == TRUE){
