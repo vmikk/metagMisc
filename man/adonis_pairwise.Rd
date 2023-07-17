@@ -50,7 +50,7 @@ data(dune)
 data(dune.env)
 
 # Compare all Management levels
-adonis(dune ~ Management, data = dune.env)
+adonis2(dune ~ Management, data = dune.env)
 
 # Pairwise comparisons between Management levels
 tst <- adonis_pairwise(x = dune.env, dd = vegdist(dune), group.var = "Management")
