@@ -5,6 +5,7 @@
 #' @param add_tax Logical, add taxonomy to the results
 #'
 #' @return Data frame
+#' @export
 #'
 #' @examples
 #' data(esophagus)
