@@ -10,6 +10,15 @@
 #' (specified by setting the package argument to "base")
 #' or the data.table package
 #' (specified by setting the package argument to "data.table").
+#' By default, it uses the data.table package, which is much faster and more efficient;
+#' for instance, on the GlobalPatterns dataset, the implementation using data.table
+#' is 7 times faster than that using base R.
+#' E.g.:
+#' # microbenchmark( \cr
+#' #   dt = prevalence(GlobalPatterns, package = "data.table"), \cr
+#' #   bb = prevalence(GlobalPatterns, package = "base"), \cr
+#' #   times = 10) \cr
+#'
 #' @return
 #' Data frame or data.table with the following columns:
 #' \itemize{
