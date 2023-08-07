@@ -21,8 +21,9 @@
    * `phyloseq_taxonomic_resolution` - summarizes taxonomic resolution of the data
    * `phyloseq_taxonomy_imputation` - replaces missing taxonomy with higher ranks
    * `phyloseq_replace_zero` - replaces zeros in OTU abundance with psudocount or min observed abundnce
-   * `phyloseq_transform_aldex_clr` - performs ALDEx2-based centred log-ratio transformation of OTU table
-   * `prepare_breakaway` - prepares frequency counts for `breakaway` package
+   * `phyloseq_transform_aldex_clr` - performs ALDEx2-based centred log-ratio transformation of OTU table  
+   * `get_max_taxonomic_rank_DT` - determines the lowest level of taxonomic classification (with `data.table`)  
+   * `prepare_breakaway` - prepares frequency counts for `breakaway` package  
    * `raref_rtk` - `RTK`-based rarefaction
    * `read_m8` - reads the standard BLAST m8 format (`-outfmt 6`)
    * `blast_to_wide` - converts BLAST results to a wide table
@@ -41,7 +42,34 @@
    * `phyloseq_extract_shared_otus` and `phyloseq_extract_non_shared_otus` - issue warning in the case if no OTUs were found
    * `get_max_taxonomic_rank` - data types bug
    * `phyloseq_average` - progress bar fixed
-   * `parse_uc` - fixed a column name problem
+   * `parse_uc` - fixed a column name problem  
+   * `prevalence` was added to NAMESPACE (thanks @LukDrey for reporting the issue)  
+
+- The other updates  
+   * `phyloseq_to_df` - handles taxa as rows case and checks the presence of taxonomy in phyloseq object  
+   * `parse_uc` - is much faster now with `data.table`  
+   * `parse_uc` - new option to remove duplicated rows  
+   * `parse_taxonomy_amptk` rewritten  
+   * `parse_taxonomy_amptk_batch` - supports multithreading now  
+   * `phyloseq_standardize_otu_abundance` - added `wisconsin` and `rhea` methods  
+   * `phyloseq_filter_prevalence` - informative error messages added  
+   * `phyloseq_sep_variable` - informative error messages added  
+   * `phyloseq_summary` - add OTU occurrence stats  
+   * `eig_perc` - added plots of explained variance percentages  
+   * `adonis_pairwise`  
+   * `phyloseq_ntaxa_by_tax`  
+   * `some` - works with phyloseq now  
+   * `taxonomy_to_qiime` - supports Domain rank and performs validation of user-supplied ranks  
+   * `phyloseq_otu_occurrence` - added counts  
+   * `phyloseq_filter_sample_wise_abund_trim` - added relative abundance option  
+   * `phyloseq_phylo_ses` - added VPD metric  
+   * `phyloseq_group_dissimilarity` - added comparison types (between/within group)  
+   * `phyloseq_extract_shared_otus` - estimates percentage of shared OTUs  
+   * `prevalence` is now much faster with `data.table`  
+
+- New logo, designed by Olesya Dulya  
+- Documentation updates  
+
 # metagMisc v.0.0.4 (git b0802ea; Feb 13, 2018)
 
 - New functions
