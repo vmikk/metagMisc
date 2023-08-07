@@ -3,8 +3,24 @@
 #'
 #' @param physeq A phyloseq-class object
 #' @param add_tax Logical, add taxonomy to the results
+#' @param package Which package to use for data processing ("base" or "data.table")
 #'
-#' @return Data frame
+#' @details
+#' This function can be executed using functions from base R
+#' (specified by setting the package argument to "base")
+#' or the data.table package
+#' (specified by setting the package argument to "data.table").
+#' @return
+#' Data frame or data.table with the following columns:
+#' \itemize{
+#'  \item{"Taxa"}          {Taxa names (species, OTU, or ASV)}
+#'  \item{"Prevalence"}    {The number of occurrences (the count of samples where the particular taxon is found)}
+#'  \item{"TotalAbundance"}{The total abundance of a taxon across all samples}
+#'  \item{"MeanAbundance"} {The average taxon abundance}
+#'  \item{"MedianAbundance"}{The median abundance of a taxon}
+#'  \item{"Taxonomy"}       {An optional set of columns containing taxonomic information present in phyloseq object}
+#' }
+#'
 #' @export
 #'
 #' @examples
