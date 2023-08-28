@@ -52,14 +52,14 @@ prevalence <- function(physeq, add_tax = TRUE, package = "data.table"){
 
     ## Transpose OTU table (species should be arranged by rows)
     if(trows == FALSE){
-    otutab <- t(otutab)
-  }
+      otutab <- t(otutab)
+    }
 
-  ## Estimate prevalence (number of samples with OTU present)
-  prevdf <- apply(X = otutab,
-                  # MARGIN = ifelse(trows, yes = 1, no = 2),  # for a non-transposed data
-                  MARGIN = 1,
-                  FUN = function(x){sum(x > 0)})
+    ## Estimate prevalence (number of samples with OTU present)
+    prevdf <- apply(X = otutab,
+                    # MARGIN = ifelse(trows, yes = 1, no = 2),  # for a non-transposed data
+                    MARGIN = 1,
+                    FUN = function(x){sum(x > 0)})
 
     ## Add total and average read counts per OTU
     prevdf <- data.frame(
@@ -102,7 +102,7 @@ prevalence <- function(physeq, add_tax = TRUE, package = "data.table"){
     ## Add taxonomy table
     if(add_tax == TRUE && !is.null(tax_table(physeq, errorIfNULL = F))){
 
-      prevdf <- cbind(prevdf, as.data.frame(tax_table(GlobalPatterns)))
+      prevdf <- cbind(prevdf, as.data.frame(tax_table(physeq)))
     }
 
   }
