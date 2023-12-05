@@ -28,42 +28,49 @@ blast_to_wide <- function(blst, max_hits = 10,
 
   ## Add query coverage
   if(add_coverage == TRUE){
-  
+
+    if(is.null(seqs)){
+      cat("Warning: query sequnces are not provided, coverage could not be estimated.\n")
+    }
+    if(is.null(refs)){
+      cat("Warning: reference sequnces are not provided, coverage could not be estimated.\n")
+    }
+
     ## Add query length to the table
     if(!is.null(seqs)){
-    if(any(!blst$QueryName %in% names(seqs))){
-      cat("Warning: not all BLAST queries are in the `seqs`.\n")
+      if(any(!blst$QueryName %in% names(seqs))){
+        cat("Warning: not all BLAST queries are in the `seqs`.\n")
+      }
+      if(verbose == TRUE){ cat("..Adding query length to the table\n") }
+      blst <- tibble::add_column(blst, QueryLength = Biostrings::width(seqs[blst$QueryName]), .before = "QueryStart")
     }
-    if(verbose == TRUE){ cat("..Adding query length to the table\n") }
-    blst <- tibble::add_column(blst, QueryLength = Biostrings::width(seqs[blst$QueryName]), .before = "QueryStart")
-  }
-
-  ## Add reference length to the table
-  if(!is.null(refs)){
-    if(any(!blst$AccID %in% names(refs))){
-      cat("Warning: not all BLAST targets are in the `refs`.\n")
+  
+    ## Add reference length to the table
+    if(!is.null(refs)){
+      if(any(!blst$AccID %in% names(refs))){
+        cat("Warning: not all BLAST targets are in the `refs`.\n")
+      }
+      if(verbose == TRUE){ cat("..Adding reference length to the table\n") }
+  
+      if("AccID" %in% colnames(blst)){
+        ## If target headers were split, use Accession ID from query sequences
+        blst <- tibble::add_column(blst, TargetLen = Biostrings::width(refs[blst$AccID]), .after = "QueryLength")
+      } else {
+        ## Use original (full) target header
+        blst <- tibble::add_column(blst, TargetLen = Biostrings::width(refs[blst$TargetName]), .after = "QueryLength")
+      }
+  
     }
-    if(verbose == TRUE){ cat("..Adding reference length to the table\n") }
-
-    if("AccID" %in% colnames(blst)){
-      ## If target headers were split, use Accession ID from query sequences
-      blst <- tibble::add_column(blst, TargetLen = Biostrings::width(refs[blst$AccID]), .after = "QueryLength")
-    } else {
-      ## Use original (full) target header
-      blst <- tibble::add_column(blst, TargetLen = Biostrings::width(refs[blst$TargetName]), .after = "QueryLength")
-    }
-
-  }
-
-  ## Estimate query coverage = (query-to - query-from + 1)/ query-len
-  if(!is.null(seqs)){
-    if(verbose == TRUE){ cat("..Estimating coverage\n") }
-    est_coverage <- function(x,y,len){ round( (max(c(x,y)) - min(c(x,y)) + 1)/ len , 3) }
-    est_coverage <- Vectorize(est_coverage)
-
-    qq <- with(blst, est_coverage(x = QueryEnd, y = QueryStart, len = QueryLength))
-    if(verbose == TRUE){ cat("..Adding coverage to the table\n") }
-    blst <- tibble::add_column(blst, QueryCoverage = qq, .before = "Evalue")
+  
+    ## Estimate query coverage = (query-to - query-from + 1)/ query-len
+    if(!is.null(seqs)){
+      if(verbose == TRUE){ cat("..Estimating coverage\n") }
+      est_coverage <- function(x,y,len){ round( (max(c(x,y)) - min(c(x,y)) + 1)/ len , 3) }
+      est_coverage <- Vectorize(est_coverage)
+  
+      qq <- with(blst, est_coverage(x = QueryEnd, y = QueryStart, len = QueryLength))
+      if(verbose == TRUE){ cat("..Adding coverage to the table\n") }
+      blst <- tibble::add_column(blst, QueryCoverage = qq, .before = "Evalue")
       rm(qq)
     }
   
