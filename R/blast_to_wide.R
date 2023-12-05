@@ -99,38 +99,25 @@ blast_to_wide <- function(blst, max_hits = 10, taxonomy = NULL, seqs = NULL, ref
     varz <- c(varz, taxonomy)
   }
 
-  ## Reshape data to long format
-  if(verbose == TRUE){ cat("..Reshaping data to long format\n") }
-  blst_long <- melt(data = blst,
-    id.vars = c("QueryName", "HitNum"),
-    measure.vars = varz,
-    variable.name = "VAR", value.name = "VAL", factorsAsStrings = FALSE)
-
   ## Reshape data to wide format (1 row = OTU)
   if(verbose == TRUE){ cat("..Reshaping data to wide format\n") }
+
   blst_wide <- dcast(
-    data = blst_long,
-    formula = QueryName ~ HitNum + VAR,
-    value.var = "VAL")
+    data = blst,
+    formula = QueryName ~ HitNum,
+    value.var = varz)
 
-  rm(blst_long)
 
-  ## Convert to numeric
-  if(verbose == TRUE){ cat("..Converting numeric data\n") }
+  ## Rename columns
+  if(verbose == TRUE){ cat("..Renaming columns\n") }
+  newnames <- data.table(OldName = colnames(blst_wide)[ ! colnames(blst_wide) %in% "QueryName" ])
+  newnames[ , VarName := gsub(pattern = "_[0-9]+$", replacement = "", x = OldName) ]
+  hitid <- sub(pattern = "_", replacement = "",
+      x = regmatches(m = regexpr("_[0-9]+$", newnames$OldName), x = newnames$OldName))
+  newnames[ , HitNum := as.integer(hitid) ]
+  newnames[ , NewName := paste0(HitNum, "_", VarName) ]
+  setnames(x = blst_wide, old = newnames$OldName, new = newnames$NewName)
 
-  to_numer <- c("SeqIdentity", "AlignLen", "MismatchN", "GapOpenings", "QueryStart",
-  	"QueryEnd", "TargetStart", "TargetEnd", "QueryCoverage", "Evalue", "BitScore")
-  if(!is.null(seqs)){ to_numer <- c(to_numer, "QueryLength", "QueryCoverage") }
-  if(!is.null(refs)){ to_numer <- c(to_numer, "TargetLen") }
-
-  to_numer_ids <- grepl(pattern = paste(to_numer, collapse="|"), x = colnames(blst_wide))
-  to_numer_names <- colnames(blst_wide)[to_numer_ids]
-
-  if("data.table" %in% class(blst_wide)){
-    blst_wide[, (to_numer_names) := lapply(.SD, as.numeric), .SDcols = to_numer_names]
-  } else {
-    blst_wide[ to_numer_ids ] <- sapply(blst_wide[to_numer_ids], as.numeric)
-  }
 
   ## Add sequences
   if(!is.null(seqs)){
@@ -141,7 +128,6 @@ blast_to_wide <- function(blst, max_hits = 10, taxonomy = NULL, seqs = NULL, ref
       y = SQDT,
       by.x = "QueryName", by.y = "OTU", all.x = TRUE)
   }
-
 
 
   ############ Reorder columns in the results
