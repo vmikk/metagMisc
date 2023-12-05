@@ -11,6 +11,7 @@
 #' }
 #' @param seqs Query sequences (XStringSet object from Biostrings package)
 #' @param refs Target sequences (XStringSet object from Biostrings package)
+#' @param add_coverage Logical, add query coverage to the output (default, TRUE)
 #' @param verbose Logical, produce more screen output (default, TRUE)
 #'
 #' @details
@@ -22,10 +23,14 @@
 #'
 #' @examples
 #'
-blast_to_wide <- function(blst, max_hits = 10, taxonomy = NULL, seqs = NULL, refs = NULL, verbose = TRUE) {
+blast_to_wide <- function(blst, max_hits = 10, 
+  taxonomy = NULL, seqs = NULL, refs = NULL, add_coverage = TRUE, verbose = TRUE) {
 
-  ## Add query length to the table
-  if(!is.null(seqs)){
+  ## Add query coverage
+  if(add_coverage == TRUE){
+  
+    ## Add query length to the table
+    if(!is.null(seqs)){
     if(any(!blst$QueryName %in% names(seqs))){
       cat("Warning: not all BLAST queries are in the `seqs`.\n")
     }
@@ -59,8 +64,11 @@ blast_to_wide <- function(blst, max_hits = 10, taxonomy = NULL, seqs = NULL, ref
     qq <- with(blst, est_coverage(x = QueryEnd, y = QueryStart, len = QueryLength))
     if(verbose == TRUE){ cat("..Adding coverage to the table\n") }
     blst <- tibble::add_column(blst, QueryCoverage = qq, .before = "Evalue")
-    rm(qq)
-  }
+      rm(qq)
+    }
+  
+  } # end of add_coverage
+
 
   ## Enumerate hits with data.table
   setDT(blst)
@@ -158,7 +166,7 @@ blast_to_wide <- function(blst, max_hits = 10, taxonomy = NULL, seqs = NULL, ref
   ## Reorder columns in data.table
   col_order <- c(col_order, clz)
   col_order <- col_order[ col_order %in% colnames(blst_wide) ]
-  setcolorder(blst_wide, col_order)
+  setcolorder(x = blst_wide, neworder = col_order)
 
   if(verbose == TRUE){ cat("..All done\n") }
   return(blst_wide)
