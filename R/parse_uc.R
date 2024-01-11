@@ -108,6 +108,15 @@ parse_uc <- function(x, map_only = F, package = "data.table", rm_dups = TRUE){
     }
 
     ## Subset to Query - OTU names only
+    ## Assign column names
+    setnames(x = ii,
+      old = paste0("V", 1:10),
+      new = c(
+        "recordType", "clusterNumber", "seqLengthOrClusterSize", 
+        "percentIdentity", "strand",
+        "unusedField1", "unusedField2",
+        "alignment", "queryLabel", "targetLabel"),
+      skip_absent = TRUE)
     if(map_only == TRUE){
       ii <- ii[, .(Query, OTU)]
     }
