@@ -26,9 +26,23 @@
 #' C       Cluster record (clustering only). The 3rd field is set to the cluster size (number of sequences in the cluster) and the 9th field is set to the label of the centroid sequence.
 #' N       No hit (for database search without clustering only). Indicates that no accepts were found. In the case of clustering, a query with no hits becomes the centroid of a new cluster and generates an S record instead of an N record.
 #'
-#' @return Data.frame or data.table.
+#'
 #' If `rm_dups = TRUE`, duplicated sequences are removed based solely on their sequence IDs, without considering any size annotations that may be present.  
 #'
+#' @return Data.frame or data.table with the following columns:
+#' \itemize{
+#'   \item{"recordType"}{ - Indicates the type of the record (Hit, Centroid, Cluster, No hit).}
+#'   \item{"clusterNumber"}{ - The number of the cluster, starting from 0.}
+#'   \item{"seqLengthOrClusterSize"}{ - Represents either sequence length (for S, N, and H records) or cluster size (for C records).}
+#'   \item{"percentIdentity"}{ - For H records, this shows the percent identity with the target sequence.}
+#'   \item{"strand"}{ - For H records, indicates the DNA strand (+ or -) for nucleotides.}
+#'   \item{"unusedField1"}{ - A placeholder for a field that is not used, kept for backward compatibility.}
+#'   \item{"unusedField2"}{ - Another unused field, also included for backward compatibility.}
+#'   \item{"alignment"}{ - CIGAR string, representing the compressed alignment, or an '=' sign indicating 100% identity to the target sequence.}
+#'   \item{"queryLabel"}{ - Label of the query sequence.}
+#'   \item{"targetLabel"}{ - Label of the target sequence.}
+#' }
+#' 
 #' @export
 #' @import data.table
 #'
