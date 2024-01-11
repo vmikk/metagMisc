@@ -117,6 +117,10 @@ parse_uc <- function(x, map_only = F, package = "data.table", rm_dups = TRUE){
         "unusedField1", "unusedField2",
         "alignment", "queryLabel", "targetLabel"),
       skip_absent = TRUE)
+
+    ## Convert similarity to numeric
+    ii[ percentIdentity %in% "*" , percentIdentity := NA ]  # There is no identity for centroids
+    ii[ , percentIdentity := as.numeric(percentIdentity) ]
     if(map_only == TRUE){
       ii <- ii[, .(Query, OTU)]
     }
