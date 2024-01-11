@@ -27,6 +27,8 @@
 #' N       No hit (for database search without clustering only). Indicates that no accepts were found. In the case of clustering, a query with no hits becomes the centroid of a new cluster and generates an S record instead of an N record.
 #'
 #' @return Data.frame or data.table.
+#' If `rm_dups = TRUE`, duplicated sequences are removed based solely on their sequence IDs, without considering any size annotations that may be present.  
+#'
 #' @export
 #' @import data.table
 #'
