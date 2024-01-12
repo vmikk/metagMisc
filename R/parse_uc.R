@@ -4,7 +4,6 @@
 #'
 #' @param x File name (typically with .uc extension)
 #' @param map_only Logical, return only mapping (correspondence of query and cluster)
-#' @param package Which package to use ("base" or "data.table")
 #' @param rm_dups  Logical, remove duplicated entries (default, TRUE)
 #'
 #' @details USEARCH cluster format (UC) is a tab-separated text file.
@@ -54,49 +53,8 @@
 #'
 parse_uc <- function(x, map_only = F, package = "data.table", rm_dups = TRUE){
 
-  ## Load data with built-in R commands  
-  if(package %in% "base"){
 
-    cat("Option to use the `base` package will be duplicated in future releas of metagMisc!\n")
-
-    ## Read file
-    ii <- read.delim(x, header = F, stringsAsFactors = F)
-
-    ## Remove redundant S-records
-    redund <- ii$V1 == "S"
-    if(any(redund)){ ii <- ii[-which(redund), ] }
-
-    ## Split Query name
-    ii$Query <- do.call(rbind, strsplit(x = ii$V9, split = ";"))[,1]
-
-    ## Split OTU name
-    ii$OTU <- do.call(rbind, strsplit(x = ii$V10, split = ";"))[,1]
-
-    ## OTU name = query name for centroids
-    ii$OTU[which(ii$V1 == "C")] <- ii$Query[which(ii$V1 %in% c("S", "C"))]
-
-    ## Check for duplicates
-    tmp <- ii[ , c("Query", "OTU")]
-    dups <- duplicated(tmp)
-    if(any(dups)){
-      cat("Warning: duplicated rows found!\n")
-
-      ## Remove duplicated seqs
-      if(rm_dups == TRUE){
-        cat("..", sum(dups), " duplicates removed\n")
-        ii <- ii[ - which(dups), ]
-      }
-    }
-
-    if(map_only == TRUE){
-        ii <- ii[, which(colnames(ii) %in% c("Query", "OTU"))]
-    }
-  } # end of `base` package
-
-
-  ## Load data with `data.table` package
-  if(package %in% "data.table"){
-    ## Read file
+    ## Read the file
     ii <- fread(file = x, header = FALSE, sep = "\t")
 
     ## Remove redundant S-records
@@ -123,7 +81,6 @@ parse_uc <- function(x, map_only = F, package = "data.table", rm_dups = TRUE){
       }
     }
 
-    ## Subset to Query - OTU names only
     ## Assign column names
     setnames(x = ii,
       old = paste0("V", 1:10),
