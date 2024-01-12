@@ -4,6 +4,7 @@
 #'
 #' @param x File name (typically with .uc extension)
 #' @param map_only Logical, return only mapping (correspondence of query and cluster)
+#' @param splitSeqID Logical, split sequence IDs at the semicolon. If TRUE (default), only the part of the ID before the semicolon is retained. If set to FALSE, the entire sequence ID, including any extra info after the semicolon, is kept intact
 #' @param rm_dups  Logical, remove duplicated entries (default, TRUE)
 #'
 #' @details USEARCH cluster format (UC) is a tab-separated text file.
@@ -51,8 +52,7 @@
 #' parse_uc("usearch_OTUs.uc", map_only = F)
 #' parse_uc("usearch_OTUs.uc", map_only = T)
 #'
-parse_uc <- function(x, map_only = F, package = "data.table", rm_dups = TRUE){
-
+parse_uc <- function(x, map_only = FALSE, splitSeqID = TRUE, rm_dups = TRUE){
 
     ## Read the file
     ii <- fread(file = x, header = FALSE, sep = "\t")
@@ -94,10 +94,19 @@ parse_uc <- function(x, map_only = F, package = "data.table", rm_dups = TRUE){
     ## Convert similarity to numeric
     ii[ percentIdentity %in% "*" , percentIdentity := NA ]  # There is no identity for centroids
     ii[ , percentIdentity := as.numeric(percentIdentity) ]
+
+    ## Return only mapping results
+    ## Subset to Query and OTU names only
     if(map_only == TRUE){
-      ii <- ii[, .(Query, OTU)]
+      if(splitSeqID == TRUE){
+        ii <- ii[, .(Query, OTU)]
+      } else {
+        ii <- ii[, .(queryLabel, targetLabel)]
+        setnames(x = ii,
+          old = c("queryLabel", "targetLabel"),
+          new = c("Query", "OTU"))
+      }
     }
-  }
 
   return(ii)
 }
