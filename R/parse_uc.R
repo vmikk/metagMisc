@@ -43,6 +43,8 @@
 #'   \item{"targetLabel"}{ - Label of the target sequence.}
 #' }
 #' 
+#' With `map_only = TRUE`, the resulting table will have only two columns - "Query" and "OTU".
+#' 
 #' @export
 #' @import data.table
 #'
