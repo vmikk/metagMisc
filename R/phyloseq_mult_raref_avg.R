@@ -35,6 +35,12 @@ phyloseq_mult_raref_avg <- function(physeq, SampSize = NULL, iter = 1000, parall
     progress <- "none"
   }
 
+  ## Transpose data if necessary
+  if(taxa_are_rows(physeq) == FALSE){
+    cat("Warning: transposing input data (OTUs should be arrenged by rows, and samples by columns)\n")
+    physeq <- t(physeq)
+  }
+
   ## Extract slots from phyloseq object (later we'll return them)
   ## and remove them to save RAM
   if(!is.null(phyloseq::tax_table(physeq, errorIfNULL=F))){
