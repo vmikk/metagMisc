@@ -1,3 +1,12 @@
+
+#' @title Determine the lowest level of taxonomic classification
+#' @details This function will find the last non-NA column in the taxonomy table and return
+#' @param x Either a phyloseq object, or a data frame with columns as taxonomic ranks and rows as entries (e.g., OTUs). Columns in the data frame should be ordered from the highest level of classification (e.g., Kingdom) to the lowest level (e.g., Species), missing data are coded as NA
+#' @param return_rank_only Logical, if TRUE only name of the taxonomic rank will be returned
+#'
+#' @return Data frame with taxonomy and additional column containing the name of the lowest level of taxonomic classification. Alternatively, if 'return_rank_only = TRUE', a vector of the lowest taxonomic ranks for each OTU.
+#' @export
+#'
 get_max_taxonomic_rank_DT <- function(x, return_rank_only = FALSE){
 
   ## Input data
