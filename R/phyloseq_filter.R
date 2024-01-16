@@ -154,10 +154,14 @@ phyloseq_filter_prevalence <- function(physeq, prev.trh = 0.05, abund.trh = NULL
     if(abund.trh <= 0){ stop("Abundance threshold should be non-negative value larger 0.\n") }
   }
 
-  ## Check for the low-prevalence species (compute the total and average prevalences of the features in each phylum)
-  prevdf_smr <- function(prevdf){
-    ddply(prevdf, "Phylum", function(df1){ data.frame(Average = mean(df1$Prevalence), Total = sum(df1$Prevalence))})
-  }
+  # ## Check for the low-prevalence species (compute the total and average prevalences of the features in each phylum)
+  # prevdf_smr <- function(prevdf){
+  #   plyr::ddply(prevdf, "Phylum", function(df1){ 
+  #     data.frame(
+  #       Average = mean(df1$Prevalence),
+  #       Total = sum(df1$Prevalence))
+  #     })
+  # }
   # prevdf_smr( prevalence(physeq) )
 
   ## Check the prevalence threshold
@@ -190,10 +194,10 @@ phyloseq_filter_prevalence <- function(physeq, prev.trh = 0.05, abund.trh = NULL
   }
 
   ## Extract names for the taxa we whant to keep
-  keepTaxa <- rownames(prevdf)[tt]
+  keepTaxa <- prevdf$Taxa[ tt ]
 
   ## Execute prevalence filter
-  res <- phyloseq::prune_taxa(keepTaxa, physeq)
+  res <- phyloseq::prune_taxa(taxa = keepTaxa, x = physeq)
   return(res)
 }
 
