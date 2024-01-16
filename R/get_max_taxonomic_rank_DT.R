@@ -7,6 +7,18 @@
 #' @return Data frame with taxonomy and additional column containing the name of the lowest level of taxonomic classification. Alternatively, if 'return_rank_only = TRUE', a vector of the lowest taxonomic ranks for each OTU.
 #' @export
 #'
+#' @examples
+#' data(GlobalPatterns)
+#'
+#' # phyloseq-class as input
+#' taxx <- get_max_taxonomic_rank(GlobalPatterns)
+#' summary(taxx$RankName)
+#'
+#' # data frame as input
+#' taxtbl <- as.data.frame(tax_table(GlobalPatterns))
+#' taxx <- get_max_taxonomic_rank(taxtbl)
+#' summary(taxx$RankName)
+#'
 get_max_taxonomic_rank_DT <- function(x, return_rank_only = FALSE){
 
   ## Input data
