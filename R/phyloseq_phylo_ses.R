@@ -272,8 +272,8 @@ vpd <- function(samp, dis, abundance.weighted=FALSE){
   # y = interspecific distance matrix (matrix or dist class) or phylogenetic tree of class phylo
 
   ## Convert phylogenetic tree to the pairwise distances
-  if(class(dis) %in% "phylo"){ dis <- ape::cophenetic.phylo(dis) }
-  if(class(dis) %in% "dist"){ dis <- as.matrix(dis) }
+  if("phylo" %in% class(dis)){ dis <- ape::cophenetic.phylo(dis) }
+  if("dist"  %in% class(dis)){ dis <- as.matrix(dis) }
 
   N <- dim(samp)[1]
   res <- numeric(N)
@@ -298,6 +298,7 @@ vpd <- function(samp, dis, abundance.weighted=FALSE){
   }
   return(res)
 }
+# library(picante)
 # data(phylocom)
 # vpd(phylocom$sample, phylocom$phylo, abundance.weighted=FALSE)
 # vpd(phylocom$sample, phylocom$phylo, abundance.weighted=TRUE)
