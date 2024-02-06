@@ -12,6 +12,7 @@
 #' @param seqs Query sequences (XStringSet object from Biostrings package)
 #' @param refs Target sequences (XStringSet object from Biostrings package)
 #' @param add_coverage Logical, add query coverage to the output (default, TRUE)
+#' @param remove_missing Logical, remove blast matches if sequences are missing in `seqs` and `refs` (default, FALSE)
 #' @param verbose Logical, produce more screen output (default, TRUE)
 #'
 #' @details
@@ -24,40 +25,70 @@
 #' @examples
 #'
 blast_to_wide <- function(blst, max_hits = 10, 
-  taxonomy = NULL, seqs = NULL, refs = NULL, add_coverage = TRUE, verbose = TRUE) {
+  taxonomy = NULL, seqs = NULL, refs = NULL,
+  add_coverage = TRUE, remove_missing = FALSE, verbose = TRUE) {
 
   ## Add query coverage
   if(add_coverage == TRUE){
 
     if(is.null(seqs)){
-      cat("Warning: query sequnces are not provided, coverage could not be estimated.\n")
+      cat("WARNING: query sequnces are not provided, coverage could not be estimated.\n")
     }
     if(is.null(refs)){
-      cat("Warning: reference sequnces are not provided, coverage could not be estimated.\n")
+      cat("WARNING: reference sequnces are not provided, coverage could not be estimated.\n")
     }
 
     ## Add query length to the table
     if(!is.null(seqs)){
-      if(any(!blst$QueryName %in% names(seqs))){
-        cat("Warning: not all BLAST queries are in the `seqs`.\n")
+      
+      query_in_seqs <- blst$QueryName %in% names(seqs)
+      if(any(!query_in_seqs)){
+        cat("WARNING: not all BLAST queries are in the `seqs`.\n")
+        if(verbose == TRUE){ cat("..n = ", sum(!query_in_seqs), " sequences are missing\n") }
+
+        if(remove_missing == TRUE){
+          cat("..Removing BLAST queries that are missing in FASTA file ('seqs').\n")
+          blst <- blst[ query_in_seqs, ]
+        } else {
+          stop("Please verify that all queries are present in the FASTA file ('seqs')\n")
+        }
+
       }
       if(verbose == TRUE){ cat("..Adding query length to the table\n") }
-      blst <- tibble::add_column(blst, QueryLength = Biostrings::width(seqs[blst$QueryName]), .before = "QueryStart")
+      blst <- tibble::add_column(blst,
+        QueryLength = Biostrings::width(seqs[blst$QueryName]),
+        .before = "QueryStart")
     }
   
     ## Add reference length to the table
     if(!is.null(refs)){
-      if(any(!blst$AccID %in% names(refs))){
-        cat("Warning: not all BLAST targets are in the `refs`.\n")
+      
+      matches_in_refs <- blst$AccID %in% names(refs)
+      if(any(!matches_in_refs)){
+        cat("WARNING: not all BLAST targets are in the `refs`.\n")
+        if(verbose == TRUE){ cat("..n = ", sum(!matches_in_refs), " records are missing,\n") }
+        if(verbose == TRUE){ cat("..among them ", length(unique(blst$AccID[ !matches_in_refs ])), " unique accession IDs\n") }
+
+        if(remove_missing == TRUE){
+          cat("..Removing BLAST matches that are missing in the reference database ('refs' FASTA)\n")
+          blst <- blst[ matches_in_refs, ]
+        } else {
+          stop("Please verify that all BLAST targets are present in the reference database ('refs' FASTA)\n")
+        }
+
       }
       if(verbose == TRUE){ cat("..Adding reference length to the table\n") }
   
       if("AccID" %in% colnames(blst)){
         ## If target headers were split, use Accession ID from query sequences
-        blst <- tibble::add_column(blst, TargetLen = Biostrings::width(refs[blst$AccID]), .after = "QueryLength")
+        blst <- tibble::add_column(blst,
+          TargetLen = Biostrings::width(refs[blst$AccID]),
+          .after = "QueryLength")
       } else {
         ## Use original (full) target header
-        blst <- tibble::add_column(blst, TargetLen = Biostrings::width(refs[blst$TargetName]), .after = "QueryLength")
+        blst <- tibble::add_column(blst,
+          TargetLen = Biostrings::width(refs[blst$TargetName]),
+          .after = "QueryLength")
       }
   
     }
