@@ -11,6 +11,8 @@
 #' @examples
 #' expand_CIGAR("5MI2D")
 #' expand_CIGAR(c("5MI2D", "3M2D3M"))
+#' expand_CIGAR(c("5MI2D", "*", "3M2D3M", NA))  # handles centroids and missing data
+#' 
 expand_CIGAR <- function(cigar) {
 
   ## There are no CIGAR strings for cluster representatives,
