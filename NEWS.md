@@ -1,5 +1,5 @@
 
-# metagMisc v.0.5.0 (git xxxx; Mar xx, 2023)
+# metagMisc v.0.5.0 (git 0114a35, March 20, 2024)
 
 - New functions
    * make rarefaction based on [RTK](https://github.com/hildebra/Rarefaction)
