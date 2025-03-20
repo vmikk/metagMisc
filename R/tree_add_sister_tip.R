@@ -3,33 +3,83 @@
 tree_add_sister_tip <- function(tree, new.tip.label, sister.tip.label, branch.length = 1e-5) {
 
     ## Validate inputs
-    if (!inherits(tree, "phylo"))
-        stop("\nTree should be an object of class `phylo`\n.")
+    if (!inherits(tree, "phylo")) {
+      stop("\nTree should be an object of class `phylo`\n.")
+    }
 
-    ## Find the sister tip index
-    sister.index <- match(sister.tip.label, tree$tip.label)
-    if (is.na(sister.index))
-        stop("sister tip not found in tree")
+    ## Convert labels to vectors
+    if (!is.vector(new.tip.label)) {
+      new.tip.label <- c(new.tip.label)
+    }
+    if (!is.vector(sister.tip.label)) {
+      sister.tip.label <- c(sister.tip.label)
+    }
 
-    ## Get the original edge length to preserve total branch length
-    original_edge <- tree$edge.length[which(tree$edge[, 2] == sister.index)]
-    if (is.null(original_edge))
-        stop("tree must have edge lengths")
+    ## Validate inputs
+    if(length(new.tip.label) < 1){
+      stop("\n`new.tip.label` is not specified\n")
+    }
+    if(length(sister.tip.label) < 1){
+      stop("\n`sister.tip.label` is not specified\n")
+    }
 
-    ## Calculate position to preserve total branch length
-    ## We'll place the new node very close to the tip
-    position <- original_edge - branch.length
+    ## Check if vectors have equal length
+    if (length(new.tip.label) > 1){
+      ## If adding multiple tips to a single sister tip
+      if(length(sister.tip.label) == 1){
+        sister.tip.label <- rep(sister.tip.label, length(new.tip.label))
+      } else if (length(sister.tip.label) != length(new.tip.label)) {
+        stop("\n`new.tip.label` and `sister.tip.label` must have the same length\n")
+      }
+    }
 
-    ## Add the new tip
-    new_tree <- phytools::bind.tip(tree,
-                        tip.label = new.tip.label,
-                        where = sister.index,
-                        position = position,
-                        edge.length = branch.length)
+    ## Process each pair of tips sequentially
+    new_tree <- tree
+    for (i in seq_along(new.tip.label)) {
 
-    ## Set the sister tip branch length equal to the new tip
-    sister_edge_index <- which(new_tree$edge[, 2] == match(sister.tip.label, new_tree$tip.label))
-    new_tree$edge.length[sister_edge_index] <- branch.length
+        ## Find the sister tip index
+        sister.index <- match(sister.tip.label[i], new_tree$tip.label)
+        if (is.na(sister.index)) {
+          stop(paste("\nSister tip", sister.tip.label[i], "not found in tree\n"))
+        }
+
+        ## Get the original edge length
+        original_edge <- new_tree$edge.length[which(new_tree$edge[, 2] == sister.index)]
+        if (is.null(original_edge)) {
+          stop("\nTree must have edge lengths\n")
+        }
+
+        ## For subsequent tips in the same group,
+        ## attach to the previous new node
+        if (i > 1 && sister.tip.label[i] == sister.tip.label[i-1]) {
+
+            ## Find the most recently added tip
+            prev_tip_index <- match(new.tip.label[i-1], new_tree$tip.label)
+
+            ## Get its parent node
+            parent_node <- new_tree$edge[which(new_tree$edge[, 2] == prev_tip_index), 1]
+
+            ## Add new tip to the parent node
+            new_tree <- phytools::bind.tip(new_tree,
+                                         tip.label = new.tip.label[i],
+                                         where = parent_node,
+                                         position = branch.length,
+                                         edge.length = branch.length)
+        } else {
+            ## Standard case - create new bifurcation
+            position <- original_edge - branch.length
+
+            new_tree <- phytools::bind.tip(new_tree,
+                                         tip.label = new.tip.label[i],
+                                         where = sister.index,
+                                         position = position,
+                                         edge.length = branch.length)
+
+            ## Set the sister tip branch length equal to the new tip
+            sister_edge_index <- which(new_tree$edge[, 2] == match(sister.tip.label[i], new_tree$tip.label))
+            new_tree$edge.length[sister_edge_index] <- branch.length
+        }
+    }
 
     return(new_tree)
 }
