@@ -1,4 +1,12 @@
 #' Aggregate distance matrices using Gower's formula
+#'
+#' @param dist_objects List of dist objects to aggregate (from ktab blocks and precomputed distances)
+#' @param weight_infos List of weights for each distance object (scalars or nlig×nlig matrices)
+#' @param nlig Number of observations (rows) in the distance matrices
+#' @param d.names Character vector of row/item labels for the final distance object
+#' @param use_matrix_weights Logical; if TRUE uses matrix-based weights (for missing data), if FALSE uses scalar weights (simple weighted average)
+#' @details d_ij = sqrt(Σ(w_k * d_ijk²) / Σ(w_k)). Function handles both scalar and matrix-based weighting for missing data scenarios.
+#' 
 .aggregate_distances <- function(dist_objects, weight_infos, nlig, d.names, use_matrix_weights) {
   
   # Compute sum of squared distances
