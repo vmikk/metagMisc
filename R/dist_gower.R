@@ -50,10 +50,9 @@
     if (total_weight <= 0) {
       warning("Total weight is non-positive (", total_weight, 
               "). Distance computation may be invalid.")
-      final_distances <- sqrt(sum_sq_distances / total_weight)
-    } else {
-      final_distances <- sqrt(sum_sq_distances / total_weight)
     }
+    
+    final_distances <- sqrt(sum_sq_distances / total_weight)
   }
   
   # Ensure symmetric matrix with zero diagonal
