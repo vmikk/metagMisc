@@ -1,3 +1,38 @@
+#' Reorder distance matrix to match row names
+.reorder_distance_matrix <- function(pd, d.names, index) {
+  
+  pd_matrix <- as.matrix(pd)
+  pd_labels <- rownames(pd_matrix)
+  
+  if (is.null(pd_labels) && is.null(d.names)) {
+    return(pd)  # No reordering needed
+  }
+  
+  if (is.null(d.names) && !is.null(pd_labels)) {
+    warning("ktab has no row names, but precomputed distance ", index, 
+            " does. Using distance matrix as-is.")
+    return(pd)
+  }
+  
+  if (!is.null(d.names) && !is.null(pd_labels)) {
+    if (!all(pd_labels %in% d.names)) {
+      warning("Row/col names of precomputed distance ", index, 
+              " do not fully match ktab row names. Attempting to reorder.")
+    }
+    
+    # Attempt reordering
+    tryCatch({
+      pd_reordered <- pd_matrix[d.names, d.names, drop = FALSE]
+      return(stats::as.dist(pd_reordered))
+    }, error = function(e) {
+      stop("Could not reorder precomputed distance ", index, 
+           " to match ktab row names. Error: ", e$message)
+    })
+  }
+  
+  return(pd)
+}
+
 #' Aggregate distance matrices using Gower's formula
 #'
 #' @param dist_objects List of dist objects to aggregate (from ktab blocks and precomputed distances)
