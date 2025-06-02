@@ -1,3 +1,18 @@
+
+#' Scale quantitative data according to option
+.scale_quantitative_data <- function(df, option, tol) {
+  switch(option,
+    "scaledBYsd" = as.data.frame(scale(df)),
+    "scaledBYrange" = {
+      ranges <- apply(df, 2, function(col) diff(range(col, na.rm = TRUE)))
+      centers <- apply(df, 2, min, na.rm = TRUE)
+      scales <- ifelse(ranges < tol, 1, ranges)
+      as.data.frame(scale(df, center = centers, scale = scales))
+    },
+    "noscale" = df
+  )
+}
+
 #' Reorder distance matrix to match row names
 .reorder_distance_matrix <- function(pd, d.names, index) {
   
