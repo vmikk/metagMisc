@@ -25,18 +25,42 @@ chunk <- function(x, n){
 #'
 #' @param x A data.table
 #' @param n The number of chunks required (integer)
+#' @param group_col Column name to split by (character)
+#' @param to_list Logical, return a list of data.tables (default: FALSE)
 #'
-#' @return List (of the length defined by the number of chunks) with parts of the data.table
+#' @return data.table or list (of the length defined by the number of chunks) with parts of the data.table
 #' @export
 #'
 #' @examples
 #' chunk_table(x = data.table(Letter = letters[1:12]), n = 4)
 #'
-chunk_table <- function(x, n){
-  if(n == 1){ res <- list(); res[[1]] <- x }
-  if(n > 1) {
-    cc <- chunk(1:nrow(x), n = n)
-    res <- llply(.data = cc, .fun = function(r){ x[ r, ] })
+chunk_table <- function(x, group_col, n, to_list = FALSE){
+
+  ## Convert to data.table if not already
+  if(! inherits(x = x, what = "data.table")){
+    setDT(x)
   }
-  return(res)
+
+  ## Get group sizes
+  group_sizes <- x[, .N, by = get(group_col)]
+  setnames(group_sizes, "get", group_col)
+  group_sizes[, cumsum_size := cumsum(N)]
+  total_size <- group_sizes[, sum(N)]
+  chunk_size <- ceiling(total_size / n)
+  
+  ## Assign chunk IDs
+  group_sizes[, chunk_id := pmin(ceiling(cumsum_size / chunk_size), n)]
+
+  ## Join back to original data
+  x[group_sizes, chunk_id := i.chunk_id, on = group_col]
+  
+  ## Return as list or data.table based on to_list argument
+  if(to_list) {
+    ## Split into list and remove chunk_id column from each chunk
+    res <- split(x, by = "chunk_id", keep.by = FALSE)
+    return(res)
+  } else {
+    ## Return data.table with chunk_id column
+    return(x[])
+  }
 }
