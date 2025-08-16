@@ -36,6 +36,11 @@ chunk <- function(x, n){
 #'
 chunk_table <- function(x, n, group_col = NULL, to_list = FALSE){
 
+  ## Check if n is a positive integer
+  if(! is.numeric(n) || length(n) != 1 || n <= 0 || n != as.integer(n)){
+    stop("Error: n must be a positive integer.\n")
+  }
+
   ## Convert to data.table if not already
   if(! inherits(x = x, what = "data.table")){
     setDT(x)
