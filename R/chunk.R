@@ -34,25 +34,36 @@ chunk <- function(x, n){
 #' @examples
 #' chunk_table(x = data.table(Letter = letters[1:12]), n = 4)
 #'
-chunk_table <- function(x, group_col, n, to_list = FALSE){
+chunk_table <- function(x, n, group_col = NULL, to_list = FALSE){
 
   ## Convert to data.table if not already
   if(! inherits(x = x, what = "data.table")){
     setDT(x)
   }
 
-  ## Get group sizes
-  group_sizes <- x[, .N, by = get(group_col)]
-  setnames(group_sizes, "get", group_col)
-  group_sizes[, cumsum_size := cumsum(N)]
-  total_size <- group_sizes[, sum(N)]
-  chunk_size <- ceiling(total_size / n)
-  
-  ## Assign chunk IDs
-  group_sizes[, chunk_id := pmin(ceiling(cumsum_size / chunk_size), n)]
+  ## If `group_col` is NULL, use simple row-based chunking
+  if(is.null(group_col)) {
 
-  ## Join back to original data
-  x[group_sizes, chunk_id := i.chunk_id, on = group_col]
+    total_rows <- nrow(x)
+    chunk_size <- ceiling(total_rows / n)
+    x[, chunk_id := ceiling(.I / chunk_size)]
+    x[, chunk_id := pmin(chunk_id, n)]  # Ensure max chunk_id doesn't exceed n
+
+  } else {
+    ## Group-based chunking
+    ## Get group sizes
+    group_sizes <- x[, .N, by = get(group_col)]
+    setnames(group_sizes, "get", group_col)
+    group_sizes[, cumsum_size := cumsum(N)]
+    total_size <- group_sizes[, sum(N)]
+    chunk_size <- ceiling(total_size / n)
+    
+    ## Assign chunk IDs
+    group_sizes[, chunk_id := pmin(ceiling(cumsum_size / chunk_size), n)]
+
+    ## Join back to original data
+    x[group_sizes, chunk_id := i.chunk_id, on = group_col]
+  }
   
   ## Return as list or data.table based on to_list argument
   if(to_list) {
