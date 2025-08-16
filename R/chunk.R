@@ -41,6 +41,19 @@ chunk_table <- function(x, n, group_col = NULL, to_list = FALSE){
     setDT(x)
   }
 
+  ## Edge case with n == 1 (return entire data.table as single chunk)
+  if(n == 1) {
+    if(to_list == TRUE) {
+      ## Return as list with single element
+      res <- list(x)
+      return(res)
+    } else {
+      ## Add chunk_id column with value 1 for all rows
+      x[, chunk_id := 1L]
+      return(x[])
+    }
+  }
+
   ## If `group_col` is NULL, use simple row-based chunking
   if(is.null(group_col)) {
 
@@ -66,7 +79,7 @@ chunk_table <- function(x, n, group_col = NULL, to_list = FALSE){
   }
   
   ## Return as list or data.table based on to_list argument
-  if(to_list) {
+  if(to_list == TRUE) {
     ## Split into list and remove chunk_id column from each chunk
     res <- split(x, by = "chunk_id", keep.by = FALSE)
     return(res)
