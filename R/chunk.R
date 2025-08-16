@@ -23,16 +23,45 @@ chunk <- function(x, n){
 
 #' Split data.table into chunks
 #'
-#' @param x A data.table
-#' @param n The number of chunks required (integer)
-#' @param group_col Column name to split by (character)
-#' @param to_list Logical, return a list of data.tables (default: FALSE)
+#' Splits a data.table into a specified number of chunks. When a grouping 
+#' column is specified, all rows with the same group value are guaranteed to remain 
+#' within the same chunk, preserving group integrity.
 #'
-#' @return data.table or list (of the length defined by the number of chunks) with parts of the data.table
+#' @param x A data.table to be split into chunks
+#' @param n Integer. The number of chunks to create (must be >= 1)
+#' @param group_col Character. Optional column name for group-preserving splits. 
+#'   When specified, all rows sharing the same value in this column will be kept 
+#'   together in the same chunk. When NULL (default), performs simple row-based 
+#'   chunking without group consideration.
+#' @param to_list Logical. If TRUE, returns a list of data.tables (one per chunk) 
+#'   without chunk identifiers. If FALSE (default), returns the original data.table 
+#'   with an added 'chunk_id' column indicating chunk membership.
+#'
+#' @return When \code{to_list = FALSE}: Original data.table with added 'chunk_id' 
+#'   column (integer values 1 to n). When \code{to_list = TRUE}: A list of 
+#'   data.tables, each containing one chunk of the original data without the 
+#'   'chunk_id' column.
+#'   
+#' @details 
+#' Group-based chunking may result in uneven chunk sizes to preserve the constraint 
+#' that all instances of each unique group value remain in the same chunk.
+#'
 #' @export
 #'
 #' @examples
-#' chunk_table(x = data.table(Letter = letters[1:12]), n = 4)
+#' library(data.table)
+#' 
+#' # Simple row-based chunking
+#' dt <- data.table(Letter = letters[1:12], Value = 1:12)
+#' chunk_table(dt, n = 4)
+#' 
+#' # Group-preserving chunking
+#' dt2 <- data.table(Group = c(rep("A", 8), rep("B", 3), "C"), Value = 1:12)
+#' chunk_table(dt2, n = 3, group_col = "Group")
+#' 
+#' # Return as list
+#' chunks <- chunk_table(dt, n = 4, to_list = TRUE)
+#' sapply(chunks, nrow)
 #'
 chunk_table <- function(x, n, group_col = NULL, to_list = FALSE){
 
@@ -58,6 +87,8 @@ chunk_table <- function(x, n, group_col = NULL, to_list = FALSE){
       return(x[])
     }
   }
+
+  ## TODO - in unbalanced groups, the number of chunks in output can be less than n
 
   ## If `group_col` is NULL, use simple row-based chunking
   if(is.null(group_col)) {
