@@ -1,5 +1,71 @@
 
-## Function to add a sister tip to a tree
+#' Add sister tips to a phylogenetic tree
+#'
+#' @description 
+#' Adds one or more sister tips to an existing phylogenetic tree. 
+#' Sister tips share the same immediate common ancestor with the specified existing tip(s).
+#'
+#' @param tree A phylogenetic tree object of class \code{phylo}
+#' @param new.tip.label Character vector of labels for the new tip(s) to add
+#' @param sister.tip.label Character vector of existing tip labels that will become 
+#'   sisters to the new tips. If a single value is provided and multiple new tips 
+#'   are specified, all new tips will be added as sisters to the same tip
+#' @param branch.length Numeric value for the branch length of new tips (default: 1e-5)
+#'
+#' @details
+#' This function supports three main scenarios: 
+#' (1) adding a single tip to a single sister tip, 
+#' (2) adding multiple tips to a single sister tip, and 
+#' (3) adding multiple tips to multiple different sister tips. 
+#' 
+#' Branch lengths are automatically adjusted based on the number of tips being added to prevent very short branches 
+#' that could cause numerical instability.
+#'
+#' @return A modified phylogenetic tree object of class \code{phylo} with the new 
+#'   sister tip(s) added
+#'
+#' @examples
+#' \dontrun{
+#' library(ape)
+#' 
+#' # Create a simple tree
+#' set.seed(42)
+#' tr <- rtree(n = 4)
+#' 
+#' # Add a single sister tip
+#' tr_single <- tree_add_sister_tip(
+#'   tree = tr, 
+#'   new.tip.label = "NewTip", 
+#'   sister.tip.label = "t4")
+#' par(mfrow = c(1, 3))
+#' plot(tr)
+#' plot(tr_single)
+#' plot(tr_single, use.edge.length = F)
+#' 
+#' # Add multiple tips to a single sister (creates polytomy)
+#' tr_poly <- tree_add_sister_tip(
+#'   tree = tr, 
+#'   new.tip.label = c("Tip1", "Tip2"), 
+#'   sister.tip.label = "t4")
+#' par(mfrow = c(1, 3))
+#' plot(tr)
+#' plot(tr_poly)
+#' plot(tr_poly, use.edge.length = F)
+#' 
+#' # Add tips to different sisters
+#' tr_multi <- tree_add_sister_tip(
+#'   tree = tr, 
+#'   new.tip.label = c("NewTip1", "NewTip2"), 
+#'   sister.tip.label = c("t4", "t3"))
+#' par(mfrow = c(1, 3))
+#' plot(tr)
+#' plot(tr_multi)
+#' plot(tr_multi, use.edge.length = F)
+#' }
+#'
+#' @importFrom phytools bind.tip
+#' @export
+#' 
 tree_add_sister_tip <- function(tree, new.tip.label, sister.tip.label, branch.length = 1e-5) {
 
     ## Validate inputs
@@ -91,29 +157,3 @@ tree_add_sister_tip <- function(tree, new.tip.label, sister.tip.label, branch.le
 
     return(new_tree)
 }
-
-
-set.seed(42)
-tr <- ape::rtree(n = 4)
-
-## Add a single tip
-trs <- tree_add_sister_tip(tree = tr, new.tip.label = "TN", sister.tip.label = "t4")
-par(mfrow = c(1, 3))
-plot(tr)
-plot(trs)
-plot(trs, use.edge.length = F)
-
-## Add multiple tips to a single sister tip
-trs <- tree_add_sister_tip(tree = tr, new.tip.label = c("TN1", "TN2"), sister.tip.label = "t4")
-par(mfrow = c(1, 3))
-plot(tr)
-plot(trs)
-plot(trs, use.edge.length = F)
-
-## Independently add several tips to several sister tips
-trs <- tree_add_sister_tip(tree = tr, new.tip.label = c("TN4", "TN3"), sister.tip.label = c("t4", "t3"))
-par(mfrow = c(1, 3))
-plot(tr)
-plot(trs)
-plot(trs, use.edge.length = F)
-
