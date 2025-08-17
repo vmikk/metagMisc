@@ -84,9 +84,27 @@ tree_add_sister_tip <- function(tree, new.tip.label, sister.tip.label, branch.le
     return(new_tree)
 }
 
-## Examples
-# tr <- ape::rtree(n = 4)
-# plot(tr)
-# plot( tree_add_sister_tip(tree = tr, new.tip.label = "TN", sister.tip.label = "t1") )
-# plot( tree_add_sister_tip(tree = tr, new.tip.label = "TN", sister.tip.label = "t1"), use.edge.length = F )
+set.seed(42)
+tr <- ape::rtree(n = 4)
+
+## Add a single tip
+trs <- tree_add_sister_tip(tree = tr, new.tip.label = "TN", sister.tip.label = "t4")
+par(mfrow = c(1, 3))
+plot(tr)
+plot(trs)
+plot(trs, use.edge.length = F)
+
+## Add multiple tips to a single sister tip
+trs <- tree_add_sister_tip(tree = tr, new.tip.label = c("TN1", "TN2"), sister.tip.label = "t4")
+par(mfrow = c(1, 3))
+plot(tr)
+plot(trs)
+plot(trs, use.edge.length = F)
+
+## Independently add several tips to several sister tips
+trs <- tree_add_sister_tip(tree = tr, new.tip.label = c("TN4", "TN3"), sister.tip.label = c("t4", "t3"))
+par(mfrow = c(1, 3))
+plot(tr)
+plot(trs)
+plot(trs, use.edge.length = F)
 
