@@ -33,6 +33,10 @@ tree_add_sister_tip <- function(tree, new.tip.label, sister.tip.label, branch.le
       }
     }
 
+    ## Calculate minimum safe branch length based on number of tips per sister
+    sister_counts <- table(sister.tip.label)
+    min_branch_length <- max(1e-6, branch.length)  # ensure minimum tolerance
+
     ## Process each pair of tips sequentially
     new_tree <- tree
     for (i in seq_along(new.tip.label)) {
@@ -49,6 +53,10 @@ tree_add_sister_tip <- function(tree, new.tip.label, sister.tip.label, branch.le
           stop("\nTree must have edge lengths\n")
         }
 
+        ## Calculate adjusted branch length for this sister tip
+        n_tips <- sister_counts[sister.tip.label[i]]
+        adjusted_branch_length <- min(min_branch_length, original_edge/(n_tips + 1))
+
         ## For subsequent tips in the same group,
         ## attach to the previous new node
         if (i > 1 && sister.tip.label[i] == sister.tip.label[i-1]) {
@@ -63,26 +71,27 @@ tree_add_sister_tip <- function(tree, new.tip.label, sister.tip.label, branch.le
             new_tree <- phytools::bind.tip(new_tree,
                                          tip.label = new.tip.label[i],
                                          where = parent_node,
-                                         position = branch.length,
-                                         edge.length = branch.length)
+                                         position = adjusted_branch_length,
+                                         edge.length = adjusted_branch_length)
         } else {
             ## Standard case - create new bifurcation
-            position <- original_edge - branch.length
+            position <- original_edge - adjusted_branch_length
 
             new_tree <- phytools::bind.tip(new_tree,
                                          tip.label = new.tip.label[i],
                                          where = sister.index,
                                          position = position,
-                                         edge.length = branch.length)
+                                         edge.length = adjusted_branch_length)
 
             ## Set the sister tip branch length equal to the new tip
             sister_edge_index <- which(new_tree$edge[, 2] == match(sister.tip.label[i], new_tree$tip.label))
-            new_tree$edge.length[sister_edge_index] <- branch.length
+            new_tree$edge.length[sister_edge_index] <- adjusted_branch_length
         }
     }
 
     return(new_tree)
 }
+
 
 set.seed(42)
 tr <- ape::rtree(n = 4)
