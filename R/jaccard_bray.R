@@ -42,7 +42,7 @@
 #' bc <- c(0.1, 0.5, 1.0)
 #' jr <- bray_jaccard_convert(bc, to = "jaccard")   # -> (2*bc)/(1+bc)
 #' all.equal(jr, (2*bc)/(1+bc))
-#' 
+#'
 #' # With vegan distances (presence–absence Jaccard and Bray–Curtis on binary data)
 #' \dontrun{
 #'   library(vegan); data(dune)
@@ -60,6 +60,14 @@
 #' 
 bray_jaccard_convert <- function(x, to = "bray"){
 
+  if(length(to) > 1){
+    stop("Argument 'to' must be a single character string.\n")
+  }
+  to <- match.arg(to)
+
+  if(any(x < 0 | x > 1, na.rm = TRUE)){
+    stop("All dissimilarities must be in [0, 1].\n")
+  }
 
   ## Convert Bray-Curtis to Jaccard dissimilarity
   if(to == "jaccard"){
