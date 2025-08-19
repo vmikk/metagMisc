@@ -1,7 +1,7 @@
 
 
 ## Function to estimate abundance-based version of Simpson's dissimilarity coefficient
-dist_simpson_abund <- function(x){
+dist_simpson <- function(x, abundance = TRUE){
   # x = otu table, taxa = columns
 
   ## Function for Simpson dissimilarity for a pair of samples
@@ -31,24 +31,36 @@ dist_simpson_abund <- function(x){
   ## Convert to relative abundances
   x <- decostand(x, method = "total", MARGIN = 1)
 
-  ## Initialize distance matrix
-  dd <- matrix(data = NA, nrow = nrow(x), ncol = nrow(x),
-               dimnames = list(rownames(x), rownames(x)))
+  ## Abundance-based Simpson's dissimilarity
+  if(abundance == TRUE){
 
-  ## Estimate pairwise dissimilarities
-  cmb <- combn(x = 1:nrow(x), m = 2)
+    ## Initialize distance matrix
+    dd <- matrix(data = NA, nrow = nrow(x), ncol = nrow(x),
+                dimnames = list(rownames(x), rownames(x)))
 
-  for(i in 1:ncol(cmb)){
-    s1 <- cmb[1, i]
-    s2 <- cmb[2, i]
-    ds <- abund_simps_pair(x = x[c(s1, s2), ])
-    dd[s1, s2] <- ds
-    dd[s2, s1] <- ds
-    rm(ds)
+    ## Estimate pairwise dissimilarities
+    cmb <- combn(x = 1:nrow(x), m = 2)
+
+    for(i in 1:ncol(cmb)){
+      s1 <- cmb[1, i]
+      s2 <- cmb[2, i]
+      ds <- abund_simps_pair(x = x[c(s1, s2), ])
+      dd[s1, s2] <- ds
+      dd[s2, s1] <- ds
+      rm(ds)
+    }
+
+    diag(dd) <- 0
+    dd <- as.dist(dd)
+    attr(x = dd, which = "abundance_weighted") <- TRUE
+
+  ## Presence-absence Simpson's dissimilarity
+  } else {
+
+    dd <- vegan::betadiver(x = x, method = "sim")
+    attr(x = dd, which = "abundance_weighted") <- FALSE
   }
 
-  diag(dd) <- 0
-  dd <- as.dist(dd)
   return(dd)
 }
-# e.g. dist_simpson_abund(BCI)
+# e.g. dist_simpson(BCI)
