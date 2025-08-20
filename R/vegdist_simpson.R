@@ -55,6 +55,16 @@
 #' when there are unseen species in samples // Biometrics, V. 62 (2), P. 361–371, 
 #' DOI:10.1111/j.1541-0420.2005.00489.x
 #'
+#' @examples
+#' library(vegan)
+#' data(BCI)
+#' 
+#' # Abundance-weighted Simpson dissimilarity (default)
+#' dist_abund <- dist_simpson(BCI)
+#' 
+#' # Presence-absence Simpson dissimilarity  
+#' dist_pa <- dist_simpson(BCI, abundance = FALSE)
+#' 
 #' @importFrom vegan decostand betadiver
 #' @export
 #' 
