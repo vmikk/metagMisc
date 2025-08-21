@@ -2,3 +2,7 @@
 ^\.Rproj\.user$
 ^\tmp_code\*.R$
 ^TO_DO.txt$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.github$
