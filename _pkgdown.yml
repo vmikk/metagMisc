@@ -1,4 +1,9 @@
 url: https://vmikk.github.io/metagMisc/
+
+home:
+  title: metagMisc
+
 template:
   bootstrap: 5
+  light-switch: true
 
