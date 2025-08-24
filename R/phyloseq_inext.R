@@ -4,6 +4,7 @@
 #' @param physeq A phyloseq-class object
 #' @param Q Diversity order of Hill number; 0 for species richness (default), 1 for Shannon diversity; 2 for Simpson diversity
 #' @param curve_type Which data to show on the plot: "diversity" (default) or sample "coverage"
+#' @param ci_type Confidence interval type: "size_based" (default) or "coverage_based"
 #' @param correct_singletons Logical; apply Good-Turing correction for singleon counts
 #' @param endpoint Sample size for extrapolation (default = NULL, which corresponds to a double reference sample size for each sample)
 #' @param knots Number of equally-spaced sample sizes (x-axis) to analyze (default, 40)
