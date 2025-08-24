@@ -31,7 +31,8 @@
 #' phyloseq_inext(esophagus, curve_type = "coverage")
 #' phyloseq_inext(esophagus, justDF = T)
 #' 
-phyloseq_inext <- function(physeq, Q = 0, curve_type = "diversity",
+phyloseq_inext <- function(physeq, Q = 0, 
+    curve_type = "diversity", ci_type = "size_based",
     correct_singletons = FALSE, endpoint=NULL, knots = 40,
     multithread = FALSE, show_CI = TRUE, show_sample_labels = TRUE,
     show_plot = TRUE, justDF = FALSE, add_raw_data = TRUE, ...) {
@@ -44,7 +45,8 @@ phyloseq_inext <- function(physeq, Q = 0, curve_type = "diversity",
   ## Run rarefaction for all samples in a single thread
   if(multithread == FALSE){
     ## Estimate interpolated and extrapolated Hill numbers
-    inext_res <- iNEXT::iNEXT(x, q = Q, datatype = "abundance", endpoint = endpoint, knots = knots, ...)
+    inext_res <- iNEXT::iNEXT(x, q = Q,
+      datatype = "abundance", endpoint = endpoint, knots = knots, ...)
 
     ## Extract results (list with data.frames for each sample)
     res <- inext_res$iNextEst
@@ -110,15 +112,18 @@ phyloseq_inext <- function(physeq, Q = 0, curve_type = "diversity",
 
 
   ## Prepare single table for all samples
-  res <- Map(cbind, res, SampleID = names(res))   # Add sample name to the table
-  res <- do.call(rbind, res)                      # Merge list into a single data.frame
-  rownames(res) <- NULL
+  if(ci_type == "size_based"){
+    res <- res$size_based
+  } else if(ci_type == "coverage_based"){
+    res <- res$coverage_based
+  }
+  setDT(res)
 
   ## Add sample metadata
   if(!is.null(phyloseq::sample_data(physeq, errorIfNULL = FALSE))){
     mtd <- as(phyloseq::sample_data(physeq), "data.frame")
-    mtd$SampleID <- rownames(mtd)
-    res <- merge(res, mtd, by = "SampleID")
+    mtd$Assemblage <- rownames(mtd)
+    res <- merge(res, mtd, by = "Assemblage")
   }
 
   ## Just return the table (otherwise, make a plot)
@@ -134,21 +139,33 @@ phyloseq_inext <- function(physeq, Q = 0, curve_type = "diversity",
 
 
   ## Extract coordinates for sample labels
-  samplabs <- plyr::ddply(.data = res, .variables = "SampleID", .fun = function(z){
-    mid <- which.max(z$qD)
-    rez <- data.frame(SampSize = z[mid, "m"], MaxQD = z[mid, "qD"], MaxSC = z[mid, "SC"])
-    return(rez)
-  })
+  samplabs <- res[res[, .I[which.max(qD)], by=Assemblage]$V1][, .(Assemblage, m, qD, SC) ]
+  setnames(samplabs,
+    old = c("m", "qD", "SC"),
+    new = c("SampSize", "MaxQD", "MaxSC"))
+
 
   ## Split data to interpolated, observed & extrapolated parts
-  resl <- plyr::dlply(.data = res, .variables = "method", .fun = function(z){ z })
+  resl <- split(x = res, f = res$Method)
 
   ## Which variables to plot?
-  if(curve_type == "diversity"){ YY <- "qD"; YYL <- "qD.LCL"; YYU <- "qD.UCL"; YYM <- "MaxQD"; ylab <- paste("Species diversity, q = ", Q, sep = "") }
-  if(curve_type == "coverage") { YY <- "SC"; YYL <- "SC.LCL"; YYU <- "SC.UCL"; YYM <- "MaxSC"; ylab <- "Sample coverage" }
+  if(curve_type == "diversity"){ 
+    YY   <- "qD"
+    YYL  <- "qD.LCL"
+    YYU  <- "qD.UCL"
+    YYM  <- "MaxQD"
+    ylab <- paste("Species diversity, q = ", Q, sep = "")
+  }
+  if(curve_type == "coverage") { 
+    YY   <- "SC"
+    YYL  <- "SC.LCL"
+    YYU  <- "SC.UCL"
+    YYM  <- "MaxSC"
+    ylab <- "Sample coverage"
+  }
 
   ## Prepare a plot
-  pp <- ggplot(data = res, aes_string(x = "m", y = YY, group = "SampleID")) +  # color = color
+  pp <- ggplot(data = res, aes_string(x = "m", y = YY, group = "Assemblage")) +  # color = color
     geom_line(data = resl$interpolated, linetype = "solid") +
     geom_line(data = resl$extrapolated, linetype = "dashed") +
     geom_point(data = resl$observed, size = 2)
@@ -162,7 +179,7 @@ phyloseq_inext <- function(physeq, Q = 0, curve_type = "diversity",
   ## Show sample labels
   if(show_sample_labels == TRUE){
     pp <- pp +
-      geom_text(data = samplabs, aes_string(x = "SampSize", y = YYM, label = "SampleID"), size = 4, hjust = -0.5)     # color = color
+      geom_text(data = samplabs, aes_string(x = "SampSize", y = YYM, label = "Assemblage"), size = 4, hjust = -0.5)     # color = color
   }
 
   ## Add axes labels
