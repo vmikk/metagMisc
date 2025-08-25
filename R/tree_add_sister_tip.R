@@ -25,7 +25,6 @@
 #'   sister tip(s) added
 #'
 #' @examples
-#' \dontrun{
 #' library(ape)
 #' 
 #' # Create a simple tree
@@ -61,7 +60,6 @@
 #' plot(tr)
 #' plot(tr_multi)
 #' plot(tr_multi, use.edge.length = F)
-#' }
 #'
 #' @importFrom phytools bind.tip
 #' @export
