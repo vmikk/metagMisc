@@ -166,7 +166,7 @@ phyloseq_inext <- function(physeq, Q = 0,
   }
 
   ## Prepare a plot
-  pp <- ggplot(data = res, aes_string(x = "m", y = YY, group = "Assemblage")) +  # color = color
+  pp <- ggplot(data = res, aes(x = m, y = .data[[YY]], group = Assemblage)) +  # color = color
     geom_line(data = resl$interpolated, linetype = "solid") +
     geom_line(data = resl$extrapolated, linetype = "dashed") +
     geom_point(data = resl$observed, size = 2)
@@ -174,13 +174,17 @@ phyloseq_inext <- function(physeq, Q = 0,
   ## Show confinence interval
   if(show_CI == TRUE){
     pp <- pp +
-      geom_ribbon(aes_string(ymin = YYL, ymax = YYU, color = NULL), alpha = 0.2)   # fill = color
+      geom_ribbon(
+        aes(ymin = .data[[YYL]], ymax = .data[[YYU]], color = NULL),
+        alpha = 0.2)   # fill = color
   }
 
   ## Show sample labels
   if(show_sample_labels == TRUE){
     pp <- pp +
-      geom_text(data = samplabs, aes_string(x = "SampSize", y = YYM, label = "Assemblage"), size = 4, hjust = -0.5)     # color = color
+      geom_text(data = samplabs,
+        aes(x = SampSize, y = .data[[YYM]], label = Assemblage),
+        size = 4, hjust = -0.5)     # color = color
   }
 
   ## Add axes labels
