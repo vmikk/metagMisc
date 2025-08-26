@@ -27,7 +27,7 @@ Suggests:
     PhyloMeasures (>= 2.1),
     smacof (>= 1.9-6),
     XML (>= 3.98),
-    zCompositions (>= 1.1.1)
+    zCompositions (>= 1.1.1),
     tinytest
 License: MIT
 Encoding: UTF-8
