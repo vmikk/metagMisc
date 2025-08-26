@@ -44,6 +44,10 @@ phyloseq_inext <- function(physeq, Q = 0,
     multithread = FALSE, show_CI = TRUE, show_sample_labels = TRUE,
     show_plot = TRUE, justDF = FALSE, add_raw_data = TRUE, ...) {
 
+  if(curve_type == "coverage" & ci_type == "coverage_based") {
+    stop("Coverage-based confidence intervals (ci_type = 'coverage_based') are not compatible with coverage curve (curve_type = 'coverage').\n")
+  }
+
   ## Prepare a list of OTU abundance vectors
   x <- prepare_inext(
         as.data.frame(phyloseq::otu_table(physeq, taxa_are_rows = T)),
