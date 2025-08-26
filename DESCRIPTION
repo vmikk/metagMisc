@@ -1,13 +1,19 @@
 Package: metagMisc
 Title: Miscellaneous functions for metagenomic analysis
-Version: 0.5.0
-Authors@R: person("Vladimir", "Mikryukov", email = "vmikryukov@gmail.com", role = c("aut", "cre"))
+Version: 0.6.0.9000
+Authors@R: c(
+    person("Vladimir", "Mikryukov", 
+        email = "vmikryukov@gmail.com",
+        role = c("aut", "cre"),
+        comment = c(ORCID = "0000-0003-2786-2690"))
+  )
 Description: metagMisc package contains miscellaneous functions for metagenomic analysis, including data transformations, several parsers (for USERCH UC-format; BLAST, SINA and STAMPA outputs, etc.), taxonomy handlers (SILVA, QIIME, AMPTk), phyloseq-shortcuts (multiple rarefaction, phyloseq splitting and exporting), and DADA2-shortcuts (error rate estimation on the subset of data, export of denoised amplicons in fasta).
-Depends: R (>= 4.1.0)
+BugReports: https://github.com/vmikk/metagMisc/issues
+Depends: R (>= 4.4.0)
 Imports: 
-    data.table (>= 1.14.6),
+    data.table (>= 1.17.0),
     plyr (>= 1.8.0),
-    vegan (>= 2.4-0)
+    vegan (>= 2.7-0)
 Suggests: 
     reshape2 (>= 1.4.2),
     ggplot2 (>= 2.2.0),
@@ -19,7 +25,7 @@ Suggests:
     entropart (>= 1.4-8),
     geiger (>= 2.0.6),
     GenomicAlignments (>= 1.36.0),
-    iNEXT (>= 2.0.14),
+    iNEXT (>= 3.0.0),
     Matrix (>= 1.5-0),
     metagenomeSeq (>= 1.16.0),
     openssl (>= 0.9.6),
