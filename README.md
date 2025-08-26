@@ -23,15 +23,15 @@ Vignette is under construction.
 * OTU abundance averaging following CoDa (Compositional Data Analysis) workflow
 * Phylogenetic diversity estimation (including standardized effect sizes)
 * Pairwise dissimilarity boxplots
-<img src="vignettes/Pairwise_dissimilarity_boxplot.png" width="500" title="Pairwise dissimilarity boxplots (enterotype data)" />
+<img src="man/figures/Pairwise_dissimilarity_boxplot.png" width="500" title="Pairwise dissimilarity boxplots (enterotype data)" />
 * Prevalence plots (total OTU abundance vs OTU prevalence)
-<img src="vignettes/Prevalence_plots.png" width="500" title="Prevalence plots (GlobalPatterns data)" />
+<img src="man/figures/Prevalence_plots.png" width="500" title="Prevalence plots (GlobalPatterns data)" />
 * Diversity profiles based on Hill numbers (with `entropart` package)
-<img src="vignettes/Diversity_profile.png" width="500" title="Diversity profiles (esophagus data)" />
+<img src="man/figures/Diversity_profile.png" width="500" title="Diversity profiles (esophagus data)" />
 * Various data filtering options (e.g., extraction of the most abundant OTUs)
-<img src="vignettes/Filter_top_taxa.png" width="500" title="Top taxa (GlobalPatterns data)" />
+<img src="man/figures/Filter_top_taxa.png" width="500" title="Top taxa (GlobalPatterns data)" />
 * Taxonomic resolution visualization
-<img src="vignettes/Taxonomic_resolution.png" width="500" title="Taxonomic resolution (GlobalPatterns data)" />
+<img src="man/figures/Taxonomic_resolution.png" width="500" title="Taxonomic resolution (GlobalPatterns data)" />
 
 # Installation
 ```
