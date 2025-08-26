@@ -27,8 +27,14 @@
 #' Methods in Ecology and Evolution, 7: 1451-1456. DOI: 10.1111/2041-210X.12613
 #' 
 #' @examples
+#' library(phyloseq)
+#' library(iNEXT)
+#' library(ggplot2)
+#' library(data.table)
 #' data("esophagus")
+#' 
 #' phyloseq_inext(esophagus)
+#' phyloseq_inext(esophagus, Q = 1)
 #' phyloseq_inext(esophagus, curve_type = "coverage")
 #' phyloseq_inext(esophagus, justDF = T)
 #' 
