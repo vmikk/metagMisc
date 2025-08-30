@@ -66,10 +66,7 @@ phyloseq_randomize <- function(physeq, null_model = "phylogeny.pool", verbose = 
 
   ### Extract phyloseq components
   ## OTU table
-  comm <- as.data.frame(phyloseq::otu_table(physeq))
-  if(!phyloseq::taxa_are_rows(physeq)){
-    comm <- t(comm)
-  }
+  comm <- phyloseq_otu_to_df(physeq, taxa_as_rows = TRUE)
 
   ## Phylo tree
   tree_null <- is.null(phyloseq::phy_tree(physeq, errorIfNULL=F))

@@ -9,7 +9,7 @@ phyloseq_effort_div <- function(physeq, base = "size", level = NULL, conf = 0.95
 
   ## Prepare a list of OTU abundance vectors
   x <- prepare_inext(
-        as.data.frame(phyloseq::otu_table(physeq, taxa_are_rows = T)),
+        phyloseq_otu_to_df(physeq, taxa_as_rows = T),
         correct_singletons = correct_singletons)
 
   ## Estimate species diversity

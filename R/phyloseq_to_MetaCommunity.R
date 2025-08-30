@@ -40,8 +40,7 @@ phyloseq_to_MetaCommunity <- function(physeq, wei = NULL){
   # require(entropart)
 
   ## Extract OTU table
-  otus <- as.data.frame(phyloseq::otu_table(physeq))
-  if(phyloseq::taxa_are_rows(physeq) == FALSE){ otus <- t(otus) }
+  otus <- phyloseq_otu_to_df(physeq, taxa_as_rows = TRUE)
 
   ## Prepare equal community weights
   if(is.null(wei)){

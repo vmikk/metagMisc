@@ -56,7 +56,7 @@ phyloseq_combine_samples <- function(physeq, variable = NULL){
     # rm(i)
 
     ## Extract OTU tables
-    ppc <- plyr::llply(.data = ppc, .fun = function(x){ as.data.frame(phyloseq::otu_table(x)) })
+    ppc <- plyr::llply(.data = ppc, .fun = function(x){ phyloseq_otu_to_df(x) })
 
     ## Merge OTU tables and rename samples
     ppc <- do.call(cbind, ppc)

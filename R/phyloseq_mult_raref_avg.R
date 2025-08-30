@@ -94,7 +94,7 @@ phyloseq_mult_raref_avg <- function(physeq, SampSize = NULL, iter = 1000, parall
 
   ## Extract OTU tables
   phys_tabs <- plyr::llply(.data = phys_raref, .fun = function(x){
-    as.data.frame(phyloseq::otu_table(x))
+    phyloseq_otu_to_df(x)
   })
 
   ## Merge OTU tables

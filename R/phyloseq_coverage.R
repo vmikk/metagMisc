@@ -22,7 +22,7 @@ phyloseq_coverage <- function(physeq, correct_singletons = FALSE, add_attr = T){
 
   ## Prepare a list of OTU abundance vectors
   x <- prepare_inext(
-        as.data.frame(phyloseq::otu_table(physeq, taxa_are_rows = T)),
+        phyloseq_otu_to_df(physeq, taxa_as_rows = T),
         correct_singletons = correct_singletons)
 
   ## Estimate sample coverages
@@ -129,7 +129,7 @@ phyloseq_coverage_raref <- function(physeq, coverage = NULL, iter = 1, replace =
 
   ## Prepare a list of OTU abundance vectors
   x <- prepare_inext(
-        as.data.frame(phyloseq::otu_table(physeq, taxa_are_rows = T)),
+        phyloseq_otu_to_df(physeq, taxa_as_rows = T),
         correct_singletons = correct_singletons)
 
   ## Estimate the observed sample coverages

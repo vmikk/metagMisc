@@ -74,14 +74,11 @@ phyloseq_replace_zero <- function(physeq, method = "pseudocount", pseudocount = 
 #'
 phyloseq_transform_aldex_clr <- function(physeq, variable = NULL, iter = 1){
 
-  ## Extract OTU abundance table
-  OTUS <- as.data.frame(phyloseq::otu_table(physeq))
-
-  ## Transpose data
+  ## How are the OTUs arranged?
   trow <- phyloseq::taxa_are_rows(physeq)
-  if(trow == FALSE){
-    OTUS <- t(OTUS)
-  }
+
+  ## Extract OTU abundance table
+  OTUS <- phyloseq_otu_to_df(physeq, taxa_as_rows = TRUE)
 
   ## Extract meta-data
   if(is.null(variable)){

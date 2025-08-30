@@ -65,7 +65,7 @@ phyloseq_summary <- function(physeq, ..., cols = NULL, more_stats = FALSE, long 
     sreads <- phyloseq::sample_sums(x)
 
     ## OTU abundance table
-    otutab <- as.data.frame(phyloseq::otu_table(x))
+    otutab <- phyloseq_otu_to_df(x)
 
     ## OTU occurrence
     otuocc <- phyloseq_otu_occurrence(x, taxa_frequency = "percentage", variable = NULL, drop_zeroes = F, justdf = T)

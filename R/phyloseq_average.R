@@ -161,7 +161,7 @@ OTU_average <- function(x, avg_type = "aldex",
   }
 
   ## Extract OTU abundance table
-  otus <- as.data.frame(phyloseq::otu_table(x))
+  otus <- phyloseq_otu_to_df(x)
 
   ## Show some warnings
   if(verbose == TRUE){

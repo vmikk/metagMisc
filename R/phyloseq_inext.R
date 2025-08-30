@@ -50,7 +50,7 @@ phyloseq_inext <- function(physeq, Q = 0,
 
   ## Prepare a list of OTU abundance vectors
   x <- prepare_inext(
-        as.data.frame(phyloseq::otu_table(physeq, taxa_are_rows = T)),
+        phyloseq_otu_to_df(physeq, taxa_as_rows = T),
         correct_singletons = correct_singletons)
 
   ## Run rarefaction for all samples in a single thread
