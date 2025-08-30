@@ -1,5 +1,51 @@
 
-## Replace missing taxonomy
+#' Impute missing taxonomy assignments in phyloseq objects
+#'
+#' @description 
+#' Replaces missing (NA) taxonomic assignments with informative placeholders 
+#' based on the nearest available higher-level taxonomic information. Handles 
+#' species and higher taxonomic ranks differently.
+#'
+#' @param phys A \code{phyloseq} object or \code{taxonomyTable} containing 
+#'   taxonomic assignments with potential missing values
+#' @param unknown_taxon Character string to append to higher taxonomic ranks 
+#'   when the assignment is missing (default: "_unidentified")
+#' @param unknown_sp Character string to append to genus names when species 
+#'   assignment is missing (default: " sp")
+#' @param make_unique Logical indicating whether to make species names unique 
+#'   by appending numerical suffixes (default: \code{FALSE})
+#' @param addmaxrank Logical indicating whether to add a column showing the 
+#'   lowest resolved taxonomic rank for each OTU/ASV (default: \code{FALSE})
+#'
+#' @details
+#' This function addresses common issues in metagenomic/phylogenetic datasets 
+#' where taxonomic assignments are incomplete. Missing values are replaced using 
+#' a hierarchical approach:
+#' 
+#' \strong{Higher taxonomic ranks}: Missing values are replaced with the previous 
+#' (higher) rank name plus the \code{unknown_taxon} suffix. For example, if an 
+#' OTU is classified to family "Enterobacteriaceae" but genus is missing, the 
+#' genus becomes "Enterobacteriaceae_unidentified".
+#' 
+#' \strong{Species level}: Missing species assignments are replaced with the 
+#' genus name plus the \code{unknown_sp} suffix (e.g., "Escherichia sp").
+#' 
+#' \strong{Cleanup operations}:
+#' \itemize{
+#'   \item Removes duplicate unidentified strings (e.g., "_unidentified_unidentified")
+#'   \item Cleans up species-level artifacts (e.g., "Genus_unidentified sp" -> "Genus sp")
+#'   \item Optionally ensures unique species names using \code{make.unique()}
+#' }
+#'
+#' @return A \code{phyloseq} object with imputed taxonomy table. Missing 
+#'   taxonomic assignments are replaced with informative placeholders derived 
+#'   from higher-level classifications.
+#'
+#' @seealso \code{\link{get_max_taxonomic_rank}} for identifying the lowest 
+#'   resolved taxonomic rank
+#'
+#' @export
+#'
 phyloseq_taxonomy_imputation <- function(phys,
   unknown_taxon = "_unidentified", unknown_sp = " sp",
   make_unique = FALSE, addmaxrank = FALSE){
