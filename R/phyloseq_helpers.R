@@ -7,9 +7,10 @@
 #' a data.frame with control over whether taxa should be arranged as rows or columns.
 #'
 #' @param physeq A \code{phyloseq} object containing an OTU table (or \code{otu_table} object)
-#' @param taxa_as_rows Logical, if \code{TRUE} (default), taxa will be arranged as rows 
-#'   and samples as columns in the output data.frame. If \code{FALSE}, samples will be 
-#'   rows and taxa will be columns.
+#' @param taxa_as_rows Logical or NULL. 
+#'   If \code{NULL} (default), the orientation of the OTU table will not be changed. 
+#'   If \code{TRUE}, taxa will be arranged as rows and samples as columns in the output data.frame. 
+#'   If \code{FALSE}, samples will be rows and taxa will be columns.
 #'
 #' @return A data.frame containing OTU abundances with the specified orientation.
 #'   Row and column names are preserved from the original phyloseq object.
@@ -37,23 +38,37 @@
 #' otu_samp_rows <- phyloseq_otu_to_df(GlobalPatterns, taxa_as_rows = FALSE)
 #' dim(otu_samp_rows)
 #'
-phyloseq_otu_to_df <- function(physeq, taxa_as_rows = TRUE){
+phyloseq_otu_to_df <- function(physeq, taxa_as_rows = NULL){
 
   res <- as.data.frame(phyloseq::otu_table(physeq))
   current_orientation <- phyloseq::taxa_are_rows(physeq)
 
+  ## If taxa_as_rows is NULL, use the default orientation of the OTU table
+  if(is.null(taxa_as_rows)){
+    taxa_as_rows <- current_orientation
+  }
+
+  ## Validation
+  if(!is.logical(taxa_as_rows)){
+    stop("taxa_as_rows must be TRUE or FALSE\n")
+  }
+
   ## Transpose if needed to match desired orientation
+
+  ## Want taxa as rows
   if(taxa_as_rows == TRUE){
-    ## Want taxa as rows
+
+    ## Currently samples as rows, need to transpose
     if(current_orientation == FALSE){
-      ## Currently samples as rows, need to transpose
       res <- t(res)
     }
     ## If current_orientation == TRUE, no change needed
+
+  ## Want samples as rows (taxa as columns)
   } else {
-    ## Want samples as rows (taxa as columns)
+
+    ## Currently taxa as rows, need to transpose
     if(current_orientation == TRUE){
-      ## Currently taxa as rows, need to transpose
       res <- t(res)
     }
     ## If current_orientation == FALSE, no change needed
