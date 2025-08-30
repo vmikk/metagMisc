@@ -15,7 +15,7 @@
 #' \strong{Presence–absence} (\code{abundance = FALSE}):
 #' Let \eqn{a} be the number of shared taxa and \eqn{b} and \eqn{c} the numbers
 #' unique to each sample. Simpson's dissimilarity (Lennon et al., 2001) is
-#' \deqn{β_{sim} = \frac{\min(b,,c)}{a + \min(b,,c)}\ ,}
+#' \deqn{β_{sim} = \frac{a}{a + \min(b,c)} }
 #' which equals 0 for identical lists and 1 when no taxa are shared. Implemented
 #' via \code{vegan::betadiver(x > 0, method = "sim")}, i.e. any positive value
 #' is treated as presence.
@@ -25,7 +25,7 @@
 #' samples, let \eqn{U} and \eqn{V} be the sums of relative abundances (in each
 #' sample) over taxa shared by the pair. Following Chao et al. (2006), the
 #' Simpson \emph{similarity} is
-#' \deqn{S = \frac{UV}{,UV + \min{U(1 - V),; V(1 - U)},},}
+#' \deqn{S = \frac{UV}{UV + \min{ (U - UV, V - UV) } }}
 #' and the reported \emph{dissimilarity} is \eqn{1 - S}. This reduces to the
 #' binary form when abundances are equal across taxa.
 #'
