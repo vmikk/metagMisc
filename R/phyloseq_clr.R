@@ -1,5 +1,29 @@
 
-## CLR transform function
+#' Centered log-ratio transformations for phyloseq objects
+#'
+#' Apply centered log-ratio (CLR) or modified CLR (mCLR) transformation to the
+#' `otu_table` of a `phyloseq` object. Counts can be optionally shifted by a
+#' user-specified pseudocount before converting to relative abundances and
+#' transforming. Zeros are handled using a CLR implementation that ignores
+#' zeros in the log and centers by the mean of the non-zero logs. The mCLR
+#' variant applies an additional positive shift to non-zero CLR values to
+#' ensure strict positivity, following Yoon et al. (2019).
+#'
+#' @param physeq A `phyloseq` object whose `otu_table` contains counts or
+#'   abundances to be transformed.
+#' @param method Character string selecting the transform: either
+#'   "CLR" (default) for standard centered log-ratio with zero handling, or
+#'   "mCLR" for the modified CLR that shifts non-zero CLRs to be strictly positive.
+#' @param pseudocount Numeric scalar pseudocount to add to the `otu_table`
+#'   prior to conversion to relative abundances. Set to `NULL` to disable.
+#'   Default is 0.5.
+#'
+#' @return A `phyloseq` object whose `otu_table` has been transformed by the
+#'   requested method.
+#'
+#' @importFrom phyloseq otu_table transform_sample_counts
+#' @export
+#' 
 phyloseq_clr <- function(physeq, method = "CLR", pseudocount = 0.5){
 
   ## CLR function with special handling of zeros
@@ -68,5 +92,3 @@ phyloseq_clr <- function(physeq, method = "CLR", pseudocount = 0.5){
 
   return(physeq)
 }
-
-
