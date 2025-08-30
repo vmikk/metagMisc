@@ -45,15 +45,10 @@ prevalence <- function(physeq, add_tax = TRUE, package = "data.table"){
   trows <- taxa_are_rows(physeq)
 
   ## Extract OTU table
-  otutab <- as.data.frame(otu_table(physeq))
+  otutab <- phyloseq_otu_to_df(physeq, taxa_as_rows = TRUE)
 
   ## Process data with base R
   if(package %in% "base"){
-
-    ## Transpose OTU table (species should be arranged by rows)
-    if(trows == FALSE){
-      otutab <- t(otutab)
-    }
 
     ## Estimate prevalence (number of samples with OTU present)
     prevdf <- apply(X = otutab,
@@ -81,11 +76,6 @@ prevalence <- function(physeq, add_tax = TRUE, package = "data.table"){
   if(package %in% "data.table"){
 
     setDT(otutab)
-
-    ## Transpose OTU table (species should be arranged by rows)
-    if(trows == FALSE){
-      otutab <- t(otutab)
-    }
 
     ## Row-wise medians
     ## Based on https://stackoverflow.com/a/48885574  by Jaap Walhout
