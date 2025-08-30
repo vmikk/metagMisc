@@ -124,6 +124,13 @@ coverage_to_samplesize <- function(x, coverage = 0.95, add_attr = F){
 phyloseq_coverage_raref <- function(physeq, coverage = NULL, iter = 1, replace = F,
   correct_singletons = FALSE, seeds = NULL, multithread = F, drop_lowcoverage = F, ...){
 
+  ## Sanity check for the random number generator
+  if(!is.null(seeds)){
+    if(length(seeds) != iter){ stop("Error: lenght of 'seeds' should be the same as the number of iterations.\n") }
+    if(length(seeds) != length(unique(seeds))){ warning("Warning: Provided seeds are not unique which leads to the identical results of random sampling.\n") }
+    if(!isTRUE(all(seeds == floor(seeds)))){ stop("Error: Seeds must only contain integer values.\n") }
+  }
+
   ## Prepare seed values for rarefaction
   if(is.null(seeds)){ seeds <- 1:iter }
 
