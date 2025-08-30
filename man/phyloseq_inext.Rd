@@ -8,6 +8,7 @@ phyloseq_inext(
   physeq,
   Q = 0,
   curve_type = "diversity",
+  ci_type = "size_based",
   correct_singletons = FALSE,
   endpoint = NULL,
   knots = 40,
@@ -26,6 +27,8 @@ phyloseq_inext(
 \item{Q}{Diversity order of Hill number; 0 for species richness (default), 1 for Shannon diversity; 2 for Simpson diversity}
 
 \item{curve_type}{Which data to show on the plot: "diversity" (default) or sample "coverage"}
+
+\item{ci_type}{Confidence interval type: "size_based" (default) or "coverage_based"}
 
 \item{correct_singletons}{Logical; apply Good-Turing correction for singleon counts}
 
@@ -54,8 +57,14 @@ Plot of class 'ggplot' or 'data.frame' (if 'justDF = TRUE')
 Estimate interpolated and extrapolated Hill numbers and sample coverage and construct rarefaction curve.
 }
 \examples{
+library(phyloseq)
+library(iNEXT)
+library(ggplot2)
+library(data.table)
 data("esophagus")
+
 phyloseq_inext(esophagus)
+phyloseq_inext(esophagus, Q = 1)
 phyloseq_inext(esophagus, curve_type = "coverage")
 phyloseq_inext(esophagus, justDF = T)
 
