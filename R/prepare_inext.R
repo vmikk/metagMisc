@@ -39,7 +39,7 @@ prepare_inext <- function(OTUs, correct_singletons = T){
 
       ## Extract OTUs
       if("phyloseq" %in% class(OTUs)){
-        OTUs <- as.data.frame(phyloseq::otu_table(OTUs))
+        OTUs <- phyloseq_otu_to_df(OTUs)
       }
       if("otu_table" %in% class(OTUs)){
         OTUs <- as.data.frame(OTUs)
