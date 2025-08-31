@@ -13,13 +13,13 @@
 #'
 #' @examples
 #' data("esophagus")
-#' eso_raref <- raref_rtk(esophagus, iter = 10)
+#' eso_raref <- phyloseq_raref_rtk(esophagus, iter = 10)
 #' 
 #' # Benchmark
-#' system.time( GPr <- raref_rtk(GlobalPatterns, SampSize = 5000, iter = 10, trimOTUs = T) )
+#' system.time( GPr <- phyloseq_raref_rtk(GlobalPatterns, SampSize = 5000, iter = 10, trimOTUs = T) )
 #' system.time( GPr <- phyloseq_mult_raref(GlobalPatterns, SampSize = 5000, iter = 10, trimOTUs = T) )
 #' 
-raref_rtk <- function(physeq, SampSize = NULL, MinSizeThreshold = NULL,
+phyloseq_raref_rtk <- function(physeq, SampSize = NULL, MinSizeThreshold = NULL,
   iter = 1000, trimOTUs = TRUE, ...){
 
   ## Filter samples by number of reads
