@@ -19,7 +19,7 @@
 #' GP <- prune_taxa(taxa_sums(GlobalPatterns) >= 100, GlobalPatterns)
 #' 
 #' # Perform multiple rarefaction and average relative OTU abundances across rarefaction iterations
-#' res <- phyloseq_mult_raref_avg(GP)
+#' res <- phyloseq_mult_raref_avg(GP, iter = 10)
 #' res
 #' 
 phyloseq_mult_raref_avg <- function(physeq, SampSize = NULL, iter = 1000, parallel = FALSE, verbose = TRUE, ...){
