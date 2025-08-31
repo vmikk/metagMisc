@@ -1,17 +1,17 @@
 
 #' Calculate Simpson's dissimilarity coefficient
 #'
-#' @description 
-#' Computes pairwise Simpson's dissimilarity coefficient between samples using either 
+#' @description
+#' Computes pairwise Simpson's dissimilarity coefficient between samples using either
 #' abundance-weighted or presence-absence data.
 #'
-#' @param x A numeric matrix or data frame containing community data where rows are samples 
+#' @param x A numeric matrix or data frame containing community data where rows are samples
 #'   and columns are taxa (species/OTUs)
 #' @param abundance Logical, if \code{TRUE} (default), compute the abundance-
 #'   weighted version. If \code{FALSE}, compute the binary (presence–absence) version.
 #'
 #' @details
-#' 
+#'
 #' \strong{Presence–absence} (\code{abundance = FALSE}):
 #' Let \eqn{a} be the number of shared taxa and \eqn{b} and \eqn{c} the numbers
 #' unique to each sample. Simpson's dissimilarity (Lennon et al., 2001) is
@@ -23,8 +23,8 @@
 #' \strong{Abundance-weighted} (\code{abundance = TRUE}):
 #' Rows are standardized to relative abundances (row sums = 1). For a pair of
 #' samples, let \eqn{U} and \eqn{V} be the sums of relative abundances (in each
-#' sample) over taxa shared by the pair. Following Chao et al. (2006), the
-#' Simpson \emph{similarity} is
+#' sample) \strong{over taxa shared by the pair of samples}. 
+#' Following Chao et al. (2006), the Simpson \emph{similarity} is
 #' \deqn{S = \frac{UV}{UV + \min{ (U - UV, V - UV) } }}
 #' and the reported \emph{dissimilarity} is \eqn{1 - S}. This reduces to the
 #' binary form when abundances are equal across taxa.
@@ -41,33 +41,33 @@
 #' (Chao et al., 2006); in undersampled communities this can inflate
 #' dissimilarity.
 #'
-#' @return A distance object of class \code{dist} containing pairwise Simpson 
-#'   dissimilarity values. The object includes an \code{abundance_weighted} 
+#' @return A distance object of class \code{dist} containing pairwise Simpson
+#'   dissimilarity values. The object includes an \code{abundance_weighted}
 #'   attribute indicating the calculation method used.
 #'
 #' @references
-#' 
-#' Lennon JJ, Koleff P, Greenwood JJD, Gaston KJ (2001) The geographical structure of British bird distributions: 
-#' Diversity, spatial turnover and scale // Journal of Animal Ecology, V. 70, P. 966–979, 
+#'
+#' Lennon JJ, Koleff P, Greenwood JJD, Gaston KJ (2001) The geographical structure of British bird distributions:
+#' Diversity, spatial turnover and scale // Journal of Animal Ecology, V. 70, P. 966–979,
 #' DOI:10.1046/j.0021-8790.2001.00563.x
-#' 
-#' Chao A, Chazdon RL, Colwell RK, Shen T-J (2006) Abundance-based similarity indices and their estimation 
-#' when there are unseen species in samples // Biometrics, V. 62 (2), P. 361–371, 
+#'
+#' Chao A, Chazdon RL, Colwell RK, Shen T-J (2006) Abundance-based similarity indices and their estimation
+#' when there are unseen species in samples // Biometrics, V. 62 (2), P. 361–371,
 #' DOI:10.1111/j.1541-0420.2005.00489.x
 #'
 #' @examples
 #' library(vegan)
 #' data(BCI)
-#' 
+#'
 #' # Abundance-weighted Simpson dissimilarity (default)
 #' dist_abund <- dist_simpson(BCI)
-#' 
-#' # Presence-absence Simpson dissimilarity  
+#'
+#' # Presence-absence Simpson dissimilarity
 #' dist_pa <- dist_simpson(BCI, abundance = FALSE)
-#' 
+#'
 #' @importFrom vegan decostand betadiver
 #' @export
-#' 
+#'
 dist_simpson <- function(x, abundance = TRUE){
 
   ## Function for Simpson dissimilarity for a pair of samples
@@ -118,12 +118,17 @@ dist_simpson <- function(x, abundance = TRUE){
 
     diag(dd) <- 0
     dd <- as.dist(dd)
+    attr(x = dd, which = "call") <- match.call()
+    attr(x = dd, which = "method") <- "dist_simpson"
+    attr(x = dd, which = "maxdist") <- 1
     attr(x = dd, which = "abundance_weighted") <- TRUE
 
   ## Presence-absence Simpson's dissimilarity
   } else {
 
     dd <- vegan::betadiver(x = x, method = "sim")
+    attr(x = dd, which = "call") <- match.call()
+    attr(x = dd, which = "method") <- "dist_simpson"
     attr(x = dd, which = "abundance_weighted") <- FALSE
   }
 
