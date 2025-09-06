@@ -26,8 +26,21 @@
 #' @export
 #'
 #' @examples
-#' d <- dist(1:10)
+#' library(ggplot2)
+#' 
+#' d  <- dist(1:100) / 100
 #' dk <- gaussian_kernel(d)
+#  shepard_plot(dis = d, ord = dk) + labs(x = "Original distance", y = "Transformed distance")
+#' 
+#' dk <- rbind(
+#' data.frame(d = as.vector(d), Bandwidth = "1", dk = as.vector(gaussian_kernel(d, bandwidth = 1))),
+#' data.frame(d = as.vector(d), Bandwidth = "1.5", dk = as.vector(gaussian_kernel(d, bandwidth = 1.5))),
+#' data.frame(d = as.vector(d), Bandwidth = "2", dk = as.vector(gaussian_kernel(d, bandwidth = 2))),
+#' data.frame(d = as.vector(d), Bandwidth = "4", dk = as.vector(gaussian_kernel(d, bandwidth = 4))) )
+#' 
+#' ggplot(dk, aes(x = d, y = dk, color = Bandwidth)) +
+#    geom_line() +
+#'   labs(x = "Original distance", y = "Transformed distance") + theme_classic()
 #' 
 gaussian_kernel <- function(d, bandwidth = 1, invert = TRUE) {
 
