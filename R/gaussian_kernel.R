@@ -42,7 +42,8 @@
 #    geom_line() +
 #'   labs(x = "Original distance", y = "Transformed distance") + theme_classic()
 #' 
-gaussian_kernel <- function(d, bandwidth = 1, invert = TRUE) {
+gaussian_kernel <- function(d, bandwidth = 1, invert = TRUE,
+                            normalize_to_max = FALSE, max_distance = 1) {
 
   # Validate inputs
   if(! "dist" %in% class(d)) {
@@ -58,6 +59,23 @@ gaussian_kernel <- function(d, bandwidth = 1, invert = TRUE) {
   ## Convert back to dissimilarity
   if(invert == TRUE){
     res <- 1 - res
+  }
+  
+  ## Optional normalization to the value at D_max (done after invert step)
+  if(normalize_to_max) {
+    s_Dmax <- exp(- (max_distance^2) / (2 * bandwidth^2))
+    denom <- 1 - s_Dmax
+    if(denom <= 0) {
+      stop("Normalization denominator is non-positive; check 'max_distance' and 'bandwidth'.\n")
+    }
+    if(denom < 1e-12) {
+      warning("Normalization denominator is very small; results may be numerically unstable.\n")
+    }
+    if(invert == TRUE) {
+      res <- res / denom
+    } else {
+      res <- (res - s_Dmax) / denom
+    }
   }
   
   return(res)
