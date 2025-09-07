@@ -47,12 +47,8 @@
 phyloseq_SRS <- function(physeq, Cmin, drop_zeros = FALSE, set_seed = TRUE, seed = 1, ...){
 
   ## Extract OTU table
-  data <- as.data.frame(otu_table(physeq))
-
-  ## Transpose data (columns should be samples and rows are the OTU counts)
-  if(!taxa_are_rows(physeq)){
-    data <- t(data)
-  }
+  ## and transpose data (columns should be samples and rows are the OTU counts)
+  data <- phyloseq_otu_to_df(physeq, taxa_as_rows = TRUE)
 
   ## Perform SRS-normalization
   res <- SRS(data = data, Cmin = Cmin, ...)
