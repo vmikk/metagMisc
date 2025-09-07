@@ -44,6 +44,26 @@
 #' @importFrom phyloseq otu_table taxa_are_rows prune_taxa taxa_sums
 #' @export
 #'
+#' @examples
+#' # Load required packages
+#' library(phyloseq)
+#' library(SRS)
+#' 
+#' # Load example data
+#' data(enterotype)
+#' 
+#' # Check original library sizes
+#' sample_sums(enterotype)
+#' 
+#' # Normalize to 1000 reads per sample
+#' ps_norm <- phyloseq_SRS(enterotype, Cmin = 1000)
+#' 
+#' # Verify normalization
+#' sample_sums(ps_norm)  # All should equal 1000
+#' 
+#' # Remove zero-abundance taxa after normalization
+#' ps_norm_clean <- phyloseq_SRS(enterotype, Cmin = 1000, drop_zeros = TRUE)
+#'
 phyloseq_SRS <- function(physeq, Cmin, drop_zeros = FALSE, set_seed = TRUE, seed = 1, ...){
 
   ## Extract OTU table
