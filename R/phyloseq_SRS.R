@@ -89,3 +89,16 @@ phyloseq_SRS <- function(physeq, Cmin, drop_zeros = FALSE, set_seed = TRUE, seed
 
   return(physeq)
 }
+phyloseq_SRS_lowcount <- function(physeq, treshold = 10000){
+  
+  ## Split data into low- and high- count parts
+  pl <- prune_samples(sample_sums(physeq) < treshold, physeq)
+  ph <- prune_samples(sample_sums(physeq) >= treshold, physeq)
+
+  ## SRS-normalize high-count samples
+  ps <- phyloseq_SRS(ph, Cmin = treshold, drop_zeros = FALSE)
+
+  ## Merge phyloseq objects
+  res <- merge_phyloseq(pl, ps)
+  return(res)
+}
