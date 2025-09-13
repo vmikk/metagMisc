@@ -52,6 +52,14 @@ gaussian_kernel <- function(d, bandwidth = 1, invert = TRUE,
   if(bandwidth <= 0) {
     stop("Bandwidth must be positive.\n")
   }
+  if(normalize_to_max) {
+    if(!is.numeric(max_distance) || length(max_distance) != 1 || !is.finite(max_distance) || max_distance <= 0) {
+      stop("When 'normalize_to_max = TRUE', 'max_distance' must be a single positive, finite number.\n")
+    }
+    if(max(as.vector(d), na.rm = TRUE) > max_distance) {
+      warning("Some observed distances exceed 'max_distance'. Normalized values may exceed 1.\n")
+    }
+  }
   
   # Compute Gaussian kernel
   res <- exp(- (d^2) / (2 * bandwidth^2))
