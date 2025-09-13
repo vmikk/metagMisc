@@ -58,6 +58,16 @@
 #' ggplot(dk, aes(x = d, y = dk, color = Bandwidth)) +
 #    geom_line() +
 #'   labs(x = "Original distance", y = "Transformed distance") + theme_classic()
+#'
+#' # Normalize by the maximum possible distance
+#' dkn <- rbind(
+#' data.frame(d = as.vector(d), Bandwidth = "1", dk = as.vector(gaussian_kernel(d, bandwidth = 1, normalize_to_max = TRUE))),
+#' data.frame(d = as.vector(d), Bandwidth = "2", dk = as.vector(gaussian_kernel(d, bandwidth = 2, normalize_to_max = TRUE))))
+#' 
+#' ggplot(dkn, aes(x = d, y = dk, color = Bandwidth)) +
+#'   annotate("segment", x=-Inf, xend=Inf,y=-Inf, yend=Inf, color = "grey70", linetype = "dashed") +
+#'   geom_line() +
+#'   labs(x = "Original distance", y = "Transformed distance (normalized)") + theme_classic()
 #' 
 gaussian_kernel <- function(d, bandwidth = 1, invert = TRUE,
                             normalize_to_max = FALSE, max_distance = 1) {
