@@ -19,6 +19,7 @@
 #' @export
 #'
 #' @examples
+#' library(phyloseq)
 #' data("esophagus")
 #' eso_raref <- phyloseq_mult_raref(esophagus, iter = 10)
 #'
