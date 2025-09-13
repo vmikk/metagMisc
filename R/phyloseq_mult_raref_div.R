@@ -13,6 +13,13 @@
 #' @export
 #'
 #' @examples
+#' library(phyloseq)
+#' data("esophagus")
+#' 
+#' # Perform multiple rarefaction, estimate diversity (repeat the procedure 10 times)
+#' # and average diversity (richness and Shannon index) estimates over all iterations
+#' phyloseq_mult_raref_div(esophagus, divindex = c("Observed", "Shannon"), iter = 10)
+#' 
 phyloseq_mult_raref_div <- function(physeq, SampSize = min(sample_sums(physeq)), iter = 1000,
   divindex = c("Observed", "Shannon"), parallel = FALSE, verbose = TRUE, ...){
 
