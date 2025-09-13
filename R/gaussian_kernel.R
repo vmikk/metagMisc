@@ -6,6 +6,12 @@
 #'   (default is 1). The bandwidth controls the spread of the kernel; a smaller
 #'   bandwidth leads to a kernel that drops off more quickly.
 #' @param invert Logical (default is TRUE); if TRUE, converts the Gaussian kernel into a measure of dissimilarity.
+#' @param normalize_to_max Logical (default is FALSE); if TRUE, normalizes the
+#'   transformed values to the [0, 1] range using `max_distance` as the maximum
+#'   possible distance for the original metric.
+#' @param max_distance A positive number (default is 1) indicating the maximum
+#'   possible dissimilarity in the original metric. Used only when
+#'   `normalize_to_max = TRUE`.
 #'
 #' @details
 #' The Gaussian kernel transformation is used to convert distances into a
@@ -18,6 +24,17 @@
 #' A smaller bandwidth makes the kernel more sensitive to small distances,
 #' emphasizing local structure, while a larger bandwidth smooths out local
 #' variations, focusing on global structure.
+#'
+#' When `normalize_to_max = TRUE`, the output is rescaled to ensure the full
+#' [0, 1] range is attainable for the selected `bandwidth` and chosen
+#' `max_distance` (denoted as D_max):
+#' - If `invert = TRUE` (dissimilarity): delta(d) = 1 - exp(-d^2/(2*sigma^2)), and
+#'   delta*(d) = delta(d) / delta(D_max).
+#' - If `invert = FALSE` (similarity): s(d) = exp(-d^2/(2*sigma^2)), and
+#'   s*(d) = {s(d) - s(D_max)} / {1 - s(D_max)}.
+#'
+#' This preserves monotonicity and ensures standardized scaling across datasets
+#' when a common D_max is used (e.g., 1 for Bray–Curtis or Jaccard dissimilarities).
 #'
 #' @return An object of class `dist`, with values in the range between 0 and 1.
 #' These values can be interpreted as the probability of similarity 
