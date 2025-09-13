@@ -25,6 +25,17 @@
 #' @return Character vector of the same length as \code{x}, with numbers formatted 
 #'   as zero-padded strings
 #'
+#' @examples
+#' # Automatic padding based on maximum value
+#' zero_pad(c(1, 10, 100))
+#' # Returns: "001" "010" "100"
+#' 
+#' # Manual specification of digits
+#' zero_pad(c(1, 5, 12), ndigits = 4)
+#' # Returns: "0001" "0005" "0012"
+#'
+#' @export
+#' 
 zero_pad <- function(x, ndigits = NULL){
 
   n_int_digits <- function(z) {
