@@ -47,6 +47,16 @@
 #'
 #' @seealso [phyloseq::transform_sample_counts()], [phyloseq::otu_table()]
 #'
+#' @examples
+#' library(phyloseq)
+#' data(GlobalPatterns)
+#' gp <- GlobalPatterns
+#' 
+#' # Standard CLR on relative abundances
+#' gp_clr <- phyloseq_clr(gp, method = "CLR")
+#' 
+#' # Modified CLR with default positive shift
+#' gp_mclr <- phyloseq_clr(gp, method = "mCLR")
 #'
 #' @importFrom phyloseq otu_table transform_sample_counts
 #' @export
