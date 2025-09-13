@@ -21,6 +21,33 @@
 #' @return A `phyloseq` object whose `otu_table` has been transformed by the
 #'   requested method.
 #'
+#' @details
+#' The CLR implementation is adapted from the approach used in
+#' `SpiecEasi` (Kurtz et al., 2015), computing `log(x)` only for entries above a
+#' small tolerance and centering by the mean of the non-zero log values.
+#'
+#' The mCLR implementation follows Yoon et al. (2019) as used in the `SPRING`
+#' package: CLR is computed on non-zero entries and then shifted by a positive
+#' constant so that all non-zero values are strictly positive. In this
+#' implementation, defaults are used (`eps = NULL`, `atleast = 1`).
+#'
+#' Prior to transformation, counts are converted to relative abundances per
+#' sample using `phyloseq::transform_sample_counts`. If `pseudocount` is not
+#' `NULL`, it is added to the counts before this conversion.
+#'
+#' @references
+#' 
+#' Kurtz ZD, Müller CL, Miraldi ER, Littman DR, Blaser MJ, et al. (2015) 
+#' Sparse and Compositionally Robust Inference of Microbial Ecological Networks //
+#' PLOS Computational Biology 11(5): e1004226. DOI:10.1371/journal.pcbi.1004226  
+#' 
+#' Yoon G, Gaynanova I, Müller CL (2019) 
+#' Microbial Networks in SPRING - Semi-parametric Rank-Based Correlation and Partial Correlation Estimation for Quantitative Microbiome Data // 
+#' Front. Genet. 10:516. DOI:10.3389/fgene.2019.00516  
+#'
+#' @seealso [phyloseq::transform_sample_counts()], [phyloseq::otu_table()]
+#'
+#'
 #' @importFrom phyloseq otu_table transform_sample_counts
 #' @export
 #' 
