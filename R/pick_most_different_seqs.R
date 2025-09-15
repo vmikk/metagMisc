@@ -1,3 +1,21 @@
+
+#' Pick the N most different sequences from a FASTA / XStringSet / alignment
+#'
+#' @param x Path to FASTA file, a DNAStringSet, or a DNAMultipleAlignment.
+#' @param top_n How many sequences to select (default 3).
+#' @param method "maximin" (default) or "maxsum" greedy selection.
+#' @param correction Substitution model for DECIPHER::DistanceMatrix (default "Jukes-Cantor").
+#' @param processors Number of CPU cores for DECIPHER (NULL = auto).
+#' @param verbose Logical; pass through to DECIPHER functions.
+#' @return A list with:
+#'   - names: character vector of selected sequence names (in chosen order)
+#'   - indices: integer indices into the original input order (if available)
+#'   - subset: DNAStringSet of selected sequences (original, unaligned)
+#'   - dist: numeric matrix of pairwise distances used for selection
+#' @examples
+#' # res <- pick_most_different("seqs.fasta", top_n = 5)
+#' # res$subset  # DNAStringSet of the 5 most different sequences
+
 ## Pick the N most different sequences
 pick_most_different_seqs <- function(x, top_n = 3,
   method = c("maximin", "maxsum"),
@@ -110,4 +128,5 @@ pick_most_different_seqs <- function(x, top_n = 3,
 
   return(res)
 }
+
 
