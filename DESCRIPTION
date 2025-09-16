@@ -24,6 +24,7 @@ Suggests:
     DESeq2 (>= 1.14.0),
     entropart (>= 1.4-8),
     geiger (>= 2.0.6),
+    geodist (>= 0.1.1),
     GenomicAlignments (>= 1.36.0),
     iNEXT (>= 3.0.0),
     Matrix (>= 1.5-0),
