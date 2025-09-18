@@ -41,6 +41,19 @@
 #'   taxonomic assignments are replaced with informative placeholders derived 
 #'   from higher-level classifications.
 #'
+#' @examples
+#' library(phyloseq)
+#' 
+#' # Basic imputation with default settings
+#' ps_imputed <- phyloseq_taxonomy_imputation(physeq)
+#' 
+#' # Custom placeholders for missing assignments
+#' ps_custom <- phyloseq_taxonomy_imputation(
+#'   physeq,
+#'   unknown_taxon = "_unknown",
+#'   unknown_sp = "_sp"
+#' )
+#'
 #' @seealso \code{\link{get_max_taxonomic_rank}} for identifying the lowest 
 #'   resolved taxonomic rank
 #'

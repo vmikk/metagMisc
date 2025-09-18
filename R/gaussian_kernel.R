@@ -68,7 +68,7 @@
 #'   annotate("segment", x=-Inf, xend=Inf,y=-Inf, yend=Inf, color = "grey70", linetype = "dashed") +
 #'   geom_line() +
 #'   labs(x = "Original distance", y = "Transformed distance (normalized)") + theme_classic()
-#' 
+#'
 gaussian_kernel <- function(d, bandwidth = 1, invert = TRUE,
                             normalize_to_max = FALSE, max_distance = 1) {
 
