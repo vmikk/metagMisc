@@ -1,3 +1,16 @@
+
+#' @title Separate phyloseq-class object into a number of chunks by sample.
+#' @description This function splits a phyloseq object by samples, returning a list of phyloseqs with N samples each.
+#' @param physeq A phyloseq-class object
+#' @param nchunks A number of samples per chunks
+#' @param drop_zeroes Logical, indicating weather OTUs with zero abundance or samples with zero total abundance should be removed
+#' @return List with phyloseq objects.
+#' @export
+#'
+#' @examples
+#' data("enterotype")
+#' phyloseq_sep_samp_chunks(enterotype, nchunks = 5)
+#'
 phyloseq_sep_samp_chunks <- function(physeq, nchunks = NULL, drop_zeroes = T){
     
   ## Check if nchunks is specified
