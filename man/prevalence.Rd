@@ -4,18 +4,42 @@
 \alias{prevalence}
 \title{Compute prevalence and abundance summary of each species/OTU.}
 \usage{
-prevalence(physeq, add_tax = TRUE)
+prevalence(physeq, add_tax = TRUE, package = "data.table")
 }
 \arguments{
 \item{physeq}{A phyloseq-class object}
 
 \item{add_tax}{Logical, add taxonomy to the results}
+
+\item{package}{Which package to use for data processing ("base" or "data.table")}
 }
 \value{
-Data frame
+Data frame or data.table with the following columns:
+\itemize{
+ \item{"Taxa"}          {Taxa names (species, OTU, or ASV)}
+ \item{"Prevalence"}    {The number of occurrences (the count of samples where the particular taxon is found)}
+ \item{"TotalAbundance"}{The total abundance of a taxon across all samples}
+ \item{"MeanAbundance"} {The average taxon abundance}
+ \item{"MedianAbundance"}{The median abundance of a taxon}
+ \item{"Taxonomy"}       {An optional set of columns containing taxonomic information present in phyloseq object}
+}
 }
 \description{
 Compute prevalence and abundance summary of each species/OTU.
+}
+\details{
+This function can be executed using functions from base R
+(specified by setting the package argument to "base")
+or the data.table package
+(specified by setting the package argument to "data.table").
+By default, it uses the data.table package, which is much faster and more efficient;
+for instance, on the GlobalPatterns dataset, the implementation using data.table
+is 7 times faster than that using base R.
+E.g.:
+# microbenchmark( \cr
+#   dt = prevalence(GlobalPatterns, package = "data.table"), \cr
+#   bb = prevalence(GlobalPatterns, package = "base"), \cr
+#   times = 10) \cr
 }
 \examples{
 data(esophagus)
