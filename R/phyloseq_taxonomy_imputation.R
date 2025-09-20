@@ -53,6 +53,13 @@
 #'   unknown_taxon = "_unknown",
 #'   unknown_sp = "_sp"
 #' )
+#' 
+#' # Make species names unique and add rank information
+#' ps_enhanced <- phyloseq_taxonomy_imputation(
+#'   physeq,
+#'   make_unique = TRUE,
+#'   addmaxrank = TRUE
+#' )
 #'
 #' @seealso \code{\link{get_max_taxonomic_rank}} for identifying the lowest 
 #'   resolved taxonomic rank
