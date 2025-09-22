@@ -161,5 +161,3 @@ phyloseq_taxonomy_imputation <- function(phys,
   phyloseq::tax_table(phys) <- phyloseq::tax_table(as.matrix(x))
   return(phys)
 }
-
-
