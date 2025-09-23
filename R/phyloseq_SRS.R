@@ -45,25 +45,26 @@
 #' @export
 #'
 #' @examples
-#' # Load required packages
 #' library(phyloseq)
 #' library(SRS)
 #' 
 #' # Load example data
-#' data(enterotype)
+#' data(esophagus)
 #' 
 #' # Check original library sizes
-#' sample_sums(enterotype)
+#' sample_sums(esophagus)
 #' 
-#' # Normalize to 1000 reads per sample
-#' ps_norm <- phyloseq_SRS(enterotype, Cmin = 1000)
+#' # Normalize to 100 reads per sample
+#' ps_norm <- phyloseq_SRS(esophagus, Cmin = 100)
 #' 
 #' # Verify normalization
-#' sample_sums(ps_norm)  # All should equal 1000
+#' sample_sums(ps_norm)  # All should equal 100
 #' 
 #' # Remove zero-abundance taxa after normalization
-#' ps_norm_clean <- phyloseq_SRS(enterotype, Cmin = 1000, drop_zeros = TRUE)
-#'
+#' ps_norm_clean <- phyloseq_SRS(esophagus, Cmin = 100, drop_zeros = TRUE)
+#' ntaxa(ps_norm_clean)  # without zero-abundance taxa
+#' ntaxa(ps_norm)        # with zero-abundance taxa, original number of taxa preserved
+#' 
 phyloseq_SRS <- function(physeq, Cmin, drop_zeros = FALSE, set_seed = TRUE, seed = 1, ...){
 
   ## Extract OTU table
