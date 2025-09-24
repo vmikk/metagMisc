@@ -12,7 +12,7 @@ phyloseq_bootstrap <- function(phys, n = 100, seed = NULL, other_slots = c("tax_
     if(taxa_are_rows(ps) == TRUE) { oo <- phyloseq::otu_table(ps)[, samp_ids] }
     if(taxa_are_rows(ps) == FALSE){ oo <- phyloseq::otu_table(ps)[samp_ids, ] }
 
-    if(!is.null(phyloseq::sample_data(ps, errorIfNULL=TRUE))){
+    if(!is.null(phyloseq::sample_data(ps, errorIfNULL = FALSE))){
       dd <- phyloseq::sample_data(ps)[samp_ids, ]
       phyloseq::sample_names(oo) <- phyloseq::sample_names(dd)
       newps <- phyloseq::phyloseq(oo, dd)
