@@ -29,3 +29,10 @@ rar_2 <- phyloseq_mult_raref(ps, SampSize = reads, iter = iters, replace = FALSE
 
 expect_true(ntaxa(rar_2[[1]]) < ntaxa(ps))
 expect_true(all(taxa_sums(rar_2[[1]]) > 0))
+
+## Error handling
+expect_error(phyloseq_mult_raref(ps, SampSize = 0, iter = iters))
+expect_error(phyloseq_mult_raref(ps, SampSize = reads, iter = 0))
+expect_error(phyloseq_mult_raref(ps, SampSize = reads, iter = iters, seeds = 1))
+expect_error(phyloseq_mult_raref(x = ps, iter = "A"))
+expect_error(phyloseq_mult_raref(x = ps, SampSize = "A"))
