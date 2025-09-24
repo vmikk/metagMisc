@@ -33,8 +33,11 @@
 #'
 phyloseq_mult_raref <- function(x, SampSize = NULL, MinSizeThreshold = NULL, iter = 1000, replace = F, multithread = F, seeds = NULL, ...){
 
-  # require(plyr)
-  # require(phyloseq)
+  ## Data validation
+  if(!is.numeric(iter)){ stop("Error: 'iter' must be a numeric value.\n") }
+  if(!is.numeric(SampSize)){ stop("Error: 'SampSize' must be a numeric value.\n") }
+  if(iter < 1)    { stop("Error: 'iter' must be greater than 0.\n") }
+  if(SampSize < 1){ stop("Error: 'SampSize' must be greater than 0.\n") }
 
   ## Sanity check for the random number generator
   if(!is.null(seeds)){
