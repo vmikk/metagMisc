@@ -1,5 +1,26 @@
 
-## Bootstrap samples in phyloseq object
+#' Bootstrap samples in a phyloseq object
+#'
+#' Resamples the samples (columns) of a `phyloseq` object with replacement to
+#' generate bootstrap replicates. Each replicate preserves the `otu_table` and
+#' `sample_data`, and can optionally copy additional slots such as
+#' `tax_table`, `refseq`, and `phy_tree`.
+#'
+#' @param phys A `phyloseq` object to bootstrap
+#' @param n Integer number of bootstrap replicates to generate (default, 100)
+#' @param seed Optional integer random seed for reproducibility. If `NULL`, the
+#'   current RNG state is used
+#' @param other_slots Character vector of additional slots to copy into each
+#'   replicate. Allowed values are any of "tax_table", "refseq",
+#'   "phy_tree". Use "none" or `NULL` to copy none. Default:
+#'   `c("tax_table", "refseq", "phy_tree")`
+#' @param progress Progress bar type passed to `plyr::llply` (e.g., "text" or "none")
+#'
+#' @return A list of length `n` of `phyloseq` objects containing
+#'   bootstrap-resampled samples.
+#'
+#' @export
+#' 
 phyloseq_bootstrap <- function(phys, n = 100, seed = NULL, other_slots = c("tax_table", "refseq", "phy_tree"), progress = "text"){
 
   ## Preserve no other slots except "otu_table" and "sample_data"
@@ -46,4 +67,3 @@ phyloseq_bootstrap <- function(phys, n = 100, seed = NULL, other_slots = c("tax_
 
   return(res)
 }
-# gg <- phyloseq_bootstrap(phys = GlobalPatterns, n = 10, other_slots = "")
