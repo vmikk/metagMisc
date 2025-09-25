@@ -4,19 +4,19 @@
 \alias{parse_uc}
 \title{Parse UC files (clustering output from USEARCH, VSEARCH, SWARM)}
 \usage{
-parse_uc(x, map_only = F, package = "data.table", rm_dups = TRUE)
+parse_uc(x, map_only = FALSE, splitSeqID = TRUE, rm_dups = TRUE)
 }
 \arguments{
 \item{x}{File name (typically with .uc extension)}
 
 \item{map_only}{Logical, return only mapping (correspondence of query and cluster)}
 
-\item{package}{Which package to use ("base" or "data.table")}
+\item{splitSeqID}{Logical, split sequence IDs at the semicolon. If TRUE (default), only the part of the ID before the semicolon is retained. If set to FALSE, the entire sequence ID, including any extra info after the semicolon, is kept intact}
 
 \item{rm_dups}{Logical, remove duplicated entries (default, TRUE)}
 }
 \value{
-Data.frame or data.table.
+
 }
 \description{
 Parse UC files (clustering output from USEARCH, VSEARCH, SWARM)
@@ -40,6 +40,9 @@ H       Hit. Represents a query-target alignment. For clustering, indicates the 
 S       Centroid (clustering only). There is one S record for each cluster, this gives the centroid (representative) sequence label in the 9th field. Redundant with the C record; provided for backwards compatibility.
 C       Cluster record (clustering only). The 3rd field is set to the cluster size (number of sequences in the cluster) and the 9th field is set to the label of the centroid sequence.
 N       No hit (for database search without clustering only). Indicates that no accepts were found. In the case of clustering, a query with no hits becomes the centroid of a new cluster and generates an S record instead of an N record.
+
+
+If `rm_dups = TRUE`, duplicated sequences are removed based solely on their sequence IDs, without considering any size annotations that may be present.
 }
 \examples{
 parse_uc("usearch_OTUs.uc", map_only = F)
