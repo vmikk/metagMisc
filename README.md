@@ -47,6 +47,8 @@ devtools::install_github("vmikk/metagMisc")
 * metagenomeSeq: `biocLite("metagenomeSeq")`
 * DESeq2: `biocLite("DESeq2")`
 * vegan: `install.packages("vegan")`
+* PhyloMeasures: `remotes::install_github("cran/PhyloMeasures")`
+* speedyseq: `remotes::install_github("mikemc/speedyseq")`
 * ggplot2
 * plyr
 * openssl
