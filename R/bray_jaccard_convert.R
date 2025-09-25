@@ -44,17 +44,15 @@
 #' all.equal(jr, (2*bc)/(1+bc))
 #'
 #' # With vegan distances (presence–absence Jaccard and Bray–Curtis on binary data)
-#' \dontrun{
-#'   library(vegan); data(dune)
-#'   bc_bin  <- vegdist(dune > 0, method = "bray")
-#'   jac_bin <- vegdist(dune > 0, method = "jaccard")
-#'   all.equal(bray_jaccard_convert(bc_bin, to = "jaccard"), jac_bin)
+#' library(vegan); data(dune)
+#' bc_bin  <- vegdist(dune > 0, method = "bray")
+#' jac_bin <- vegdist(dune > 0, method = "jaccard")
+#' all.equal(bray_jaccard_convert(bc_bin, to = "jaccard"), jac_bin)
 #'
-#'   # Quantitative Jaccard/Ružička
-#'   bc_abund <- vegdist(dune, method = "bray")
-#'   jr_abund <- vegdist(dune, method = "ruzicka")
-#'   all.equal(bray_jaccard_convert(bc_abund, to = "jaccard"), jr_abund)
-#' }
+#' # Quantitative Jaccard/Ružička
+#' bc_abund <- vegdist(dune, method = "bray")
+#' jr_abund <- vegdist(dune, method = "ruzicka")
+#' all.equal(bray_jaccard_convert(bc_abund, to = "jaccard"), jr_abund)
 #'
 #' @export
 #' 
