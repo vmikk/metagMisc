@@ -11,6 +11,7 @@ blast_to_wide(
   seqs = NULL,
   refs = NULL,
   add_coverage = TRUE,
+  remove_missing = FALSE,
   verbose = TRUE
 )
 }
@@ -30,6 +31,8 @@ blast_to_wide(
 \item{refs}{Target sequences (XStringSet object from Biostrings package)}
 
 \item{add_coverage}{Logical, add query coverage to the output (default, TRUE)}
+
+\item{remove_missing}{Logical, remove blast matches if sequences are missing in `seqs` and `refs` (default, FALSE)}
 
 \item{verbose}{Logical, produce more screen output (default, TRUE)}
 }
