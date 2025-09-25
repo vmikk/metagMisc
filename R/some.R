@@ -1,24 +1,26 @@
-#' @title Check random lines in the data (including phyloseq objects)
+#' @title Inspect random samples (and taxa) in a phyloseq object
 #'
-#' @description Returns several random lines from the data.frame, matrix or phyloseq.
-#' Usage is quite similar to the \code{\link{head}} or \code{\link{tail}} functions.
+#' @description Inspect a random subset of samples from a
+#'   \code{\link[phyloseq]{phyloseq-class}} object. Optionally, also
+#'   subsample taxa (OTUs/ASVs) for compact viewing.
 #'
-#' @param x Coluld be a \code{\link{data.frame}}, \code{\link{matrix}}, or \code{\link[phyloseq]{phyloseq-class}} 
-#' @param n Number of records (or samples in phyloseq) that will be returned
-#' @param n_otu Number of OTUs to show (if the input is phyloseq-object)
-#' @return Part of the data.frame or matrix with n lines or a subset of phyloseq-object.
+#' @param x A \code{\link[phyloseq]{phyloseq-class}} object
+#' @param n Number of samples to return
+#' @param n_otu Optional number of taxa (OTUs/ASVs) to retain; set to \code{NULL}
+#'   to keep all taxa
+#' @return A phyloseq object pruned to \code{n} samples and up to \code{n_otu} taxa.
+#' @seealso \code{\link[phyloseq]{prune_samples}}, \code{\link[phyloseq]{prune_taxa}},
+#'   \code{\link[phyloseq]{nsamples}}, \code{\link[phyloseq]{ntaxa}}
 #' @export
-#' @author Adapted from \code{\link[car]{some}} in the car-package by John Fox.
+#' @author Inspired by \code{\link[car]{some}} in the car-package by John Fox.
 #' @examples
-#' # Load phyloseq data
+#' library(phyloseq)
 #' data(enterotype)
-#' some(enterotype)
 #' 
-#' # If input is data.frame or matrix
-#' x <- matrix(rnorm(500), ncol=5)
-#' some(x)
+#' phyloseq_some(enterotype)
+#' 
 #'
-some <- function(x, n = 10, n_otu = 10){
+phyloseq_some <- function(x, n = 10, n_otu = 10){
 
   ## Input data = data.frame or matrix
   if(any(class(x) %in% c("data.frame", "matrix"))){
