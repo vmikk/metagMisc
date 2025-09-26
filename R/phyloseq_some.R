@@ -52,11 +52,13 @@ phyloseq_some <- function(x, n = 10, n_otu = 10){
     ntax <- phyloseq::ntaxa(res)
 
     ## Subset OTUs
-    if(!is.null(n_otu) & ntax > n_otu){
-      otus <- sample(x = 1:ntax, size = n_otu)
-      res <- phyloseq::prune_taxa(1:ntax %in% otus, res)
-    } else {
-      warning("Number of OTUs in phyloseq <= n_otu \n")
+    if(!is.null(n_otu)){
+      if(ntax > n_otu){
+        otus <- sample(x = 1:ntax, size = n_otu)
+        res <- phyloseq::prune_taxa(1:ntax %in% otus, res)
+      } else {
+        warning("Number of OTUs in phyloseq <= n_otu \n")
+      }
     }
 
   } # end of phyloseq
