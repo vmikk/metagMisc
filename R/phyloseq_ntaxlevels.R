@@ -86,10 +86,9 @@ phyloseq_ntaxlevels <- function(physeq, add_all_samps = TRUE, format = "long"){
   }
   
   ## Create lookup table for ranks
-  tranks_cmbs <- data.table::data.table(
-    TaxRank = tranks[-1], 
-    CombinedRank = tranks_cmb
-  )
+  tranks_cmbs <- rbind(
+    data.table(TaxRank = tranks[1],  CombinedRank = tranks[1]),
+    data.table(TaxRank = tranks[-1], CombinedRank = tranks_cmb))
 
   ## Create combined taxonomic columns
   for(i in seq_len(length(tranks) - 1)) {
