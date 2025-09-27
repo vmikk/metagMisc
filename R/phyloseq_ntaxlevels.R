@@ -9,7 +9,9 @@
 #' @param physeq A \code{phyloseq} object containing OTU table, taxonomy table, 
 #'   and sample data
 #' @param add_all_samps Logical, if \code{TRUE} (default), includes results for 
-#'   all samples combined. If \code{FALSE}, returns only per-sample counts.
+#'   all samples combined. If \code{FALSE}, returns only per-sample counts
+#' @param format Character, if \code{long} (default), returns a long format data frame (3 columns). 
+#'   If \code{wide}, returns a wide format data frame (samples in columns, taxonomic ranks in rows)
 #'
 #' @details
 #' The function processes each taxonomic rank and counts unique combinations at each level. 
@@ -19,12 +21,15 @@
 #' When \code{add_all_samps = TRUE}, an additional row with \code{Sample = "All_samples"}
 #' provides the total unique taxonomic levels across all samples combined.
 #'
-#' @return A data.frame with columns:
+#' @return A data.frame.
+#' If \code{format = "long"}, returns a long format data frame with columns:
 #' \describe{
 #'   \item{TaxRank}{Character vector of taxonomic rank names (Phylum, Class, Order, etc.)}
 #'   \item{Sample}{Character vector of sample identifiers, plus "All_samples" if requested}
 #'   \item{N.tax.levels}{Numeric vector of unique taxonomic level counts}
 #' }
+#' If \code{format = "wide"}, returns a wide format data frame with columns
+#' (samples are arranged by columns, taxonomic ranks in rows)
 #'
 #' @importFrom speedyseq psmelt
 #' @importFrom phyloseq rank_names
@@ -45,6 +50,10 @@
 #' 
 #' # View results for a specific taxonomic rank
 #' subset(tax_counts, TaxRank == "Family")
+#' 
+#' # Wide format
+#' tax_counts_wide <- phyloseq_ntaxlevels(GlobalPatterns, format = "wide")
+#' tax_counts_wide[, 1:5]
 #' 
 phyloseq_ntaxlevels <- function(physeq, add_all_samps = TRUE, format = "long"){
 
