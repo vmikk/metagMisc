@@ -11,6 +11,13 @@
 #' @param ...
 #'
 #' @return Invisibly returns a plot ('ggplot' class).
+#' 
+#' @importFrom ggplot2 ggplot aes geom_point scale_size_continuous theme_bw theme element_text labs geom_segment ggplotGrob
+#' @importFrom reshape2 melt
+#' @importFrom ggdendro dendro_data segment theme_dendro
+#' @importFrom vegan vegdist
+#' @importFrom grid unit unit.pmax
+#' @importFrom gridExtra grid.arrange
 #' @export
 #'
 #' @examples
@@ -20,9 +27,6 @@
 #' bubble_plot(x, add.dendro=T)
 #'
 bubble_plot <- function(x, transp=0.9, circ=16, add.dendro = FALSE, ...){
-
-	require(ggplot2)
-	require(reshape2)
 
 	if(add.dendro == FALSE){
 		# reshape data
@@ -43,7 +47,6 @@ bubble_plot <- function(x, transp=0.9, circ=16, add.dendro = FALSE, ...){
 	}
 
 	if(add.dendro == TRUE){
-		require(ggdendro); require(vegan); require(grid); require(gridExtra)
 
 		# Cluster samples
 		dd.row <- as.dendrogram(hclust(vegdist(t(x), method="bray")))

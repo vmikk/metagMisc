@@ -25,6 +25,7 @@
 #'   \item stress. Stress 1 measure which corresponds to the loss of the variance due to distance transformation (see \code{\link[smacof]{stress0}});
 #'   \item dissim_plot. (if 'show_plot = TRUE') gglot object with the corresponding plot.
 #' }
+#' @importFrom ggplot2 aes annotate geom_point labs ggtitle
 #' @export
 #' @seealso \code{\link[smacof]{smacofConstraint}}, \code{\link[vegan]{vegdist}}, \code{\link{dissimilarity_to_distance_importance_plot}}
 #' @references Greenacre, M. (2017), Ordination with any dissimilarity measure: a weighted Euclidean solution. Ecology, 98: 2293–2300. doi:10.1002/ecy.1937
@@ -139,8 +140,6 @@ dissimilarity_to_distance <- function(datt, dist_type = "bray", dst = NULL, drop
   ## Compare dissimilarities to weighted Euclidean distances
   if(show_plot == TRUE){
 
-    require(ggplot2)
-
     plt <- data.frame(Dissim = as.numeric(dst), Euclid = as.numeric(WEdist))
 
     dissim_plot <- ggplot2::ggplot(data = plt, aes(x = Dissim, y = Euclid)) +
@@ -172,6 +171,8 @@ dissimilarity_to_distance <- function(datt, dist_type = "bray", dst = NULL, drop
 #' @param mark_removed Logical; if TRUE, species that were removed from distance will be highlighted with a separate symbol on a plot
 #'
 #' @return ggplot-object.
+#'
+#' @importFrom ggplot2 ggplot aes_string scale_shape_manual geom_point labs
 #' @export
 #' @seealso \code{\link{dissimilarity_to_distance}}
 #' @examples
@@ -185,8 +186,6 @@ dissimilarity_to_distance <- function(datt, dist_type = "bray", dst = NULL, drop
 #' dissimilarity_to_distance_importance_plot(bc_to_eucl)
 #'
 dissimilarity_to_distance_importance_plot <- function(x, scaled_weights = TRUE, mark_removed = TRUE){
-
-  require(ggplot2)
 
   ## Extract data
   dtt <- x$sp_weights
