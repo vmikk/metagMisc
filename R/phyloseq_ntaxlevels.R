@@ -2,85 +2,90 @@
 ## Estimate number of unique (non-NA) taxonomic levels
 phyloseq_ntaxlevels <- function(physeq, add_all_samps = TRUE){
 
-  ## Melt phyloseq data object into large data.frame
-  mm <- phyloseq::psmelt(physeq)
+  ## Melt phyloseq data
+  mm <- speedyseq::psmelt(physeq)
+  setDT(mm)
 
   ## Convert all factors to character
-  i <- sapply(mm, is.factor)
-  mm[i] <- lapply(mm[i], as.character)
-  rm(i)
-
-  ## Replace NAs in taxonomy
-  tranks <- phyloseq::rank_names(physeq)
-  for(i in tranks){
-    nas <- is.na( mm[, i] )
-    if(any(nas)){
-      mm[, i][ which(nas) ] <- "NA"
-    }
-    rm(nas)
+  factor_cols <- names(mm)[sapply(mm, is.factor)]
+  if(length(factor_cols) > 0) {
+    mm[, (factor_cols) := lapply(.SD, as.character), .SDcols = factor_cols]
   }
-  rm(i)
 
-  ## Reorder columns (taonomy first)
-  mm <- mm[, c(tranks, colnames(mm)[ which(!colnames(mm) %in% tranks)]) ]
+  ## Get taxonomic ranks
+  tranks <- phyloseq::rank_names(physeq)
+  
+  ## Replace NAs in taxonomy
+  for(col in tranks) {
+    mm[is.na(get(col)), (col) := "NA"]
+  }
+
+  ## Reorder columns (taxonomy first)
+  other_cols <- setdiff(names(mm), tranks)
+  setcolorder(mm, c(tranks, other_cols))
 
   ## Create combined tax ranks
-  tranks_ids <- list()
-  for(i in 1:(length(tranks)-1)){
-    tranks_ids[[i]] <- 1:(i+1)
+  tranks_cmb <- character(length(tranks) - 1)
+  for(i in seq_len(length(tranks) - 1)) {
+    tranks_cmb[i] <- paste(tranks[1:(i+1)], collapse = "_")
   }
-  rm(i)
+  
+  ## Create lookup table for ranks
+  tranks_cmbs <- data.table::data.table(
+    TaxRank = tranks[-1], 
+    CombinedRank = tranks_cmb
+  )
 
-
-  tranks_cmb <- laply(.data = tranks_ids, .fun = function(z){ paste(tranks[z], collapse = "_") })  # rank names
-  names(tranks_ids) <- tranks_cmb
-
-  tranks_cmbs <- data.frame(TaxRank = tranks[-1], CombinedRank = tranks_cmb, stringsAsFactors = F)
-
-  tranks_ccc <- llply(.data = tranks_ids, .fun = function(z){
-    data.frame(Cmb = apply(mm[,z], 1, paste, collapse= "_"), stringsAsFactors = F)
-  })
-
-  tranks_ccc <- do.call(cbind, tranks_ccc)
-  colnames(tranks_ccc) <- tranks_cmb
-  mm <- cbind(mm, tranks_ccc)
-  rm(tranks_ccc, tranks_cmb, tranks_ids)
-
-
-  ## Count number of OTUs for each sample
-  count_taxlevels <- function(z, TaxRank = TaxRank){
-
-    ## Remove zero-OTUs
-    zero_otu <- z$Abundance > 0
-    if(any(zero_otu)){ z <- z[zero_otu, ] }
-
-    ## Remove NA tax levels
-    na_tax <- z[, TaxRank] %in% "NA"
-    if(any(na_tax)){ z <- z[!na_tax, ] }
-
-    ## Find which column to take for the aggregation
-    TaxRankCmb <- tranks_cmbs[ which(tranks_cmbs$TaxRank == TaxRank), "CombinedRank"]
-
-    ## Count number of unique levels per taxonomic rank selected
-    rez <- data.frame(N.tax.levels = length(unique(z[, TaxRankCmb])), stringsAsFactors = F)
-
-    return(rez)
+  ## Create combined taxonomic columns
+  for(i in seq_len(length(tranks) - 1)) {
+    rank_cols <- tranks[1:(i+1)]
+    combined_col <- tranks_cmb[i]
+    mm[, (combined_col) := do.call(paste, c(.SD, sep = "_")), .SDcols = rank_cols]
   }
 
-  ## Count number of tax levels for each sample and each rank
-  res <- mdply(
-    .data = data.frame(TaxRank = tranks_cmbs$TaxRank, stringsAsFactors = F),
-    .fun = function(...){ plyr::ddply(.data = mm, .variables = "Sample", .fun = count_taxlevels, ...) })  # TaxRank = TaxRank
-
-  ## Count for all samples (if there are > 1 samples)
-  if(add_all_samps == TRUE & length(unique(mm$Sample)) > 1){
-    res_all <- mdply(
-      .data = data.frame(TaxRank = tranks_cmbs$TaxRank, stringsAsFactors = F),
-      .fun = function(...){ count_taxlevels(mm, ...) })
-    res_all$Sample <- "All_samples"
-
-    ## Combine results
-    res <- rbind(res, res_all)
+  ## For each taxonomic rank and sample, count unique non-zero, non-NA taxa
+  res_list <- vector("list", nrow(tranks_cmbs))
+  
+  for(i in seq_len(nrow(tranks_cmbs))) {
+    tax_rank <- tranks_cmbs$TaxRank[i]
+    combined_rank <- tranks_cmbs$CombinedRank[i]
+    
+    ## Count unique taxa per sample for this rank
+    temp_res <- mm[Abundance > 0 & get(tax_rank) != "NA", 
+                   .(N.tax.levels = uniqueN(get(combined_rank))), 
+                   by = Sample]
+    temp_res[, TaxRank := tax_rank]
+    res_list[[i]] <- temp_res
   }
+  
+  ## Combine all results
+  res <- rbindlist(res_list, use.names = TRUE)
+  
+  ## Add results for all samples combined if requested
+  if(add_all_samps == TRUE && uniqueN(mm$Sample) > 1) {
+    res_all_list <- vector("list", nrow(tranks_cmbs))
+    
+    for(i in seq_len(nrow(tranks_cmbs))) {
+      tax_rank <- tranks_cmbs$TaxRank[i]
+      combined_rank <- tranks_cmbs$CombinedRank[i]
+      
+      ## Count unique taxa across all samples for this rank
+      n_unique <- mm[Abundance > 0 & get(tax_rank) != "NA", 
+                     uniqueN(get(combined_rank))]
+      
+      res_all_list[[i]] <- data.table(
+        TaxRank = tax_rank,
+        Sample = "All_samples", 
+        N.tax.levels = n_unique
+      )
+    }
+    
+    res_all <- rbindlist(res_all_list, use.names = TRUE)
+    res <- rbindlist(list(res, res_all), use.names = TRUE)
+  }
+  
+  ## Reorder columns
+  setcolorder(res, c("TaxRank", "Sample", "N.tax.levels"))
+  
   return(res)
 }
