@@ -1,5 +1,5 @@
 
-#' @title Pairwise dissimilarity boxplots.
+#' @title Pairwise dissimilarity boxplots
 #'
 #' @param physeq A phyloseq-class object
 #' @param group Grouping variable name (contained in \code{\link{sample_data}})
@@ -9,10 +9,13 @@
 #' @param notch Logical, draw the notches at each side of the boxes
 #' @param justDF  Logical, instead of returning a ggplot2-object, return the data.frame that was used to build the plot
 #' @param ... Additional arguments may be passed to \code{\link{distance}} function from phyloseq package
-
+#'
 #' @details If the notches of two boxplots do not overlap this indicates that the two medians differ.
 #'
 #' @return ggplot2-object or data.frame (if justDF = TRUE).
+#'
+#' @importFrom plyr llply ldply aaply
+#' @importFrom ggplot2 ggplot aes geom_boxplot xlab ylab ggtitle
 #' @export
 #'
 #' @examples
@@ -26,9 +29,6 @@
 #' phyloseq_group_dissimilarity(ent, group = "Enterotype", method = "jaccard")
 #'
 phyloseq_group_dissimilarity <- function(physeq, group = NULL, between_groups = TRUE, method = "bray", method_title = FALSE, notch = TRUE, justDF = FALSE, ...){
-
-  require(plyr)
-  if(justDF == FALSE){ require(ggplot2) }
 
   ## Check the input
   if(is.null(sample_data(physeq, errorIfNULL = T))){ stop("Error: Sample data is missing in the phyloseq-object.\n") }

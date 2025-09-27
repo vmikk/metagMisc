@@ -10,6 +10,8 @@
 #' If the points are close to diagonal then the projection in reduced space accounts for a high fraction of the variance.
 #'
 #' @return Invisible returns ggplot-object.
+#'
+#' @importFrom ggplot2 ggplot aes annotate geom_point theme_classic labs
 #' @export
 #' @references Legendre P. & Legendre L. Numerical Ecology. 2012. 3rd Ed. - Chapter 9 (Ordination in reduced space).
 #' @seealso \code{\link{vegan::stressplot}}, \code{\link{MAAS::Shepard}}
@@ -32,8 +34,6 @@
 #' shepard_plot(dis = dd, ord = scores(ord))
 #'
 shepard_plot <- function(dis, ord, k=2, show = TRUE){
-
-  require(ggplot2)
 
   ## If the ordination scores were provided
   if("matrix" %in% class(ord) || "data.frame" %in% class(ord)){

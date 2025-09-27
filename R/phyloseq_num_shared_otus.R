@@ -53,9 +53,6 @@
 #'
 phyloseq_num_shared_otus <- function(physeq, use_Matrix = TRUE){
 
-  require(phyloseq)
-  if(use_Matrix == TRUE){ require(Matrix) }
-
   ## Extract OTU table
   x <- as( phyloseq::otu_table(physeq), "matrix" )
 

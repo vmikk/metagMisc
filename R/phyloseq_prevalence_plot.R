@@ -1,5 +1,5 @@
 
-#' @title Prevalence plot (total OTU abundance vs OTU prevalence).
+#' @title Prevalence plot (total OTU abundance vs OTU prevalence)
 #' @description This function will plot total OTU abundance vs the fraction of samples in which an OTU is observed.
 #' @param physeq A phyloseq-class object
 #' @param prev.trh Add horizontal line with prevalence threshold (default is NULL, but  0.05 = 5\% of samples)
@@ -9,6 +9,8 @@
 #' @param showplot Logical, show plot on screen
 #'
 #' @return Plot of class 'ggplot'.
+#'
+#' @importFrom ggplot2 ggplot aes aes_string geom_hline geom_point scale_x_log10 xlab ylab theme facet_wrap
 #' @seealso \code{\link{phyloseq_filter_prevalence}}
 #' @export
 #'
@@ -19,8 +21,6 @@
 #' phyloseq_prevalence_plot(GP, taxcolor = "Phylum", facet = TRUE, point_alpha = 0.5, prev.trh = 0.05)
 #'
 phyloseq_prevalence_plot <- function(physeq, prev.trh = NULL, taxcolor = NULL, facet = FALSE, point_alpha = 0.7, showplot = T){
-
-  require(ggplot2)
 
   ## Compute prevalence of each species
   prevdf <- prevalence(physeq)
