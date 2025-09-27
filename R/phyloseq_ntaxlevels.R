@@ -46,7 +46,7 @@
 #' # View results for a specific taxonomic rank
 #' subset(tax_counts, TaxRank == "Family")
 #' 
-phyloseq_ntaxlevels <- function(physeq, add_all_samps = TRUE){
+phyloseq_ntaxlevels <- function(physeq, add_all_samps = TRUE, format = "long"){
 
   ## Melt phyloseq data
   mm <- speedyseq::psmelt(physeq)
@@ -133,5 +133,25 @@ phyloseq_ntaxlevels <- function(physeq, add_all_samps = TRUE){
   ## Reorder columns
   setcolorder(res, c("TaxRank", "Sample", "N.tax.levels"))
   
-  return(res)
+  ## Return long table
+  if(format == "long"){
+    return(res)
+  }
+
+  ## Reshape to wide table
+  if(format == "wide"){
+    resw <- dcast(res, TaxRank ~ Sample,
+      value.var = "N.tax.levels", fill = 0)
+
+    ## Move "All_samples" to the beginning of the table
+    if(add_all_samps == TRUE){
+      setcolorder(resw, c("TaxRank", "All_samples"))
+    }
+
+    ## Reorder taxonomic ranks
+    resw <- resw[ order(chmatch(x = TaxRank, table = tranks)) ]
+
+    return(resw)
+  }
+  
 }
