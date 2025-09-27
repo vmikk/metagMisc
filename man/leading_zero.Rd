@@ -14,14 +14,21 @@ leading_zero(x, z = NULL, mode = "add")
 \item{mode}{"add" or "remove" leading zero}
 }
 \value{
-vector with (mode = "add) or without (mode = "remove") leading zeros
+A vector with (mode = "add) or without (mode = "remove") leading zeros
 }
 \description{
 Add or remove leading zeros
+}
+\details{
+In 'add' mode, the function adds leading zeros to the numbers to make them all the same length.  
+In 'remove' mode, the function removes leading zeros. 
+The pattern used for removing leading zeros removes all zeros that are either at the beginning of the string
+(e.g., '0001' -> '1') or following non-digit characters (e.g., 'sample001' -> 'sample1').
 }
 \examples{
 leading_zero(1:10, z=3)
 leading_zero(c(1,10,100,1000,10000))
 leading_zero(c("001", "1001", "g01", "0abc"), mode = "remove")
+leading_zero(x = "sample001", mode = "remove")  # sample1
 
 }
