@@ -32,6 +32,20 @@
 #' 
 #' @export
 #'
+#' @examples
+#' library(phyloseq)
+#' data(GlobalPatterns)
+#' 
+#' # Basic usage - count taxonomic levels per sample
+#' tax_counts <- phyloseq_ntaxlevels(GlobalPatterns)
+#' head(tax_counts)
+#' 
+#' # Without combined results
+#' tax_counts_only <- phyloseq_ntaxlevels(GlobalPatterns, add_all_samps = FALSE)
+#' 
+#' # View results for a specific taxonomic rank
+#' subset(tax_counts, TaxRank == "Family")
+#' 
 phyloseq_ntaxlevels <- function(physeq, add_all_samps = TRUE){
 
   ## Melt phyloseq data
