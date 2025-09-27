@@ -1,5 +1,37 @@
 
-## Estimate number of unique (non-NA) taxonomic levels
+#' Estimate number of unique taxonomic levels per sample
+#'
+#' @description 
+#' Calculates the number of unique (non-NA) taxonomic assignments at each 
+#' taxonomic rank for each sample in a phyloseq object. Useful for assessing 
+#' taxonomic diversity and completeness of taxonomic annotations across samples.
+#'
+#' @param physeq A \code{phyloseq} object containing OTU table, taxonomy table, 
+#'   and sample data
+#' @param add_all_samps Logical, if \code{TRUE} (default), includes results for 
+#'   all samples combined. If \code{FALSE}, returns only per-sample counts.
+#'
+#' @details
+#' The function processes each taxonomic rank and counts unique combinations at each level. 
+#' Only taxa with non-zero abundances are included in the counts, 
+#' and missing taxonomic assignments (NA values) are excluded from the analysis.
+#' 
+#' When \code{add_all_samps = TRUE}, an additional row with \code{Sample = "All_samples"}
+#' provides the total unique taxonomic levels across all samples combined.
+#'
+#' @return A data.frame with columns:
+#' \describe{
+#'   \item{TaxRank}{Character vector of taxonomic rank names (Phylum, Class, Order, etc.)}
+#'   \item{Sample}{Character vector of sample identifiers, plus "All_samples" if requested}
+#'   \item{N.tax.levels}{Numeric vector of unique taxonomic level counts}
+#' }
+#'
+#' @importFrom speedyseq psmelt
+#' @importFrom phyloseq rank_names
+#' @importFrom data.table setDT data.table uniqueN rbindlist setcolorder
+#' 
+#' @export
+#'
 phyloseq_ntaxlevels <- function(physeq, add_all_samps = TRUE){
 
   ## Melt phyloseq data
