@@ -12,7 +12,7 @@
 #'
 #' @references \url{https://benjjneb.github.io/dada2/bigdata.html}
 #'
-#' @seealso \code{\link{dada}}
+#' @seealso \code{\link[dada2]{dada}}
 #' @examples
 #' library(dada2)
 #' # filtF and filtR are character vectors with the full path to fastq.gz-files

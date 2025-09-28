@@ -2,8 +2,8 @@
 #' @title Permutational multivariate analysis of variance using distance matrices (PERMANOVA) for phyloseq objects
 #'
 #' @param physeq A phyloseq-class object
-#' @param group.var Variable name (contained in \code{\link{sample_data}}) to test (RHS in adonis formula)
-#' @param method Distance/dissimilarity method (as character string; see \code{\link{distanceMethodList}})
+#' @param group.var Variable name (contained in \code{\link[phyloseq]{sample_data}}) to test (RHS in adonis formula)
+#' @param method Distance/dissimilarity method (as character string; see \code{\link[phyloseq]{distanceMethodList}})
 #' @param pairwise Logical, perform pairwise adonis (dafault, FALSE)
 #' @param add_permdisp Logical; if TRUE (default), results of tests for homogeneity of multivariate dispersions will be added to output (see \code{\link[vegan]{betadisper}})
 #' @param permut Number of permutations required

@@ -45,7 +45,7 @@ phyloseq_effort_div <- function(physeq, base = "size", level = NULL, conf = 0.95
 #' @param show_plot Logical; if TRUE, show the resulting plot
 #' @param justDF Logical; if TRUE, just return the resulting table
 #' @param progress Show progress bar ("text" or "none")
-#' @param ... Additional arguments may be passed to \code{\link{phyloseq_effort_div}}
+#' @param ... Additional arguments may be passed to phyloseq_effort_div
 #' @details
 #' Diversity estimation based on the analytical approach for coverage-based rarefaction proposed by Chao and Jost (2012).
 #' @return ggplot object (if show_plot = TRUE) or a data.frame (if justDF = TRUE)

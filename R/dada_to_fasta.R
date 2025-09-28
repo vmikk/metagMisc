@@ -4,7 +4,7 @@
 #' @param seqtab dada-class or derep-class objects
 #' @param out Output file name (fasta)
 #' @param hash Hash function to use: "sha1" (default), "sha256", "md5"
-#' @param ... Additional parameters passed on to \code{\link{uniquesToFasta}}
+#' @param ... Additional parameters passed on to \code{\link[dada2]{uniquesToFasta}}
 #'
 #' @details
 #' This function relabels sequences using diffetent message digest algorithms applied to each sequence. This approach guarantees (with a very high probability) that FASTA entries from different projects with identical names will also have identical sequences.
@@ -16,7 +16,7 @@
 #'
 #' @return Invisible returns sequence names in the VSEARCH/USEARCH style.
 #' @export
-#' @seealso \code{\link{uniquesToFasta}}, \code{\link{getUniques}}
+#' @seealso \code{\link[dada2]{uniquesToFasta}}, \code{\link[dada2]{getUniques}}
 #' @examples
 #' derep1 = derepFastq(system.file("extdata", "sam1F.fastq.gz", package="dada2"))
 #' dada1 <- dada(derep1, err=tperr1)

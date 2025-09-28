@@ -6,7 +6,7 @@
 #' @details This function will split
 #' @return Named character vector with taxonomic ranks of OTU or species.
 #' @export
-#' @seealso \code{\link{parse_taxonomy_qiime}}
+#' @seealso \code{\link[phyloseq]{parse_taxonomy_qiime}}
 #' @references AMPtk: Amplicon ToolKit for NGS data (formally UFITS): https://github.com/nextgenusfs/amptk
 #' @examples
 #' parse_taxonomy_amptk("k:Fungi,p:Zygomycota,o:Mortierellales,f:Mortierellaceae,g:Mortierella,s:Mortierella parvispora")
@@ -94,7 +94,7 @@ parse_taxonomy_amptk <- function(x, custom_ranks = NULL){
 #'
 #' @return Data frame with OTUs or species as rows and their taxonomic ranks as columns.
 #' @references AMPtk: Amplicon ToolKit for NGS data (formally UFITS): https://github.com/nextgenusfs/amptk
-#' @seealso \code{\link{parse_taxonomy_amptk}} \code{\link{parse_taxonomy_qiime}}
+#' @seealso \code{\link{parse_taxonomy_amptk}} \code{\link[phyloseq]{parse_taxonomy_qiime}}
 #' @export
 #' @examples
 #' ## Taxonomy with sequence ID
