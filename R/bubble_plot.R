@@ -13,7 +13,6 @@
 #' @return Invisibly returns a plot ('ggplot' class).
 #' 
 #' @importFrom ggplot2 ggplot aes geom_point scale_size_continuous theme_bw theme element_text labs geom_segment ggplotGrob
-#' @importFrom reshape2 melt
 #' @importFrom ggdendro dendro_data segment theme_dendro
 #' @importFrom vegan vegdist
 #' @importFrom grid unit unit.pmax
@@ -31,7 +30,9 @@ bubble_plot <- function(x, transp=0.9, circ=16, add.dendro = FALSE, ...){
 	if(add.dendro == FALSE){
 		# reshape data
 		xx <- data.frame(Spec = rownames(x), x)
+		setDT(xx)
 		xx <- melt(data = xx, value.name = "abund", id.vars = "Spec", variable.name = "Sample")
+		setDF(xx)
 
 		# plot data
 		p1 <- ggplot(xx, aes(x = Sample, y = Spec)) +
@@ -55,7 +56,9 @@ bubble_plot <- function(x, transp=0.9, circ=16, add.dendro = FALSE, ...){
 		# order samples
 		xx <- x[, row.ord]
 		xx <- data.frame(Spec = rownames(xx), xx)
+		setDT(xx)
 		xx <- melt(data = xx, value.name = "abund", id.vars = "Spec", variable.name = "Sample")
+		setDF(xx)
 
 		# Extract dendrogram data and create the plots
 		ddata_x <- dendro_data(dd.row)
