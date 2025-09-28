@@ -15,7 +15,6 @@ Imports:
     plyr (>= 1.8.0),
     vegan (>= 2.7-0)
 Suggests: 
-    reshape2 (>= 1.4.2),
     ggplot2 (>= 2.2.0),
     phyloseq (>= 1.19.0),
     breakaway (>= 4.3),
