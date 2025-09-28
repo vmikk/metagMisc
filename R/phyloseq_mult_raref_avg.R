@@ -154,7 +154,9 @@ phyloseq_mult_raref_avg <- function(physeq, SampSize = NULL, iter = 1000, parall
   # rm(i)
 
   ## Reshape data (rows = OTUs, columns = samples)
-  smps_avg_wide <- reshape2::dcast(data = smps_avg, formula = OTU ~ SampleID, fill = 0, value.var = "Average")
+  setDT(smps_avg)
+  smps_avg_wide <- dcast(data = smps_avg, formula = OTU ~ SampleID, fill = 0, value.var = "Average")
+  setDF(smps_avg_wide)
   rownames(smps_avg_wide) <- smps_avg_wide$OTU
   smps_avg_wide$OTU <- NULL
 
