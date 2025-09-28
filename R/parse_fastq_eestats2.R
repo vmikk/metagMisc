@@ -6,7 +6,7 @@
 #' @return data frame
 #' @export
 #'
-#' @details This function depends on plyr and reshape2 packages.
+#' @details 
 #' Additional details on 'fastq_eestats2' function can be found on http://drive5.com/usearch/manual/cmd_fastq_eestats2.html
 #' 
 #' @examples
@@ -27,22 +27,20 @@ parse_fastq_eestats2 <- function(file, long = FALSE){
     # read.delim("R1.eestats2.txt", stringsAsFactors = FALSE, skip = 2)
     # data.table::fread(input = "R1.eestats2.txt")
 
-    # require(plyr)
-
-    # load file
+    ## Load file
     inp <- readLines(file)
 
-    # remove empty rows
+    ## Remove empty rows
     inp <- inp[-c(1:3,5)]
 
-    # extract column names
+    ## Extract column names
     header <- strsplit(inp[1], split = "  +")[[1]]
 
-    # prepare columns for % or reads
+    ## Prepare columns for % or reads
     header <- rep(header, times=c(1, rep(2, length(header)-1)))  # duplicate columns
     header[seq(3, length(header), by = 2)] <- paste(header[seq(3, length(header), by = 2)], ",%", sep="")
 
-    # prepare main table
+    ## Prepare main table
     res <- gsub(pattern = "\\(", replacement = " ", x = inp[2:length(inp)])
     res <- gsub(pattern = "%)", replacement = " ", x = res[2:length(res)])
     res <- gsub("^\\s+|\\s+$", "", res)   # trim leading and ending whitespaces
@@ -51,20 +49,21 @@ parse_fastq_eestats2 <- function(file, long = FALSE){
     colnames(res) <- header
     res <- colwise(as.numeric)(res)
 
-    # reshape data
+    ## Reshape data
     if(long == TRUE){
 
-      # require(reshape2)
-      
-      # Columns with percentage of reads
+      ## Columns with percentage of reads
       perc.col <- grep(pattern = "%", x = colnames(res))
       
-      # reshape only read counts
-      mm <- reshape2::melt(data = res[,-perc.col],
+      ## Reshape only read counts
+      res_subset <- res[,-perc.col]
+      setDT(res_subset)
+      mm <- melt(data = res_subset,
                  id.vars = header[1],
                  variable.name = "MaxEE", value.name = "NumberOfReads")
+      setDF(mm)
 
-      # rename
+      ## Rename
       mm$MaxEE <- gsub(pattern = "\\(No EE cutoff\\)", replacement = Inf, x = mm$MaxEE)
       mm$MaxEE <- gsub(pattern = "MaxEE ", replacement = "", x = mm$MaxEE)
       mm$MaxEE <- as.numeric(mm$MaxEE)
