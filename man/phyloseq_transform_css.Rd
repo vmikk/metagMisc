@@ -13,7 +13,7 @@ phyloseq_transform_css(physeq, norm = TRUE, log = TRUE, ...)
 
 \item{log}{Logical, apply a logarithmic transform (log2) to the normalized count data}
 
-\item{...}{Additional arguments will be passed to \code{\link{MRcounts}}}
+\item{...}{Additional arguments will be passed to \code{\link[metagenomeSeq]{MRcounts}}}
 }
 \value{
 Phyloseq object with transformed counts in OTU table.
@@ -39,5 +39,5 @@ plot_ordination(physeq = GlobalPatterns, ordination = ordinate(GlobalPatterns, m
 Paulson et al. Nature Methods 10, 1200–1202 (2013) doi:10.1038/nmeth.2658. http://www.nature.com/nmeth/journal/v10/n12/full/nmeth.2658.html
 }
 \seealso{
-\code{\link{phyloseq_transform_vst_blind}}, \code{\link{phyloseq_transform_rlog_blind}}, \code{\link{rlog}}, \code{\link{varianceStabilizingTransformation}}
+\code{\link{phyloseq_transform_vst_blind}}, \code{\link{phyloseq_transform_rlog_blind}}, \code{\link[DESeq2]{rlog}}, \code{\link[DESeq2]{varianceStabilizingTransformation}}
 }

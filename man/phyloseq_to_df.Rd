@@ -36,5 +36,5 @@ str(GlobalPatternsDF)
 
 }
 \seealso{
-\code{\link{phyloseq-class}}
+\code{\link[phyloseq]{phyloseq-class}}
 }

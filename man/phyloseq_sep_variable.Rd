@@ -9,7 +9,7 @@ phyloseq_sep_variable(physeq, variable, drop_zeroes = T)
 \arguments{
 \item{physeq}{A phyloseq-class object}
 
-\item{variable}{Variable name (contained in \code{\link{sample_data}})}
+\item{variable}{Variable name (contained in \code{\link[phyloseq]{sample_data}})}
 
 \item{drop_zeroes}{Logical, indicating weather OTUs with zero abundance withing a group of samples should be removed}
 }

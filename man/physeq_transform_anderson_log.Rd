@@ -9,7 +9,7 @@ physeq_transform_anderson_log(physeq, ...)
 \arguments{
 \item{physeq}{A phyloseq-class object}
 
-\item{...}{Additional arguments (e.g., "logbase" for the logarithm base) will be passed to \code{\link{decostand}}}
+\item{...}{Additional arguments (e.g., "logbase" for the logarithm base) will be passed to \code{\link[vegan]{decostand}}}
 }
 \value{
 Phyloseq object with log-transformed counts in OTU table.
@@ -20,7 +20,7 @@ Log-transformation of OTU abundance table.
 \details{
 Logarithmic transformation as suggested by Anderson et al. (2006) will be applied to the OTU table in phyloseq-object. First, non-integer data will be divided by smallest positive value. Second, log(x) + 1 for x > 0.
 Default value of the logarithm base ("logbase" parameter) is 2.
-This function is a wrapper to \code{\link{decostand}} in vegan.
+This function is a wrapper to \code{\link[vegan]{decostand}} in vegan.
 }
 \examples{
 data(enterotype)
@@ -31,5 +31,5 @@ physeq_transform_anderson_log(enterotype)
 Anderson MJ, Ellingsen KE and McArdle BH. (2006) Multivariate dispersion as a measure of beta diversity. Ecology Letters 9, P. 683–693.
 }
 \seealso{
-\code{\link{decostand}}
+\code{\link[vegan]{decostand}}
 }

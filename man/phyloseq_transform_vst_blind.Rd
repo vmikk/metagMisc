@@ -22,8 +22,8 @@ Phyloseq object with transformed counts in OTU table.
 Variance stabilizing transformation (VST) of OTU abundance table.
 }
 \details{
-For downstream analysis it could be better to use sample covariate information (blind = FALSE in \code{\link{varianceStabilizingTransformation}}).
+For downstream analysis it could be better to use sample covariate information (blind = FALSE in \code{\link[DESeq2]{varianceStabilizingTransformation}}).
 }
 \seealso{
-\code{\link{phyloseq_transform_rlog_blind}}, \code{\link{phyloseq_transform_css}}, \code{\link{varianceStabilizingTransformation}}, \code{\link{rlog}}
+\code{\link{phyloseq_transform_rlog_blind}}, \code{\link{phyloseq_transform_css}}, \code{\link[DESeq2]{varianceStabilizingTransformation}}, \code{\link[DESeq2]{rlog}}
 }

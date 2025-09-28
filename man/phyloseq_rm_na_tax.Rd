@@ -16,7 +16,7 @@ Phyloseq object.
 Remove unused taxonomy levels from phyloseq-object.
 }
 \details{
-This function is particularly useful after \code{\link{tax_glom}}.
+This function is particularly useful after \code{\link[phyloseq]{tax_glom}}.
 
 'phyloseq_rm_na_tax' will remove columns filled with NA values from the taxonomy table of phyloseq object.
 }
@@ -31,5 +31,5 @@ head(tax_table(gp2))
 
 }
 \seealso{
-\code{\link{tax_table}}
+\code{\link[phyloseq]{tax_table}}
 }

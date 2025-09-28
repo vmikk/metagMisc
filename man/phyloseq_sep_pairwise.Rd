@@ -9,7 +9,7 @@ phyloseq_sep_pairwise(phys, group, comparis = "all", drop_zeroes = TRUE)
 \arguments{
 \item{phys}{A phyloseq-class object}
 
-\item{group}{Variable name (contained in \code{\link{sample_data}})}
+\item{group}{Variable name (contained in \code{\link[phyloseq]{sample_data}})}
 
 \item{comparis}{Character "all" for all possible pairwise comparisons (default), or a matrix with comparison names to use (similar to the output of \code{\link{combn}} with m=2)}
 
