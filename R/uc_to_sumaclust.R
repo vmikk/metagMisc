@@ -8,6 +8,7 @@
 #' which occurs twice in this vector (i.e., there are two identical sequence IDs in a vector
 #' for OTUs that are represented by only one sequence).
 #'
+#' @importFrom plyr dlply laply
 #' @export
 #' @seealso \code{\link{parse_uc}}
 #' @references https://git.metabarcoding.org/obitools/sumaclust/wikis/home
@@ -24,8 +25,6 @@
 #' # uc_to_sumaclust("vsearch_clusters.uc", output_file = "vsearch_to_sumaclust.txt")
 #'
 uc_to_sumaclust <- function(x, output_file = NULL){
-
-  require(plyr)
 
   ## Read UC file
   uc <- parse_uc(x, map_only = TRUE)
