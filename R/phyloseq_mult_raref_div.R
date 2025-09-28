@@ -53,11 +53,13 @@ phyloseq_mult_raref_div <- function(physeq, SampSize = min(sample_sums(physeq)),
   colnames(DIV)[1] <- "Iteration"
 
   ## Reshape data to long-format
-  DIV.resh <- reshape2::melt(
+  setDT(DIV)
+  DIV.resh <- melt(
     data = DIV,
     id.vars = c("Iteration", "Sample"),
     variable.name = "Index",
     value.name = "Value")
+  setDF(DIV.resh)
 
   ## Average diversity estimates over all iterations
   if(verbose == TRUE){ cat("..Averaging diversity estimates\n") }
