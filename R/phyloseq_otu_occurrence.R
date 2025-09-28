@@ -43,9 +43,6 @@ phyloseq_otu_occurrence <- function(physeq, variable = NULL,
   # taxa_frequency = "percentage" - proportion of sampling units that contains the OTU (sample units in which OTU occurred / total number of sample units examined)
   # taxa_frequency = "relfreq"    - relative frequency of OTU (frequency of each OTU / sum of the frequency of all OTUs)
 
-  # require(plyr)
-  # require(reshape2)
-
   ## Function to collapse samples into occurrences for a single sample group
   single_group_occurrence <- function(phys, rel = "count"){
 
@@ -86,7 +83,9 @@ phyloseq_otu_occurrence <- function(physeq, variable = NULL,
     resl <- plyr::ldply(.data = pg, .fun = single_group_occurrence, rel = taxa_frequency, .id = "SampleGroup")
 
     ## Reshape species occurrences into a wide format (samples as columns)
-    res <- reshape2::dcast(data = resl, Taxa ~ SampleGroup, value.var = "Occurrence")
+    setDT(resl)
+    res <- dcast(data = resl, Taxa ~ SampleGroup, value.var = "Occurrence")
+    setDF(res)
 
   }
 
