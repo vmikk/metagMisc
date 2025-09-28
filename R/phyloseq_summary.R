@@ -137,7 +137,9 @@ phyloseq_summary <- function(physeq, ..., cols = NULL, more_stats = FALSE, long 
   if(long == FALSE){
   
     ## Reshape
-    RES <- reshape2::dcast(data = RES, Parameter ~ Phyloseq, value.var = "Phy")
+    setDT(RES)
+    RES <- dcast(data = RES, Parameter ~ Phyloseq, value.var = "Phy")
+    setDF(RES)
 
     ## If there are multiple phyloseq objects - estimate percentages
     if(length(lls) > 1){
