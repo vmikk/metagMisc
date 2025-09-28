@@ -21,9 +21,9 @@ phyloseq_adonis(
 \arguments{
 \item{physeq}{A phyloseq-class object}
 
-\item{group.var}{Variable name (contained in \code{\link{sample_data}}) to test (RHS in adonis formula)}
+\item{group.var}{Variable name (contained in \code{\link[phyloseq]{sample_data}}) to test (RHS in adonis formula)}
 
-\item{method}{Distance/dissimilarity method (as character string; see \code{\link{distanceMethodList}})}
+\item{method}{Distance/dissimilarity method (as character string; see \code{\link[phyloseq]{distanceMethodList}})}
 
 \item{pairwise}{Logical, perform pairwise adonis (dafault, FALSE)}
 

@@ -9,7 +9,7 @@ mult_dissim(x, method = "bray", average = T, ...)
 \arguments{
 \item{x}{List of phyloseq objects (result of \code{\link{phyloseq_mult_raref}})}
 
-\item{method}{A character string with the name of supported dissimilarity index (see \code{\link{distanceMethodList}})}
+\item{method}{A character string with the name of supported dissimilarity index (see \code{\link[phyloseq]{distanceMethodList}})}
 
 \item{average}{Logical; if TRUE, dissimilarity averaged over rarefication iterations will be returned; if FALSE, list of dissimilarity matrices will be returned.}
 

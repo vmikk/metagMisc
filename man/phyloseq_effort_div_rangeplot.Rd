@@ -38,7 +38,7 @@ For range_type = "coverage": "seqdepth", "Q0", "Q1", "Q2"}
 
 \item{progress}{Show progress bar ("text" or "none")}
 
-\item{...}{Additional arguments may be passed to \code{\link{phyloseq_effort_div}}}
+\item{...}{Additional arguments may be passed to phyloseq_effort_div}
 }
 \value{
 ggplot object (if show_plot = TRUE) or a data.frame (if justDF = TRUE)

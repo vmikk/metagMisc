@@ -2,7 +2,7 @@
 % Please edit documentation in R/phyloseq_extract_otus.R
 \name{phyloseq_extract_non_shared_otus}
 \alias{phyloseq_extract_non_shared_otus}
-\title{Extract non-shared species (OTUs) between samples.}
+\title{Extract non-shared species (OTUs) between samples}
 \usage{
 phyloseq_extract_non_shared_otus(x, samp_names = sample_names(x))
 }

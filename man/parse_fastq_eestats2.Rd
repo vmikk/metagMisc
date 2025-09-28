@@ -18,7 +18,6 @@ data frame
 Load USEARCH fastq_eestats2 report showing how many reads will pass an expected error filter at different length thresholds.
 }
 \details{
-This function depends on plyr and reshape2 packages.
 Additional details on 'fastq_eestats2' function can be found on http://drive5.com/usearch/manual/cmd_fastq_eestats2.html
 }
 \examples{
