@@ -9,7 +9,7 @@
 #'
 #' @return Data frame with OTU taxonomy and abundance
 #' @export
-#' @seealso \code{\link{phyloseq-class}}
+#' @seealso \code{\link[phyloseq]{phyloseq-class}}
 #'
 #' @examples
 #' data(GlobalPatterns)

@@ -157,14 +157,14 @@ phyloseq_transform_aldex_clr <- function(physeq, variable = NULL, iter = 1){
 #' @param physeq A phyloseq-class object
 #' @param norm Logical, return normalized counts
 #' @param log Logical, apply a logarithmic transform (log2) to the normalized count data
-#' @param ... Additional arguments will be passed to \code{\link{MRcounts}}
+#' @param ... Additional arguments will be passed to \code{\link[metagenomeSeq]{MRcounts}}
 #'
 #' @details Median scaling factor across samples will be used as default.
 #' @return Phyloseq object with transformed counts in OTU table.
 #' @export
 #' @references
 #' Paulson et al. Nature Methods 10, 1200–1202 (2013) doi:10.1038/nmeth.2658. http://www.nature.com/nmeth/journal/v10/n12/full/nmeth.2658.html
-#' @seealso \code{\link{phyloseq_transform_vst_blind}}, \code{\link{phyloseq_transform_rlog_blind}}, \code{\link{rlog}}, \code{\link{varianceStabilizingTransformation}}
+#' @seealso \code{\link{phyloseq_transform_vst_blind}}, \code{\link{phyloseq_transform_rlog_blind}}, \code{\link[DESeq2]{rlog}}, \code{\link[DESeq2]{varianceStabilizingTransformation}}
 #' @examples
 #' data("GlobalPatterns")
 #' gp_tr <- phyloseq_transform_css(GlobalPatterns)
@@ -202,10 +202,10 @@ phyloseq_transform_css <- function(physeq, norm = TRUE, log = TRUE, ...){
 #' @param ... Not yet implemented
 #@param ... Additional arguments will be passed to \code{\link{varianceStabilizingTransformation}
 #'
-#' @details For downstream analysis it could be better to use sample covariate information (blind = FALSE in \code{\link{varianceStabilizingTransformation}}).
+#' @details For downstream analysis it could be better to use sample covariate information (blind = FALSE in \code{\link[DESeq2]{varianceStabilizingTransformation}}).
 #' @return Phyloseq object with transformed counts in OTU table.
 #' @export
-#' @seealso \code{\link{phyloseq_transform_rlog_blind}}, \code{\link{phyloseq_transform_css}}, \code{\link{varianceStabilizingTransformation}}, \code{\link{rlog}}
+#' @seealso \code{\link{phyloseq_transform_rlog_blind}}, \code{\link{phyloseq_transform_css}}, \code{\link[DESeq2]{varianceStabilizingTransformation}}, \code{\link[DESeq2]{rlog}}
 #' @examples
 #'
 #'
@@ -278,12 +278,12 @@ phyloseq_transform_vst_blind <- function(physeq, dropneg = F, dropmissing = T, .
 #' @param physeq A phyloseq-class object
 #' @param dropneg Logical, replace negative transformed values with 0
 #' @param dropmissing Logical, remove missing data
-#' @param ... Additional arguments will be passed to \code{\link{rlogTransformation}}
+#' @param ... Additional arguments will be passed to \code{\link[DESeq2]{rlogTransformation}}
 #'
 #' @details rlog transformation (this function) is preferable to the vst (\code{\link{phyloseq_transform_vst_blind}}) if the size factors vary widely.
 #' @return Phyloseq object with transformed counts in OTU table.
 #' @export
-#' @seealso \code{\link{phyloseq_transform_vst_blind}}, \code{\link{phyloseq_transform_css}}, \code{\link{rlog}}, \code{\link{varianceStabilizingTransformation}}
+#' @seealso \code{\link{phyloseq_transform_vst_blind}}, \code{\link{phyloseq_transform_css}}, \code{\link[DESeq2]{rlog}}, \code{\link[DESeq2]{varianceStabilizingTransformation}}
 #' @examples
 #'
 #'
@@ -329,15 +329,15 @@ phyloseq_transform_rlog_blind <- function(physeq, dropneg = F, dropmissing = T, 
 #' @title Log-transformation of OTU abundance table.
 #'
 #' @param physeq A phyloseq-class object
-#' @param ... Additional arguments (e.g., "logbase" for the logarithm base) will be passed to \code{\link{decostand}}
+#' @param ... Additional arguments (e.g., "logbase" for the logarithm base) will be passed to \code{\link[vegan]{decostand}}
 #'
 #' @details
 #' Logarithmic transformation as suggested by Anderson et al. (2006) will be applied to the OTU table in phyloseq-object. First, non-integer data will be divided by smallest positive value. Second, log(x) + 1 for x > 0.
 #' Default value of the logarithm base ("logbase" parameter) is 2.
-#' This function is a wrapper to \code{\link{decostand}} in vegan.
+#' This function is a wrapper to \code{\link[vegan]{decostand}} in vegan.
 #' @return Phyloseq object with log-transformed counts in OTU table.
 #' @export
-#' @seealso \code{\link{decostand}}
+#' @seealso \code{\link[vegan]{decostand}}
 #' @references  Anderson MJ, Ellingsen KE and McArdle BH. (2006) Multivariate dispersion as a measure of beta diversity. Ecology Letters 9, P. 683–693.
 #'
 #' @examples

@@ -1,11 +1,11 @@
 
 #' @title Remove unused taxonomy levels from phyloseq-object.
-#' @details This function is particularly useful after \code{\link{tax_glom}}.
+#' @details This function is particularly useful after \code{\link[phyloseq]{tax_glom}}.
 #' @param physeq  A phyloseq-class object
 #' @details 'phyloseq_rm_na_tax' will remove columns filled with NA values from the taxonomy table of phyloseq object.
 #' @return Phyloseq object.
 #' @export
-#' @seealso \code{\link{tax_table}}
+#' @seealso \code{\link[phyloseq]{tax_table}}
 #'
 #' @examples
 #' data(GlobalPatterns)
