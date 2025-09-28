@@ -49,11 +49,13 @@ phyloseq_taxonomic_resolution <- function(physeq, add_counts = TRUE, justDF = FA
   if(justDF == FALSE){
 
     ## Reshape data
-    sp_ranks_long <- reshape2::melt(
+    setDT(sp_ranks_ok)
+    sp_ranks_long <- melt(
         data = sp_ranks_ok,
         id.vars = c("RankName", "NumReads", "Count"),
         variable.name = "DataType",
         value.name = "Perc")
+    setDF(sp_ranks_long)
 
     ## Create column with counts
     sp_ranks_long$Counts <- sp_ranks_long$NumReads
