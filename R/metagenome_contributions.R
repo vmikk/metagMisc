@@ -55,11 +55,7 @@
 #'
 metagenome_contributions <- function(otu_tab, func_tab, tax_tab = NULL, features = NULL, NSTI_present = TRUE, rel_abund = TRUE, remove_zero_contributions = TRUE){
 
-  # require(vegan)
-  # require(reshape2)
-  # require(plyr)
-
-  # Subset OTUs for the features present in the functional table
+  ## Subset OTUs for the features present in the functional table
   otu_vs_func <- otu_tab[, 1] %in% func_tab[, 1]
   if(any(!otu_vs_func)){
     cat("Warning: OTUs that are not present in the table with functional features will be removed.\n")
@@ -68,16 +64,16 @@ metagenome_contributions <- function(otu_tab, func_tab, tax_tab = NULL, features
   otus <- as.matrix( otu_tab[, -1] )
   rownames(otus) <- otu_tab[, 1]
 
-  # Extract OTUs from functional table
+  ## Extract OTUs from functional table
   match_otus <- match(x = otu_tab[, 1], table = func_tab[,1])
   if(any(is.na(match_otus))){ match_otus <- na.omit(match_otus) }
   funcs <- as.matrix( func_tab[match_otus, -1] )
   rownames(funcs) <- otu_tab[, 1]
 
-  # Remove NSTI scores if present
+  ## Remove NSTI scores if present
   if(NSTI_present == TRUE){ funcs <- funcs[, -ncol(funcs)] }
 
-  # Subset functional table
+  ## Subset functional table
   if(!is.null(features)){
     features_OK <- colnames(funcs) %in% features
     if(any(features_OK)){
@@ -93,23 +89,27 @@ metagenome_contributions <- function(otu_tab, func_tab, tax_tab = NULL, features
     }
   }
 
-  # Standardize OTU counts to relative abundance
+  ## Standardize OTU counts to relative abundance
   if(rel_abund == TRUE){ otus <- vegan::decostand(otus, method = "total", MARGIN = 2) }
 
-  # Reshape data functional table
+  ## Reshape data functional table
   if(ncol(funcs) == 1){   # only one feature
     funcs_long <- data.frame(OTU = rownames(funcs), Gene = colnames(funcs), GeneCountPerGenome = funcs[,1], stringsAsFactors = F)
   } else {
-    funcs_long <- reshape2::melt(data = funcs, varnames = c("OTU", "Gene"), value.name = "GeneCountPerGenome")
+    setDT(funcs, keep.rownames = "OTU")
+    funcs_long <- melt(data = funcs, id.vars = "OTU", variable.name = "Gene", value.name = "GeneCountPerGenome")
+    setDF(funcs_long)
   }
 
-  # Reshape OTU table
-  otus_long <- reshape2::melt(data = otus, varnames = c("OTU", "Sample"), value.name = "OTUAbundanceInSample")
+  ## Reshape OTU table
+  setDT(otus, keep.rownames = "OTU")
+  otus_long <- melt(data = otus, id.vars = "OTU", variable.name = "Sample", value.name = "OTUAbundanceInSample")
+  setDF(otus_long)
 
-  # Combine data to a PICRUSt-like table
+  ## Combine data to a PICRUSt-like table
   res <- plyr::join(x = funcs_long, y = otus_long, by = "OTU", type = "full")
 
-  # Reorder columns as in PICRUSt
+  ## Reorder columns as in PICRUSt
   res <- data.frame(
             Gene = res$Gene,
             Sample = res$Sample,
@@ -118,10 +118,10 @@ metagenome_contributions <- function(otu_tab, func_tab, tax_tab = NULL, features
             OTUAbundanceInSample = res$OTUAbundanceInSample,
             stringsAsFactors = F)
 
-  # Contribution
+  ## Contribution
   res$CountContributedByOTU <- with(res, OTUAbundanceInSample * GeneCountPerGenome)
 
-  # Remove zero-contributors
+  ## Remove zero-contributors
   if(remove_zero_contributions == TRUE){
     zeroes <- res$CountContributedByOTU == 0
     if(any(zeroes)){
@@ -129,20 +129,20 @@ metagenome_contributions <- function(otu_tab, func_tab, tax_tab = NULL, features
     }
   }
 
-  # Estimate realtive contribution
+  ## Estimate realtive contribution
   rel_contrib <- function(x){ x$CountContributedByOTU / sum(x$CountContributedByOTU) }
 
-  # Percentage of OTU contribution to the gene count within a sample
+  ## Percentage of OTU contribution to the gene count within a sample
   res <- plyr::ddply(.data=res, .variables=c("Gene", "Sample"), .fun=function(z){
     data.frame(z, ContributionPercentOfSample = rel_contrib(z), stringsAsFactors = F)
     })
 
-  # Percentage of OTU contribution over all samples
+  ## Percentage of OTU contribution over all samples
   res <- plyr::ddply(.data=res, .variables="Gene", .fun=function(z){
     data.frame(z, ContributionPercentOfAllSamples = rel_contrib(z), stringsAsFactors = F)
     })
 
-  # Add taxonomy information for each OTU
+  ## Add taxonomy information for each OTU
   if(!is.null(tax_tab)){
     otu_in_tax <- unique(res$OTU) %in% tax_tab[,1]
     if( !any(otu_in_tax)){
@@ -152,7 +152,7 @@ metagenome_contributions <- function(otu_tab, func_tab, tax_tab = NULL, features
         missing_names <- unique(res$OTU)[ !otu_in_tax ]
         number_of_tax_ranks <- ncol(tax_tab) - 1
 
-        # Add NAs for the missing OTUs
+        ## Add NAs for the missing OTUs
         otu_no_tax <- matrix(rep(NA, number_of_missing*number_of_tax_ranks),
                         nrow = number_of_missing, ncol = number_of_tax_ranks)
 
@@ -166,7 +166,7 @@ metagenome_contributions <- function(otu_tab, func_tab, tax_tab = NULL, features
             )
   }  # end of tax_tab
 
-  # Drop rownames
+  ## Drop rownames
   rownames(res) <- NULL
 
   return(res)
