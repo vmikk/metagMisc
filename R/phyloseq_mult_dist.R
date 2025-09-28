@@ -104,7 +104,7 @@ mult_dist_average <- function(dlist){
 #' @title Compute beta diversity for each rarefaction iteration.
 #'
 #' @param x List of phyloseq objects (result of \code{\link{phyloseq_mult_raref}})
-#' @param method A character string with the name of supported dissimilarity index (see \code{\link{distanceMethodList}})
+#' @param method A character string with the name of supported dissimilarity index (see \code{\link[phyloseq]{distanceMethodList}})
 #' @param average Logical; if TRUE, dissimilarity averaged over rarefication iterations will be returned; if FALSE, list of dissimilarity matrices will be returned.
 #' @param ... Additional arguments will be passed to \code{\link[phyloseq]{distance}}
 #'

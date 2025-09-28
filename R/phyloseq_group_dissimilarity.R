@@ -2,13 +2,13 @@
 #' @title Pairwise dissimilarity boxplots
 #'
 #' @param physeq A phyloseq-class object
-#' @param group Grouping variable name (contained in \code{\link{sample_data}})
+#' @param group Grouping variable name (contained in \code{\link[phyloseq]{sample_data}})
 #' @param between_groups Logical, estimate between-group dissimilarity
-#' @param method Distance/dissimilarity method (as character string; see \code{\link{distanceMethodList}})
+#' @param method Distance/dissimilarity method (as character string; see \code{\link[phyloseq]{distanceMethodList}})
 #' @param method_title Logical, add method name to the plot title
 #' @param notch Logical, draw the notches at each side of the boxes
 #' @param justDF  Logical, instead of returning a ggplot2-object, return the data.frame that was used to build the plot
-#' @param ... Additional arguments may be passed to \code{\link{distance}} function from phyloseq package
+#' @param ... Additional arguments may be passed to \code{\link[phyloseq]{distance}} function from phyloseq package
 #'
 #' @details If the notches of two boxplots do not overlap this indicates that the two medians differ.
 #'

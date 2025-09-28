@@ -1,7 +1,7 @@
 
 #' @title Split phyloseq-class object for pairwise comparisons by sample-level variable.
 #' @param phys A phyloseq-class object
-#' @param group Variable name (contained in \code{\link{sample_data}})
+#' @param group Variable name (contained in \code{\link[phyloseq]{sample_data}})
 #' @param comparis Character "all" for all possible pairwise comparisons (default), or a matrix with comparison names to use (similar to the output of \code{\link{combn}} with m=2)
 #' @param drop_zeroes Logical, indicating weather OTUs with zero abundance or samples with zero total abundance should be removed
 #' @return List with phyloseq objects (each with only two groups based on selected variable).

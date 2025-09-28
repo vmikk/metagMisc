@@ -14,7 +14,7 @@
 #' @importFrom ggplot2 ggplot aes annotate geom_point theme_classic labs
 #' @export
 #' @references Legendre P. & Legendre L. Numerical Ecology. 2012. 3rd Ed. - Chapter 9 (Ordination in reduced space).
-#' @seealso \code{\link{vegan::stressplot}}, \code{\link{MAAS::Shepard}}
+#' @seealso \code{\link[vegan]{stressplot}}
 #' @examples
 #' library(vegan)
 #' data(dune)
