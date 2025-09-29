@@ -1,3 +1,39 @@
+
+#' Summarize taxonomic richness, relative abundance, and occurrence by rank
+#'
+#' Computes summaries of OTU counts (alpha richness) and relative abundance 
+#' aggregated at a specified taxonomic rank (e.g., Phylum), 
+#' together with overall gamma richness across all samples.
+#'
+#' The function:
+#' - counts number of OTUs per sample for each taxon with a specified rank via `phyloseq_ntaxa_by_tax()`;
+#' - computes gamma richness on a combined-sample object via `phyloseq_combine_samples()`;
+#' - aggregates counts by rank with `speedyseq::tax_glom()` and derives per-sample relative abundance (percent);
+#' - estimates OTU occurrence per rank with `phyloseq_otu_occurrence()`;
+#' - summarizes per-sample metrics (alpha richness and relative abundance) by their 
+#'   median and median absolute deviation (MAD) for each taxon at the chosen rank.
+#'
+#' Output columns include the chosen rank column(s) and, for each taxon:
+#' - `Alpha_NOTU_Median`, `Alpha_NOTU_MAD` - summaries of OTU counts per sample
+#' - `Gamma_NOTU` - overall richness across all samples
+#' - `Relabund_Median`, `Relaund_MAD` - summaries of relative abundance (in %) per sample
+#' - `Occurrence` - fraction of samples where the taxon was present
+#'
+#' @param ps A `phyloseq` object
+#' @param rnk Taxonomic rank to aggregate by (default, "Phylum")
+#'
+#' @return A `data.frame` with one row per taxon at the specified rank and
+#'   summary columns as described above.
+#' @seealso phyloseq_ntaxa_by_tax, phyloseq_combine_samples,
+#'   phyloseq_standardize_otu_abundance, phyloseq_otu_occurrence,
+#'   phyloseq_rename_with_tax, phyloseq_otu_to_df, dfRowName
+#'
+#' @importFrom plyr ddply join_all
+#' @importFrom speedyseq tax_glom psmelt
+#' @importFrom stats median mad
+#' @importFrom phyloseq rank_names
+#' @export
+#'
 phyloseq_tax_summary <- function(ps, rnk = "Phylum"){
 
   ## Count number of OTUs by taxonomic rank (per sample)
