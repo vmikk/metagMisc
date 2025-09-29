@@ -19,6 +19,15 @@
 #' @return A list of length `n` of `phyloseq` objects containing
 #'   bootstrap-resampled samples.
 #'
+#' @examples
+#' library(phyloseq)
+#' data(GlobalPatterns)
+#'
+#' # Create 10 bootstrap replicates without copying extra slots
+#' boot_list <- phyloseq_bootstrap(phys = GlobalPatterns, n = 10, other_slots = "")
+#' length(boot_list)
+#' boot_list[[1]]
+#'
 #' @export
 #' 
 phyloseq_bootstrap <- function(phys, n = 100, seed = NULL, other_slots = c("tax_table", "refseq", "phy_tree"), progress = "text"){
