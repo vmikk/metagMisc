@@ -24,6 +24,13 @@
 #'
 #' @return A `data.frame` with one row per taxon at the specified rank and
 #'   summary columns as described above.
+#'
+#' @examples
+#' library(phyloseq)
+#' data(GlobalPatterns)
+#'
+#' phyloseq_tax_summary(GlobalPatterns, rnk = "Phylum")
+#'
 #' @seealso phyloseq_ntaxa_by_tax, phyloseq_combine_samples,
 #'   phyloseq_standardize_otu_abundance, phyloseq_otu_occurrence,
 #'   phyloseq_rename_with_tax, phyloseq_otu_to_df, dfRowName
