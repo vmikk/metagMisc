@@ -1,5 +1,35 @@
 
-## Function to perform Mantel correlogram test
+#' Mantel correlogram for phyloseq objects
+#'
+#' Compute a Mantel correlogram relating among-sample community distances
+#' (e.g., Bray-Curtis dissimilarity) to geographic distances between samples,
+#' using sample coordinates stored in sample metadata as columns `Long`
+#' (longitude) and `Lat` (latitude). Supports Euclidean distances or great-circle
+#' geodesic distances and optional log transformation of geographic distances.
+#'
+#' @param ps A `phyloseq` object. The sample metadata (`sample_data(ps)`)
+#'   must contain numeric columns `Long` and `Lat` with sample coordinates.
+#' @param otu_dist Character; dissimilarity measure for computing community
+#'   distances. Default is "bray" (Bray-Curtis dissimilarity).
+#' @param geo_dist Character; geographic distance type: either "geodesic"
+#'   (great-circle distance; default) or "euclidean" (on the coordinate plane).
+#' @param log_geo_dist Logical; if `TRUE`, apply `log()` to geographic
+#'   distances prior to the correlogram. Default `TRUE`.
+#' @param break_pts Optional numeric vector of distance class breakpoints. If
+#'   `NULL`, classes are chosen automatically.
+#' @param cor_type Character; correlation type - "spearman" (default) or "pearson".
+#' @param p_adj Character; multiple testing adjustment method - "fdr" (default) or "none".
+#' @param permut Integer; number of permutations (`nperm`) for the Mantel tests. Default, 10000.
+#' @param ... Additional arguments forwarded to `vegan::mantel.correlog()`.
+#'
+#' @return A `data.frame` with one row per distance class containing the
+#'   correlogram statistics returned by `vegan::mantel.correlog()` and a
+#'   `Signif` factor indicating significance after multiple testing correction.
+#'
+#' @seealso [vegan::mantel.correlog()], [geodist::geodist()]
+#'
+#' @export
+#' 
 phyloseq_mantel_correlog <- function(ps,
   otu_dist = "bray",
   geo_dist = "geodesic", log_geo_dist = TRUE,
