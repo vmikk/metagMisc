@@ -13,9 +13,11 @@
 #' @details
 #' If the sample size ('SampSize') is not specified, rarefaction will be made for the depth equeal to 0.9 * minimal observed sample size.
 #' By default, sampling is performed without replacement ('replace = FALSE'), which differs from the default behaviour of \code{\link[phyloseq]{rarefy_even_depth}}.
+#' 
+#' To perform multiple rarefactions and estimate diversity, use \code{\link{phyloseq_mult_raref_div}}.
 #'
 #' @return List of rarefied phyloseq-objects.
-#' @seealso \code{\link[phyloseq]{rarefy_even_depth}}
+#' @seealso \code{\link[phyloseq]{rarefy_even_depth}}, \code{\link{phyloseq_mult_raref_div}}
 #' @export
 #'
 #' @examples
