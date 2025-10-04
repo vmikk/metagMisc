@@ -1,4 +1,17 @@
-## Function to combine samples (sum OTU abundance) into a single sample
+#' @title Combine samples by summing OTU abundance
+#' @description Sums OTU abundances of replicates or sample groups into single samples.
+#' This function can either combine all samples into one single sample or 
+#' combine samples within groups defined by a sample metadata variable.
+#'
+#' @param physeq A phyloseq-class object
+#' @param variable Character string; name of the sample metadata variable to use for grouping. 
+#'   If NULL (default), all samples are combined into a single sample.
+#'
+#' @return A phyloseq object with combined samples. Original sample metadata is removed
+#'   when combining all samples, but taxonomy table and phylogenetic tree (if present) are preserved.
+#'
+#' @export
+#' @seealso \code{\link{phyloseq_merge_samples}}, \code{\link{phyloseq_sep_variable}}
 phyloseq_combine_samples <- function(physeq, variable = NULL){
 
   ## Function to combine all samples into a single one
