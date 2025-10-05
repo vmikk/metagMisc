@@ -12,6 +12,16 @@
 #'
 #' @export
 #' @seealso \code{\link{phyloseq_merge_samples}}, \code{\link{phyloseq_sep_variable}}
+#' @examples
+#' library(phyloseq)
+#' data("GlobalPatterns")
+#' 
+#' # Combine all samples into a single sample
+#' gp_total <- phyloseq_combine_samples(GlobalPatterns)
+#' 
+#' # Combine samples by SampleType
+#' gp_by_type <- phyloseq_combine_samples(GlobalPatterns, variable = "SampleType")
+#'
 phyloseq_combine_samples <- function(physeq, variable = NULL){
 
   ## Function to combine all samples into a single one
