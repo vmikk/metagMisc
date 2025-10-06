@@ -24,10 +24,13 @@ This function counts the number of OTUs and reads annotated
 at the lowest level of taxonomic classification and shows it on a barplot.
 }
 \examples{
+library(phyloseq)
+library(ggplot2)
 data(GlobalPatterns)
-gpt <- phyloseq_taxonomic_resolution(GlobalPatterns)
-gpt
-gpt$data_wide
+
+taxres <- phyloseq_taxonomic_resolution(GlobalPatterns)
+taxres
+taxres$data_wide
 
 }
 \seealso{
