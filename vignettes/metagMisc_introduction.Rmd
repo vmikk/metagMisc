@@ -1,0 +1,26 @@
+---
+title: "Exploring and processing metabarcoding data with metagMisc"
+author: "Vladimir Mikryukov"
+date: "`r Sys.Date()`"
+output: github_document
+vignette: >
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+## Introduction
+
+This vignette demonstrates a typical metabarcoding data analysis workflow using the `metagMisc` package. 
+We'll walk through the process of exploring, filtering, and analyzing amplicon sequencing data, 
+from initial data inspection to comparative analysis between sample groups.
+
+## Load packages and data
+
+```{r load-packages}
+library(phyloseq)
+library(ggplot2)
+library(metagMisc)
+```
