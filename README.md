@@ -8,15 +8,10 @@
 
 <!-- badges: end -->
 
-Miscellaneous functions for metagenomic analysis.  
+## metagMisc tools for metabarcoding and microbiome data analysis
 
-metagMisc package contains miscellaneous functions for metabarcoding and metagenomic analysis, including data transformations, several parsers (for USERCH UC-format; BLAST, SINA and STAMPA outputs, etc.), taxonomy handlers (SILVA, QIIME, AMPTk), phyloseq-shortcuts (multiple rarefaction, phyloseq splitting and exporting), and DADA2-shortcuts (error rate estimation on the subset of data, export of denoised amplicons in fasta).  
+`metagMisc` is an R package that provides a suite of functions for metabarcoding and microbiome data analysis (also suitable for processed metagenomic data), with particular focus on handling data in `phyloseq` format ([McMurdie and Holmes 2013](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0061217)). The package helps with common workflows including data filtering, normalization, rarefaction, diversity estimation, and comparative analysis. It offers both traditional and cutting-edge approaches for handling amplicon sequencing data, making it an essential toolkit for microbial ecologists and bioinformaticians.
 
-The repository is currently in **ALPHA** state. Nothing is guaranteed and the material is subject to change without a notice (e.g., function names or arguments).  
-
-# Getting started
-
-Vignette is under construction.
 
 # Package features
 * Multiple rarefaction
