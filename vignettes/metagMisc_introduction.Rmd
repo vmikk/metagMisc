@@ -17,6 +17,11 @@ This vignette demonstrates a typical metabarcoding data analysis workflow using 
 We'll walk through the process of exploring, filtering, and analyzing amplicon sequencing data, 
 from initial data inspection to comparative analysis between sample groups.
 
+The `metagMisc` package contains multiple functions for working with phyloseq objects 
+([McMurdie and Holmes 2013](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0061217)), 
+which provide a convenient interface and data structure for working with metabarcoding/microbiome data in R. 
+
+
 ## Load packages and data
 
 ```{r load-packages}
