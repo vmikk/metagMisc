@@ -35,3 +35,12 @@ A data.frame of the richness estimates.
 \description{
 This function performs multiple rarefaction and estimates average diversity (e.g., Simpson or Shannon indices) for each sample.
 }
+\examples{
+library(phyloseq)
+data("esophagus")
+
+# Perform multiple rarefaction, estimate diversity (repeat the procedure 10 times)
+# and average diversity (richness and Shannon index) estimates over all iterations
+phyloseq_mult_raref_div(esophagus, divindex = c("Observed", "Shannon"), iter = 10)
+
+}
