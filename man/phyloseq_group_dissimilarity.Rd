@@ -2,7 +2,7 @@
 % Please edit documentation in R/phyloseq_group_dissimilarity.R
 \name{phyloseq_group_dissimilarity}
 \alias{phyloseq_group_dissimilarity}
-\title{Pairwise dissimilarity boxplots.}
+\title{Pairwise dissimilarity boxplots}
 \usage{
 phyloseq_group_dissimilarity(
   physeq,
@@ -18,11 +18,11 @@ phyloseq_group_dissimilarity(
 \arguments{
 \item{physeq}{A phyloseq-class object}
 
-\item{group}{Grouping variable name (contained in \code{\link{sample_data}})}
+\item{group}{Grouping variable name (contained in \code{\link[phyloseq]{sample_data}})}
 
 \item{between_groups}{Logical, estimate between-group dissimilarity}
 
-\item{method}{Distance/dissimilarity method (as character string; see \code{\link{distanceMethodList}})}
+\item{method}{Distance/dissimilarity method (as character string; see \code{\link[phyloseq]{distanceMethodList}})}
 
 \item{method_title}{Logical, add method name to the plot title}
 
@@ -30,13 +30,13 @@ phyloseq_group_dissimilarity(
 
 \item{justDF}{Logical, instead of returning a ggplot2-object, return the data.frame that was used to build the plot}
 
-\item{...}{Additional arguments may be passed to \code{\link{distance}} function from phyloseq package}
+\item{...}{Additional arguments may be passed to \code{\link[phyloseq]{distance}} function from phyloseq package}
 }
 \value{
 ggplot2-object or data.frame (if justDF = TRUE).
 }
 \description{
-Pairwise dissimilarity boxplots.
+Pairwise dissimilarity boxplots
 }
 \details{
 If the notches of two boxplots do not overlap this indicates that the two medians differ.
