@@ -90,6 +90,54 @@ phyloseq_SRS <- function(physeq, Cmin, drop_zeros = FALSE, set_seed = TRUE, seed
 
   return(physeq)
 }
+
+
+#' SRS normalization with preservation of low-count samples
+#'
+#' @description 
+#' Applies SRS normalization only to samples with sufficient read counts while preserving 
+#' low-count samples unchanged. This approach prevents the loss of potentially valuable 
+#' samples that have sequencing depths below the normalization threshold.
+#'
+#' @param physeq A \code{\link[phyloseq]{phyloseq-class}} object containing OTU/ASV abundance data
+#' @param treshold Numeric. The minimum sequencing depth threshold. Samples with counts 
+#'   below this value are preserved unchanged, while samples at or above this threshold 
+#'   are normalized to exactly this value using SRS. Default is 10,000
+#'
+#' @details
+#' This function implements a mixed normalization strategy:
+#' 
+#' \enumerate{
+#'   \item \strong{Sample splitting}: Samples are divided into two groups based on the 
+#'         \code{treshold} parameter
+#'   \item \strong{Selective normalization}: Only high-count samples (\code{>= treshold}) 
+#'         are normalized to exactly \code{treshold} counts using SRS
+#'   \item \strong{Preservation}: Low-count samples (\code{< treshold}) remain unchanged 
+#'         to avoid information loss
+#'   \item \strong{Merging}: Both groups are recombined into a single phyloseq object
+#' }
+#' 
+#' This approach is particularly useful when:
+#' \itemize{
+#'   \item The dataset contains samples with highly variable sequencing depths
+#'   \item Some samples have low sequencing depth but contain unique or important taxa
+#'   \item Complete removal of low-coverage samples would result in significant data loss
+#'   \item Downstream analyses can handle mixed normalization states
+#' }
+#' 
+#' \strong{Note}: The resulting dataset will have samples with different total counts 
+#' (low-count samples retain their original depths, high-count samples are normalized 
+#' to \code{treshold}). Consider whether this is appropriate for your specific analysis.
+#'
+#' @return A \code{\link[phyloseq]{phyloseq-class}} object where high-count samples 
+#'   have been SRS-normalized to the threshold value, while low-count samples retain 
+#'   their original sequencing depths.
+#'
+#' @seealso \code{\link{phyloseq_SRS}} for standard SRS normalization of all samples
+#'
+#' @importFrom phyloseq prune_samples sample_sums merge_phyloseq
+#' @export
+#'
 phyloseq_SRS_lowcount <- function(physeq, treshold = 10000){
   
   ## Split data into low- and high- count parts
