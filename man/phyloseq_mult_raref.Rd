@@ -40,9 +40,10 @@ This function will resample an OTU table such that all samples have the same lib
 }
 \details{
 If the sample size ('SampSize') is not specified, rarefaction will be made for the depth equeal to 0.9 * minimal observed sample size.
-By default, sampling is performed without replacement ('replace = FALSE'), which differs from the default behaviour of \code{\link{rarefy_even_depth}}.
+By default, sampling is performed without replacement ('replace = FALSE'), which differs from the default behaviour of \code{\link[phyloseq]{rarefy_even_depth}}.
 }
 \examples{
+library(phyloseq)
 data("esophagus")
 eso_raref <- phyloseq_mult_raref(esophagus, iter = 10)
 
@@ -56,5 +57,5 @@ phyloseq_mult_raref(esophagus, trimOTUs = F, replace = T, MinSizeThreshold = 210
 
 }
 \seealso{
-\code{\link{rarefy_even_depth}}
+\code{\link[phyloseq]{rarefy_even_depth}}
 }
