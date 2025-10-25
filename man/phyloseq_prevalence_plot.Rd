@@ -2,7 +2,7 @@
 % Please edit documentation in R/phyloseq_prevalence_plot.R
 \name{phyloseq_prevalence_plot}
 \alias{phyloseq_prevalence_plot}
-\title{Prevalence plot (total OTU abundance vs OTU prevalence).}
+\title{Prevalence plot (total OTU abundance vs OTU prevalence)}
 \usage{
 phyloseq_prevalence_plot(
   physeq,

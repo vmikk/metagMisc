@@ -53,5 +53,5 @@ parse_taxonomy_amptk_batch(tax2, withID = FALSE)
 AMPtk: Amplicon ToolKit for NGS data (formally UFITS): https://github.com/nextgenusfs/amptk
 }
 \seealso{
-\code{\link{parse_taxonomy_amptk}} \code{\link{parse_taxonomy_qiime}}
+\code{\link{parse_taxonomy_amptk}} \code{\link[phyloseq]{parse_taxonomy_qiime}}
 }
