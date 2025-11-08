@@ -21,7 +21,8 @@ abbreviate_taxa_names(names, nlet = 3, totl = 7, sep = "_", seconditem = F)
 Character vector of abbreviated taxa names
 }
 \description{
-This function is based on vegan::\code{\link{make.cepnames}} (git 1b816c1; Aug 2, 2011).
+This function is based on the deprecated vegan::make.cepnames function 
+(git 1b816c1; Aug 2, 2011) and provides similar functionality for abbreviating taxa names.
 }
 \examples{
 x <- c("Laccaria laccata", "Meliniomyces bicolor",
@@ -29,13 +30,9 @@ x <- c("Laccaria laccata", "Meliniomyces bicolor",
   "Cadophora finlandica", "Saccharomycetales")
 
 abbreviate_taxa_names(x, nlet = 3, totl = 7, sep = "_")
-abbreviate_taxa_names(x, nlet = 4, totl = 8, sep = "")   # same as vegan::make.cepnames
-vegan::make.cepnames(x)
+abbreviate_taxa_names(x, nlet = 4, totl = 8, sep = "")
 
 }
-\seealso{
-\code{\link{make.cepnames}}
-}
 \author{
-Author of the original function is Jari Oksanen (\code{\link{make.cepnames}})
+Author of the original function is Jari Oksanen (vegan::make.cepnames)
 }
