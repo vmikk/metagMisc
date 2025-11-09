@@ -16,40 +16,65 @@
 #'   "Inocybe cincinnata", "Inocybe", "Tylospora asterophora",
 #'   "Cadophora finlandica", "Saccharomycetales")
 #'
-#' abbreviate_taxa_names(x, nlet = 3, totl = 7, sep = "_")
-#' abbreviate_taxa_names(x, nlet = 4, totl = 8, sep = "")   # same as vegan::make.cepnames
-#' vegan::make.cepnames(x)
-#'
-abbreviate_taxa_names <- function(names, nlet = 3, totl = 7, sep="_", seconditem = F){
+abbreviate_taxa_names <- function(names, minlengths = c(4, 4), seconditem = FALSE,
+                                  uniqgenera = FALSE, named = FALSE, method) {
+  
+  ## Preserve original names
+  orignames <- names
+  
+  ## Make valid names
+  names <- base::make.names(names, unique = FALSE, allow_ = FALSE)
 
-  ## make valid names
-  names <- base::make.names(names, unique = FALSE)
-
-  ## remove trailing and duplicated dots
+  ## Remove trailing and duplicated dots
   names <- gsub("\\.[\\.]+", ".", names)
   names <- gsub("\\.$", "", names)
 
-  ## split by dots and take `nlet` letters of each element (if several)
-  names <- lapply(
-    strsplit(names, "\\."), function(x){
-    if(length(x) > 1){
-      substring(x, 1, nlet)
+  dt <- data.table(
+    original_names  = orignames,
+    validated_names = names)
+  
+  ## Split by dots and extract genus and epithet
+  dt[, names_split := strsplit(validated_names, ".", fixed = TRUE)]
+  dt[, gen := sapply(names_split, function(x) x[1])]
+  
+  ## Extract epithet
+  dt[, epi := sapply(names_split, function(x) {
+    if (seconditem) {
+      if (length(x) >= 2) x[2] else ""
     } else {
-      x
-    }})
+      if (length(x) > 1) x[length(x)] else ""
+    }
+  })]
 
-  ## Take first and last element or `totl` characters if only one element
-  names <- unlist(lapply(
-    names, function(x){
-      if(length(x) > 1){
-        paste(x[c(1, if(seconditem) 2 else length(x))], collapse = sep)
-      } else {
-        x
-      }}))
+  ## Set abbreviation parameters
+  glen <- minlengths[1]
+  nmlen <- sum(minlengths)
+  if(missing(method)){ method <- "left.kept" }
 
-  names <- base::abbreviate(names, minlength = totl)
+  ## Abbreviate genus
+  gen_abbrev_all <- abbreviate(
+    abbreviate(dt$gen, glen, use.classes = FALSE, strict = !uniqgenera),
+    glen, use.classes = TRUE, method = method)
+  dt[, gen_abbrev := ifelse(epi != "", gen_abbrev_all, gen)]
+  
+  ## Combine genus and epithet
+  dt[, combined := paste0(gen_abbrev, epi)]
+  
+  ## Abbreviate combined names
+  dt[, abbreviated := abbreviate(combined, nmlen, use.classes = FALSE)]
+  
+  ## Final abbreviation pass
+  dt[, final_names := abbreviate(abbreviated, nmlen, use.classes = TRUE, 
+                                 method = method, named = FALSE)]
 
-  ## Final clean-up
+  ## Extract final names
+  names <- dt$final_names
+  
+  ## Final clean-up for uniqueness
   names <- base::make.names(names, unique = TRUE)
+  
+  ## Add original names as names attribute for the resulting vector
+  if(named){ names(names) <- orignames }
+    
   return(names)
 }
