@@ -1,26 +1,42 @@
 
 #' @title Abbreviate taxa names
 #' @param names Character vector of species names
-#' @param nlet Number of letters to take from genus-species parts
-#' @param totl Number of letters in the final abbreviation
-#' @param sep Which separator to use for genus-species case (default is underscore)
-#' @param seconditem Logical, take the second item of the original name for abbreviation
+#' @param minlengths Numeric vector of length 2: c(genus_length, epithet_length). Default c(4, 4)
+#' @param seconditem Logical, take the second item of the original name for epithet
+#' @param uniqgenera Logical, enforce unique genera abbreviations
+#' @param named Logical, preserve original names as names attribute
+#' @param method Character, abbreviation method passed to `abbreviate` function ("left.kept" or "both.sides")
 #'
-#' @description This function is based on vegan::\code{\link{make.cepnames}} (git 1b816c1; Aug 2, 2011).
+#' @description 
+#' Creates abbreviated names for taxonomic species similar to \code{\link[vegan]{make.cepnames}}.
+#' Removes hyphens, validates names, and provides control over abbreviation methods.
+#'
 #' @return Character vector of abbreviated taxa names
 #' @export
-#' @author Author of the original function is Jari Oksanen (\code{\link{make.cepnames}})
-#' @seealso \code{\link{make.cepnames}}
+#' @author Author of the original function is Jari Oksanen (\code{\link[vegan]{make.cepnames}})
+#' @seealso \code{\link[vegan]{make.cepnames}}
 #' @examples
 #' x <- c("Laccaria laccata", "Meliniomyces bicolor",
 #'   "Inocybe cincinnata", "Inocybe", "Tylospora asterophora",
-#'   "Cadophora finlandica", "Saccharomycetales")
+#'   "Cadophora finlandica", "Saccharomycetales",
+#'   "Auricularia auricula-judae")
+#'
+#' abbreviate_taxa_names(x, minlengths = c(3, 4))
+#' abbreviate_taxa_names(x, minlengths = c(4, 4))
 #'
 abbreviate_taxa_names <- function(names, minlengths = c(4, 4), seconditem = FALSE,
                                   uniqgenera = FALSE, named = FALSE, method) {
   
   ## Preserve original names
   orignames <- names
+  
+  ## Handle empty input
+  if (length(names) == 0) {
+    return(character(0))
+  }
+  
+  ## Remove hyphens
+  names <- gsub("-", "", names)
   
   ## Make valid names
   names <- base::make.names(names, unique = FALSE, allow_ = FALSE)
