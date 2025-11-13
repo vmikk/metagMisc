@@ -138,6 +138,21 @@ phyloseq_SRS <- function(physeq, Cmin, drop_zeros = FALSE, set_seed = TRUE, seed
 #' @importFrom phyloseq prune_samples sample_sums merge_phyloseq
 #' @export
 #'
+#' @examples
+#' # Load required packages
+#' library(phyloseq)
+#' library(SRS)
+#' 
+#' # Load example data
+#' data(esophagus)
+#' 
+#' # Check distribution of library sizes
+#' summary(sample_sums(esophagus))
+#' 
+#' # Apply mixed normalization (threshold = 220)
+#' ps <- phyloseq_SRS_lowcount(esophagus, treshold = 220)
+#' sample_sums(ps)
+#'
 phyloseq_SRS_lowcount <- function(physeq, treshold = 10000){
   
   ## Split data into low- and high- count parts
