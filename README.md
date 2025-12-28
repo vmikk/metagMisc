@@ -68,4 +68,10 @@ remotes::install_github("vmikk/metagMisc")
 # Acknowledgements
 `metagMisc` stands on the shoulders of numerous R-packages (see Dependencies). In particular, it would not have happened without [phyloseq](https://github.com/joey711/phyloseq/) and [vegan](https://github.com/vegandevs/vegan/) packages. Please cite R and R packages when you use them for data analysis. 
 
+## Acknowledgements
+
+metagMisc builds upon the excellent work of the R community, particularly the [vegan](https://github.com/vegandevs/vegan/), [phyloseq](https://github.com/joey711/phyloseq/), and [data.table](https://github.com/Rdatatable/data.table) packages. We are grateful to all package developers who make reproducible microbiome research possible.
+
+When using metagMisc, please also cite the underlying methods and packages used in your analysis. The package vignettes provide guidance on appropriate citations for specific functions.
+
 The development of this software was supported by RFBR grants 16-04-01259 and 15-29-02765.
