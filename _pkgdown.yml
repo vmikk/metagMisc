@@ -6,4 +6,16 @@ home:
 template:
   bootstrap: 5
   light-switch: true
+  
+  math-rendering: katex
+  includes:
+    in_header: |
+      <style>
+        /* Control logo size in README/homepage */
+        .page-header img[src*="Logo_metagMisc.png"],
+        #readme img[src*="Logo_metagMisc.png"] {
+          height: 139px !important;
+          max-height: 139px !important;
+        }
+      </style>
 

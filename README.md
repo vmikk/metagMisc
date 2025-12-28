@@ -1,4 +1,4 @@
-# metagMisc <img src='man/figures/Logo_metagMisc.png' align="right" height="139" />
+# metagMisc <img src='man/figures/Logo_metagMisc.png' align="right" style="height: 139px;" />
 
 <!-- badges: start -->
 
