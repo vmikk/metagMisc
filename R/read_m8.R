@@ -12,6 +12,7 @@
 #' @export
 #'
 #' @examples
+#' # read_m8("blast_results.m8")
 #'
 read_m8 <- function(x, blast_colz = NULL, package = "data.table"){
 
