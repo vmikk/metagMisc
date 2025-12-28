@@ -12,13 +12,14 @@
 
 `metagMisc` is an R package that provides a suite of functions for metabarcoding and microbiome data analysis (also suitable for processed metagenomic data), with particular focus on handling data in `phyloseq` format ([McMurdie and Holmes 2013](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0061217)). The package helps with common workflows including data filtering, normalization, rarefaction, diversity estimation, and comparative analysis. It offers both traditional and cutting-edge approaches for handling amplicon sequencing data, making it an essential toolkit for microbial ecologists and bioinformaticians.
 
+## Getting started
 
-# Package features
-* Multiple rarefaction
-* OTU abundance averaging following CoDa (Compositional Data Analysis) workflow
-* Phylogenetic diversity estimation (including standardized effect sizes)
-* Pairwise dissimilarity boxplots
-<img src="man/figures/Pairwise_dissimilarity_boxplot.png" width="500" title="Pairwise dissimilarity boxplots (enterotype data)" />
+The package includes two vignettes that guide through typical metabarcoding workflows:
+
+- **[Introduction to metagMisc](vignettes/metagMisc_introduction.Rmd)**: Data exploration, filtering, sample operations, and basic analysis workflows  
+- **[Rarefaction and diversity estimation](vignettes/metagMisc_rarefaction.Rmd)**: Guide to rarefaction methods, sample coverage, and diversity estimation  
+
+## Package features
 
 ### Visualization capabilities
 
@@ -36,6 +37,16 @@
 
 **Taxonomic annotation quality assessment**  
 <img src="man/figures/Taxonomic_resolution.png" width="500" title="Taxonomic resolution analysis" />
+
+### Key features
+
+- **Data exploration and quality control**: Taxonomic resolution assessment, prevalence analysis, and comprehensive filtering options  
+- **Standardization and normalization**: Multiple rarefaction, coverage-based rarefaction, and SRS (Scaling with Ranked Subsampling) normalization  
+- **Diversity estimation**: Hill numbers, phylogenetic diversity, and rarefaction/extrapolation with iNEXT integration  
+- **Comparative analysis**: Sample grouping, shared/unique taxa identification, and beta-diversity visualization  
+- **Data transformation**: CLR, CSS, VST transformations and compositional data analysis workflows  
+- **File format support**: Parsers for USEARCH, BLAST, SILVA, QIIME, and other common formats  
+
 
 ## Installation
 
