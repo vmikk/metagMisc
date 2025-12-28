@@ -52,21 +52,25 @@ remotes::install_github("vmikk/metagMisc")
 
 ## Dependencies
 
-`source("http://bioconductor.org/biocLite.R")`
-* phyloseq: `biocLite("phyloseq")`
-* dada2: `biocLite("dada2")`
-* ALDEx2: `biocLite("ALDEx2")`
-* metagenomeSeq: `biocLite("metagenomeSeq")`
-* DESeq2: `biocLite("DESeq2")`
-* vegan: `install.packages("vegan")`
-* PhyloMeasures: `remotes::install_github("cran/PhyloMeasures")`
-* speedyseq: `remotes::install_github("mikemc/speedyseq")`
-* ggplot2
-* plyr
-* openssl
+Most dependencies will be installed automatically. For Bioconductor packages, ensure you have BiocManager installed:
 
-# Acknowledgements
-`metagMisc` stands on the shoulders of numerous R-packages (see Dependencies). In particular, it would not have happened without [phyloseq](https://github.com/joey711/phyloseq/) and [vegan](https://github.com/vegandevs/vegan/) packages. Please cite R and R packages when you use them for data analysis. 
+```r
+# Install BiocManager if needed
+if (!requireNamespace("BiocManager", quietly = TRUE)){
+  install.packages("BiocManager")
+}
+
+# Core Bioconductor dependencies
+BiocManager::install(c("phyloseq", "DESeq2", "ALDEx2", "metagenomeSeq"))
+
+# Additional dependencies (installed automatically with metagMisc)
+install.packages(c("vegan", "data.table", "ggplot2", "plyr", "iNEXT", "SRS"))
+
+# Optional packages for specific analyses
+remotes::install_github("cran/PhyloMeasures")  # for phylogenetic diversity
+remotes::install_github("mikemc/speedyseq")    # for faster phyloseq operations
+BiocManager::install("GenomicAlignments")      # for CIGAR string expansion
+```
 
 ## Acknowledgements
 
