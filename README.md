@@ -19,18 +19,23 @@
 * Phylogenetic diversity estimation (including standardized effect sizes)
 * Pairwise dissimilarity boxplots
 <img src="man/figures/Pairwise_dissimilarity_boxplot.png" width="500" title="Pairwise dissimilarity boxplots (enterotype data)" />
-* Prevalence plots (total OTU abundance vs OTU prevalence)
-<img src="man/figures/Prevalence_plots.png" width="500" title="Prevalence plots (GlobalPatterns data)" />
-* Diversity profiles based on Hill numbers (with `entropart` package)
-<img src="man/figures/Diversity_profile.png" width="500" title="Diversity profiles (esophagus data)" />
-* Various data filtering options (e.g., extraction of the most abundant OTUs)
-<img src="man/figures/Filter_top_taxa.png" width="500" title="Top taxa (GlobalPatterns data)" />
-* Taxonomic resolution visualization
-<img src="man/figures/Taxonomic_resolution.png" width="500" title="Taxonomic resolution (GlobalPatterns data)" />
 
-# Installation
-```
-devtools::install_github("vmikk/metagMisc")
+### Visualization capabilities
+
+**Pairwise dissimilarity analysis**  
+<img src="man/figures/Pairwise_dissimilarity_boxplot.png" width="500" title="Pairwise dissimilarity boxplots" />
+
+**Prevalence patterns**  
+<img src="man/figures/Prevalence_plots.png" width="500" title="OTU prevalence vs abundance plots" />
+
+**Diversity profiles with Hill numbers**  
+<img src="man/figures/Diversity_profile.png" width="500" title="Diversity profiles based on Hill numbers" />
+
+**Taxonomic filtering and abundance analysis**  
+<img src="man/figures/Filter_top_taxa.png" width="500" title="Top taxa filtering visualization" />
+
+**Taxonomic annotation quality assessment**  
+<img src="man/figures/Taxonomic_resolution.png" width="500" title="Taxonomic resolution analysis" />
 ```
 
 ## Dependencies
