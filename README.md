@@ -36,6 +36,18 @@
 
 **Taxonomic annotation quality assessment**  
 <img src="man/figures/Taxonomic_resolution.png" width="500" title="Taxonomic resolution analysis" />
+
+## Installation
+
+Install the development version from GitHub:
+
+```r
+# Install from GitHub
+if (!requireNamespace("remotes", quietly = TRUE)){
+  install.packages("remotes")
+}
+
+remotes::install_github("vmikk/metagMisc")
 ```
 
 ## Dependencies
