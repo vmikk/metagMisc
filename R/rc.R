@@ -17,6 +17,16 @@
 #'
 #' @importFrom stringi stri_reverse
 #' @export
+#' @examples
+#' # Standard bases
+#' rc("ATGC")
+#'
+#' # Ambiguity codes are complemented correctly
+#' rc(c("NRY", "AaTt"))
+#'
+#' # Non-IUPAC characters are preserved as-is
+#' rc("ATGC-XYZ")
+#'
 rc <- function(x){
   # x = character vector
 
