@@ -56,37 +56,79 @@ prepare_inext <- function(OTUs, correct_singletons = T){
       OTUs <- as.data.frame(OTUs)
     }
 
+    OTUs <- dfRowName(x = OTUs, name = "OTU")
+    setDT(OTUs)
+    setcolorder(x = OTUs, neworder = "OTU")
+
     ## Data validation
+
     # Check data for empty samples
-    samp_sums <- colSums(OTUs, na.rm = TRUE)
+    samp_sums <- colSums(OTUs[, -1], na.rm = TRUE)
     if(any(samp_sums == 0)){
-      warning("Empty samples were removed from the data (samples with zero total abundance).\n")
-      OTUs <- OTUs[, -which(samp_sums == 0)]
+      to_rm <- names(samp_sums[ samp_sums == 0 ])
+      warning("Empty samples (n=", length(to_rm), ") were removed from the data (samples with zero total abundance).\n")
+      OTUs <- OTUs[, !..to_rm]
+      rm(to_rm)
     }
 
     # Check data for negative entries
-    if(any(OTUs < 0, na.rm = TRUE)){
+    has_negative <- OTUs[, 
+      any(unlist(lapply(.SD, function(x) any(x < 0, na.rm = TRUE)))), 
+      .SDcols = -1]
+    if(has_negative){
       stop("There are negative values in the abundance data.\n")
     }
 
+
+    # Remove zero and missing abundances
+    trim_table <- function(x){
+      x <- x[ Abundance > 0 ]
+      if(any(is.na(x$Abundance))){
+        warning("There are NA values in the abundance data, they will be excluded.\n")
+        x <- x[ !is.na(Abundance) ]
+      }
+      return(x)
+    }
+
+    ## Convert to long format
+    n_cll <- nrow(OTUs) * (ncol(OTUs) - 1)
+    if(n_cll < 50000000){
+      ## Reshape data in one pass
+      OTUL <- melt(OTUs, id.vars = "OTU", variable.name = "SampleID", value.name = "Abundance")
+      OTUL <- trim_table(OTUL)
+    } else {
+      ## Reshape data in chunks
+      n_chunks <- data.table::fcase(
+        n_cll <  9e7,                3L,
+        n_cll >= 9e7 & n_cll < 5e8,  6L,
+        n_cll >= 5e8 & n_cll < 5e9,  8L,
+        n_cll >= 5e9 & n_cll < 5e10, 9L,
+        n_cll >= 5e10,               12L)
+
+      chunks <- chunk(x = colnames(OTUs)[-1], n = n_chunks)
+
+      OTUL <- list()
+      for(i in 1:n_chunks){
+        cls <- c("OTU", chunks[[i]])
+        OTUL[[i]] <- melt(OTUs[, ..cls], id.vars = "OTU", variable.name = "SampleID", value.name = "Abundance")
+        OTUL[[i]] <- trim_table(OTUL[[i]])
+        rm(cls)
+      }
+
+      OTUL <- rbindlist(OTUL)
+    }
+
+    rm(OTUs); invisible(gc())
+    setorder(x = OTUL, SampleID, -Abundance, OTU)
+
     # Check if OTU counts are integers
-    tmp_matr <- as.matrix(OTUs)
-    if(!identical(all.equal(as.integer(tmp_matr), as.vector(tmp_matr)), TRUE)){
+    if(any(OTUL$Abundance != as.integer(OTUL$Abundance), na.rm = TRUE)){
       warning("There are non-integer values in the data, results may be meaningless.\n")
     }
-    rm(tmp_matr)
 
-
-    ## Function to extract non-zero OTUs and sort OTU abundance
-    extract_non_zero <- function(x) {
-      rez <- sort(x[ which(x > 0) ], decreasing = T)
-      rez <- as.integer(rez)
-      return(rez)
-    }
-
-    ## Extract OTU abundances
-    res <- plyr::alply(.data = as.matrix(OTUs), .margins = 2, .fun = extract_non_zero)
-    names(res) <- as.character(attr(res, "split_labels")[,1])
+    ## Prepare a list with OTU abundance vectors
+    res <- OTUL[, .(abund = list(as.integer(sort(Abundance, decreasing = TRUE)))), by = SampleID]
+    res <- setNames(res$abund, as.character(res$SampleID))
 
     ## Just return vectors with OTU abundances if singleton correction is not required
     if(correct_singletons == FALSE){
