@@ -14,6 +14,7 @@
 #' @export
 #' @references
 #' Chao A, Jost L. (2012) Coverage-based rarefaction and extrapolation: standardizing samples by completeness rather than size // Ecology 93(12): 2533–2547. DOI: 10.1890/11-1952.1
+#' Chiu C, Chao A. (2016) Estimating and comparing microbial diversity in the presence of sequencing errors // PeerJ 4:e1634. DOI: 10.7717/peerj.1634
 #' @examples
 #' data("esophagus")
 #' phyloseq_coverage(esophagus)
