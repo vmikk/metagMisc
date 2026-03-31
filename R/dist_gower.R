@@ -62,6 +62,7 @@ dist_gower <- function(x, type,
 
 
 #' Scale quantitative data according to option
+#' @noRd
 .scale_quantitative_data <- function(df, option, tol) {
   switch(option,
     "scaledBYsd" = as.data.frame(scale(df)),
@@ -76,6 +77,7 @@ dist_gower <- function(x, type,
 }
 
 #' Reorder distance matrix to match row names
+#' @noRd
 .reorder_distance_matrix <- function(pd, d.names, index) {
   
   pd_matrix <- as.matrix(pd)
@@ -118,7 +120,7 @@ dist_gower <- function(x, type,
 #' @param d.names Character vector of row/item labels for the final distance object
 #' @param use_matrix_weights Logical; if TRUE uses matrix-based weights (for missing data), if FALSE uses scalar weights (simple weighted average)
 #' @details d_ij = sqrt(Σ(w_k * d_ijk²) / Σ(w_k)). Function handles both scalar and matrix-based weighting for missing data scenarios.
-#' 
+#' @noRd
 .aggregate_distances <- function(dist_objects, weight_infos, nlig, d.names, use_matrix_weights) {
   
   # Compute sum of squared distances
