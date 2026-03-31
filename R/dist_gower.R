@@ -1,3 +1,65 @@
+dist_gower <- function(x, type,
+  option = c("scaledBYrange", "scaledBYsd", "noscale"),
+  scann = FALSE, tol = 1e-8,
+  precomputed.dists = NULL, precomputed.weights = NULL, ...) {
+
+  ## Input validation
+  if (!inherits(x, "ktab")) {
+    stop("'x' must be a ktab object")
+  }
+
+  valid_types <- c("Q", "O", "N", "D", "F", "B", "C")
+  if (any(is.na(match(type, valid_types)))) {
+    stop("Invalid type(s). Allowed values: ", paste(valid_types, collapse = ", "))
+  }
+
+  if (length(x$blo) != length(type)) {
+    stop("Length of 'type' must match number of blocks in ktab (", length(x$blo), ")")
+  }
+
+  if (!is.numeric(tol) || tol < 0) {
+    stop("'tol' must be a non-negative numeric value")
+  }
+
+  option <- match.arg(option)
+  
+  ## Get basic dimensions and names
+  nlig <- nrow(x[[1]])
+  if (nlig == 0){
+    stop("ktab object has no rows")
+  }
+
+  d.names <- rownames(x[[1]])
+  if (is.null(d.names)){
+    d.names <- as.character(seq_len(nlig))
+  }
+  
+  ## Interactive metric selection
+  method_params <- .get_method_parameters(type, scann)
+  
+  ## Determine if matrix weights are needed for NA handling
+  napres <- any(type == "D") || any(is.na(unlist(x[seq_along(x$blo)])))
+  
+  ## Process ktab blocks
+  ktab_results <- .process_ktab_blocks(x, type, option, method_params, tol, nlig, d.names, napres)
+  
+  ## Process precomputed distances
+  precomp_results <- .process_precomputed_distances(precomputed.dists, precomputed.weights, nlig, d.names)
+  
+  ## Combine all distance objects and weights
+  all_dist_objects <- c(ktab_results$dist_objects, precomp_results$dist_objects)
+  all_weight_infos <- c(ktab_results$weight_infos, precomp_results$weight_infos)
+  
+  if (length(all_dist_objects) == 0) {
+    warning("No distances to aggregate. Returning NULL.")
+    return(NULL)
+  }
+  
+  ## Aggregate distances using Gower's formula
+  result <- .aggregate_distances(all_dist_objects, all_weight_infos, nlig, d.names, napres || precomp_results$uses_matrix_weights)
+  return(result)
+}
+
 
 #' Scale quantitative data according to option
 .scale_quantitative_data <- function(df, option, tol) {
