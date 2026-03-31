@@ -52,7 +52,7 @@ prepare_inext <- function(OTUs, correct_singletons = T){
     }
 
     ## Convert data to data frame
-    if(!class(OTUs) %in% "data.frame"){
+    if(!inherits(OTUs, "data.frame")){
       OTUs <- as.data.frame(OTUs)
     }
 
@@ -79,14 +79,12 @@ prepare_inext <- function(OTUs, correct_singletons = T){
       stop("There are negative values in the abundance data.\n")
     }
 
-
     # Remove zero and missing abundances
     trim_table <- function(x){
-      x <- x[ Abundance > 0 ]
       if(any(is.na(x$Abundance))){
         warning("There are NA values in the abundance data, they will be excluded.\n")
-        x <- x[ !is.na(Abundance) ]
       }
+      x <- x[ Abundance > 0 ]
       return(x)
     }
 
