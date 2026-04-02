@@ -1,4 +1,51 @@
 
+#' Encode combinations of discrete variables into integer codes
+#'
+#' @description
+#' Encodes joint states of 2+ discrete (categorical) variables into a single
+#' integer using a mixed-radix representation. This is useful for building
+#' compact IDs for combinations (e.g., taxonomy rank tuples, multi-factor groups),
+#' and is closely related to enumerating states of a product alphabet in
+#' information theory.
+#'
+#' @param ... Vectors (all the same length) representing discrete variables to
+#'   encode. Alternatively, provide \code{x}.
+#' @param x A \code{data.frame}, \code{matrix}, or \code{list} of equal-length
+#'   vectors to encode. If provided, \code{...} must be empty.
+#' @param levels Optional \code{list} defining the allowed levels (and their
+#'   order) for each variable. If unnamed, must have the same length and order
+#'   as the input variables. If named, names must match the variable names.
+#'   By default, factors use \code{levels(x)}, while other vectors use
+#'   \code{unique(x)} in order of appearance (excluding \code{NA}).
+#' @param start Integer scalar; the first code value. Use \code{0} (default) to
+#'   get codes in \code{0, 1, ..., prod(bases) - 1}; use \code{1} for 1-based IDs.
+#' @param order Character scalar; either \code{"most_significant_first"} (default)
+#'   or \code{"least_significant_first"}. With \code{"most_significant_first"},
+#'   the first variable is treated as the most significant "digit":
+#'   \eqn{code = i_1 \prod_{j=2}^k b_j + i_2 \prod_{j=3}^k b_j + \cdots + i_k}.
+#' @param na_code Value to use for rows containing missing values in any input
+#'   variable. Default is \code{NA} (a missing code).
+#' @param output Character scalar; \code{"auto"} (default) returns integer when
+#'   safe, otherwise numeric. Use \code{"integer"} or \code{"numeric"} to force.
+#'
+#' @return A vector of codes (integer or numeric) of the same length as the input
+#'   variables, with attributes describing the encoding:
+#'   \itemize{
+#'     \item \code{bitcode_levels}: list of level sets per variable
+#'     \item \code{bitcode_bases}: integer vector of base sizes per variable
+#'     \item \code{bitcode_order}: encoding order
+#'     \item \code{bitcode_start}: code start offset
+#'     \item \code{bitcode_is_factor}: logical vector (whether each input was a factor)
+#'     \item \code{bitcode_varnames}: variable names used for decoding
+#'   }
+#'
+#' @details
+#' This is a mixed-radix (positional) encoding of a Cartesian product of
+#' alphabets, i.e. a reversible map between tuples and integers as long as the
+#' level sets are fixed. By default, level sets are derived from the data, which
+#' makes codes stable within that dataset; for stable codes across datasets, pass
+#' \code{levels}.
+#' @export
 bitcode <- function(
     ...,       # vectors to encode
     x = NULL,
