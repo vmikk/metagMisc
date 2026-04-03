@@ -196,4 +196,70 @@ bitcode <- function(
   class(out) <- unique(c("bitcode", class(out)))
   out
 }
+bitdecode <- function(code,
+    levels = attr(code, "bitcode_levels"),
+    bases = attr(code, "bitcode_bases"),
+    order = attr(code, "bitcode_order"),
+    start = attr(code, "bitcode_start"),
+    varnames = attr(code, "bitcode_varnames"),
+    is_factor = attr(code, "bitcode_is_factor"),
+    na_code = NA) {
+
+  if (is.null(levels) || is.null(bases) || is.null(order) || is.null(start)) {
+    stop("Decoding requires 'levels', 'bases', 'order', and 'start' (or a 'bitcode' object with these attributes).")
+  }
+  if (is.null(varnames)) varnames <- names(levels)
+  if (is.null(varnames) || any(varnames == "")) varnames <- paste0("V", seq_along(levels))
+  if (is.null(is_factor)) is_factor <- rep(FALSE, length(levels))
+
+  k <- length(levels)
+  if (length(bases) != k) stop("'bases' must have the same length as 'levels'.")
+  if (length(is_factor) != k) stop("'is_factor' must have the same length as 'levels'.")
+
+  order <- match.arg(order, c("most_significant_first", "least_significant_first"))
+
+  weights <- switch(
+    order,
+    most_significant_first = c(rev(cumprod(rev(bases[-1]))), 1),
+    least_significant_first = cumprod(c(1, bases[-k]))
+  )
+
+  code_num <- as.double(code)
+  out <- vector("list", k)
+  names(out) <- varnames
+
+  missing_row <- if (is.na(na_code)) is.na(code_num) else code_num == na_code
+
+  z <- code_num - as.double(start)
+  z[missing_row] <- NA_real_
+
+  ## Decode indices 0..(base-1)
+  idx <- matrix(NA_integer_, nrow = length(code_num), ncol = k)
+  for (j in seq_len(k)) {
+    if (order == "most_significant_first") {
+      w <- weights[[j]]
+      idx[, j] <- as.integer(floor(z / w))
+      z <- z %% w
+    } else {
+      ## Least significant first: extract digit by modulo base then divide
+      b <- bases[[j]]
+      idx[, j] <- as.integer(z %% b)
+      z <- floor(z / b)
+    }
+  }
+
+  for (j in seq_len(k)) {
+    lev_j <- levels[[j]]
+    val <- lev_j[idx[, j] + 1]
+    val[missing_row] <- NA
+    if (is_factor[[j]]) {
+      out[[j]] <- factor(val, levels = lev_j)
+    } else {
+      out[[j]] <- val
+    }
+  }
+
+  res <- data.frame(Code = code, out)
+  return(res)
+}
 
