@@ -33,3 +33,12 @@ library(phyloseq)
 library(ggplot2)
 library(metagMisc)
 ```
+
+We'll use the `GlobalPatterns` dataset from the phyloseq package, 
+which contains 16S rRNA amplicons from various environmental samples obtained by 
+[Caporaso et al. (2011)](https://www.pnas.org/doi/full/10.1073/pnas.1000080107).
+
+```{r load-data}
+data(GlobalPatterns)
+GlobalPatterns
+```
