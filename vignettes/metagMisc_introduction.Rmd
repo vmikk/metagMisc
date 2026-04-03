@@ -21,6 +21,10 @@ The `metagMisc` package contains multiple functions for working with phyloseq ob
 ([McMurdie and Holmes 2013](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0061217)), 
 which provide a convenient interface and data structure for working with metabarcoding/microbiome data in R. 
 
+> [!NOTE]  
+> In the output, columns might be named "OTU" (Operational Taxonomic Unit), 
+> but this corresponds to whatever units were used in the original dataset (e.g., ASVs, genes, species, etc.) 
+> and should be treated generically.
 
 ## Load packages and data
 
