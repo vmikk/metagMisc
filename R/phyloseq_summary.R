@@ -159,6 +159,43 @@ phyloseq_summary <- function(physeq, ..., cols = NULL, more_stats = FALSE, long 
 
       RES <- rbind(RES, pct)
     } ## End of percentages
+
+    ## Stable and human-oriented row order
+    param_order <- c(
+      "Number of samples",
+      "Number of OTUs",
+      "Percentage of OTUs",
+      "Total number of reads",
+      "Percentage of reads",
+      "Number of singletons",
+      "Percentage of singletons",
+      "Average number of reads per OTU",
+      "Median number of reads per OTU",
+      "Min total OTU abundance",
+      "Q1 of total OTU abundance",
+      "Q3 of total OTU abundance",
+      "Max total OTU abundance",
+      "Coefficient of quartile variation in OTU abundance",
+      "Average OTU occurrence, percents",
+      "Median OTU occurrence, percents",
+      "Average number of reads per sample",
+      "Median number of reads per sample",
+      "Min total sample abundance",
+      "Q1 of total sample abundance",
+      "Q3 of total sample abundance",
+      "Max total sample abundance",
+      "Coefficient of quartile variation in sample abundance",
+      "Data sparsity (number of zeros)",
+      "Data sparsity (percentage of zeros)"
+    )
+
+    ord <- match(RES$Parameter, param_order)
+    ord[is.na(ord)] <- length(param_order) + seq_len(sum(is.na(ord)))
+    RES <- RES[order(ord), , drop = FALSE]
+    rownames(RES) <- NULL
+
+    ## Wide summary keeps data.frame semantics with a dedicated print path
+    class(RES) <- unique(c("phyloseq_summary_wide", class(RES)))
   
   } ## End of long
 
