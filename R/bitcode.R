@@ -45,6 +45,23 @@
 #' level sets are fixed. By default, level sets are derived from the data, which
 #' makes codes stable within that dataset; for stable codes across datasets, pass
 #' \code{levels}.
+#'
+#' @examples
+#' # Two variables (most significant first)
+#' a <- c("A", "A", "B", "B")
+#' b <- c("x", "y", "x", "y")
+#' code <- bitcode(a, b, start = 0)
+#' code
+#'
+#' # Decode back (uses attributes stored on 'code')
+#' bitdecode(code)
+#'
+#' # Factors: uses factor levels by default
+#' f <- factor(c("low", "high", "low"), levels = c("low", "med", "high"))
+#' g <- factor(c("x", "y", "x"))
+#' code2 <- bitcode(f, g, start = 1)
+#' bitdecode(code2)
+#'
 #' @export
 bitcode <- function(
     ...,       # vectors to encode
