@@ -42,3 +42,51 @@ which contains 16S rRNA amplicons from various environmental samples obtained by
 data(GlobalPatterns)
 GlobalPatterns
 ```
+
+## 1. Initial data exploration
+
+### Dataset overview
+
+First, let's get a comprehensive overview of our dataset:
+
+```{r data-summary}
+phyloseq_summary(GlobalPatterns, cols = "GlobalPatterns")
+```
+
+### Taxonomic annotation quality
+
+One of the first things to check is how well the sequences are taxonomically annotated:
+
+```{r taxonomic-resolution, eval = TRUE}
+phyloseq_taxonomic_resolution(GlobalPatterns)
+```
+
+This plot shows the percentage of OTUs and reads annotated at each taxonomic rank. 
+The higher the resolution, the better the taxonomic annotation quality.
+
+### Taxonomic diversity across sample types
+
+Let's examine the taxonomic diversity across different sample types. First, we'll combine samples by type and count taxa at different ranks:
+
+```{r taxa-by-sample-type}
+# Combine samples by sample type
+gcomb <- phyloseq_combine_samples(GlobalPatterns, variable = "SampleType")
+phyloseq_ntaxlevels(gcomb, format = "wide")
+```
+
+We can also visualize this information:
+
+```{r taxa-diversity-plot}
+# Create plot-friendly table
+gtab <- phyloseq_ntaxlevels(gcomb, format = "long")
+gtab$TaxRank <- factor(gtab$TaxRank, levels = rank_names(gcomb))
+gtab <- gtab[!gtab$TaxRank %in% "Kingdom", ]
+
+ggplot(data = gtab, aes(y = Sample, x = N.tax.levels, fill = Sample)) +
+    geom_bar(stat = "identity") +
+    facet_wrap(~ TaxRank, scales = "free") +
+    labs(y = "Sample type", x = "Number of unique taxa") +
+    theme(legend.position = "none")
+```
+
+```
