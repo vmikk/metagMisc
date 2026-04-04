@@ -8,6 +8,7 @@ Authors@R: c(
         comment = c(ORCID = "0000-0003-2786-2690"))
   )
 Description: metagMisc package contains miscellaneous functions for metagenomic analysis, including data transformations, several parsers (for USERCH UC-format; BLAST, SINA and STAMPA outputs, etc.), taxonomy handlers (SILVA, QIIME, AMPTk), phyloseq-shortcuts (multiple rarefaction, phyloseq splitting and exporting), and DADA2-shortcuts (error rate estimation on the subset of data, export of denoised amplicons in fasta).
+URL: https://vmikk.github.io/metagMisc/ , https://github.com/vmikk/metagMisc
 BugReports: https://github.com/vmikk/metagMisc/issues
 Depends: R (>= 4.4.0)
 Imports: 
