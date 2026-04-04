@@ -5,6 +5,7 @@ home:
 
 template:
   bootstrap: 5
+  bootswatch: flatly
   light-switch: true
   
   math-rendering: katex
