@@ -89,4 +89,123 @@ ggplot(data = gtab, aes(y = Sample, x = N.tax.levels, fill = Sample)) +
     theme(legend.position = "none")
 ```
 
+## 2. Data filtering and quality control
+
+Real metabarcoding datasets often contain many rare taxa that may represent sequencing errors or contaminants. Let's apply several filtering strategies to clean our data.
+
+### Prevalence-based filtering
+
+First, let's examine the prevalence patterns of the most abundant phyla:
+
+```{r prevalence-plot}
+# Subset to major phyla for clearer visualization
+GP_major <- subset_taxa(GlobalPatterns,
+  Phylum %in% c("Acidobacteria", "Actinobacteria", "Firmicutes", "Verrucomicrobia"))
+
+phyloseq_prevalence_plot(GP_major, taxcolor = "Phylum",
+  facet = TRUE, point_alpha = 0.5, prev.trh = 0.05)
+```
+
+The horizontal line shows the 5% prevalence threshold. OTUs above this line are present in at least 5% of samples.
+
+Remove OTUs that are not present in at least 5% of samples:
+
+```{r prevalence-filter}
+# Apply prevalence filter
+GP_prev <- phyloseq_filter_prevalence(GlobalPatterns, prev.trh = 0.05)
+```
+
+Summary of the filtered dataset:
+
+```{r summary-filtered_demo, eval = TRUE}
+phyloseq_summary(
+  GlobalPatterns, GP_prev,
+  cols = c("Before filtering", "After filtering"),
+  more_stats = TRUE)
+```
+
+```{r summary-filtered, echo=FALSE, message=FALSE, warning=FALSE, eval = FALSE}
+# Use nice printing method (does not work well with knitr)
+metagMisc:::format.phyloseq_summary_wide(
+  phyloseq_summary(
+    GlobalPatterns, GP_prev,
+    cols = c("Before filtering", "After filtering"),
+    more_stats = TRUE),
+  use_color = FALSE)
+```
+
+### Abundance-based filtering
+
+Remove very rare taxa based on relative abundance:
+
+```{r abundance-filter}
+# Remove taxa with mean relative abundance < 0.01%
+GP_abund <- phyloseq_filter_taxa_rel_abund(GP_prev, frac = 0.0001)
+
+# Compare datasets
+phyloseq_summary(
+  GlobalPatterns, GP_prev, GP_abund, 
+  cols = c("Original", "Prevalence_filtered", "Abundance_filtered"))
+```
+
+### Total abundance fraction filtering
+
+Remove taxa that contribute less than a specified fraction of the total abundance across the dataset:
+
+```{r total-fraction-filter}
+# Retain OTUs with at least 0.1% of total abundance
+GP_totfrac <- phyloseq_filter_taxa_tot_fraction(GP_prev, frac = 0.001)
+
+# Compare
+phyloseq_summary(
+  GlobalPatterns, GP_prev, GP_totfrac,
+  cols = c("Original", "Prevalence_filtered", "TotalFrac_filtered"))
+```
+
+### Retain most abundant taxa
+
+Keep only the most abundant taxa using either a percentage or a fixed number:
+
+```{r top-taxa-filter}
+# Top 5% most abundant taxa
+GP_top <- phyloseq_filter_top_taxa(GlobalPatterns, perc = 5)
+
+# Alternatively: retain a fixed number of top taxa
+GP_top_n <- phyloseq_filter_top_taxa(GlobalPatterns, n = 500)
+
+phyloseq_summary(
+  GlobalPatterns, GP_top, GP_top_n,
+  cols = c("Original", "TopPct_5", "TopN_500"))
+```
+
+You can also explore how different percentage thresholds affect retained abundance per sample:
+
+```{r top-taxa-range}
+phyloseq_filter_top_taxa_range(GlobalPatterns, show_plot = TRUE)
+```
+
+### Sample richness filter
+
+Optionally remove samples with low richness (few observed taxa):
+
+```{r richness-filter}
+GP_rich <- phyloseq_richness_filter(GlobalPatterns, mintaxa = 3000)
+phyloseq_summary(GP_rich, cols = "Richness_filtered")
+```
+
+### Sample-wise abundance trimming
+
+Remove low-abundance OTUs within each sample (sample-wise filtering):
+
+```{r sample-wise-filter}
+# Remove OTUs with <10 reads in each sample
+GP_trim <- phyloseq_filter_sample_wise_abund_trim(GlobalPatterns, minabund = 10)
+
+# Final comparison
+phyloseq_summary(
+  GlobalPatterns, GP_trim, 
+  cols = c("Original", "Filtered"),
+  more_stats = TRUE)
+```
+
 ```
