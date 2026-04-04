@@ -19,4 +19,39 @@ template:
           max-height: 139px !important;
         }
       </style>
+  # includes:
+  #   in_header: |
+  #     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
+  #     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
+  #     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+
+reference:
+  - title: metagMisc
+
+  - subtitle: Phyloseq extensions
+    contents:
+      - starts_with("phyloseq_")
+
+  - subtitle: Distance functions
+    contents:
+      - starts_with("dist_")
+      - mult_dissim
+      - mult_dist_average
+      - bray_jaccard_convert
+
+  - subtitle: Parsers
+    contents:
+      - starts_with("parse_")
+
+  - subtitle: ...
+    contents:
+      - adonis_pairwise
+      - has_concept("misc")
+
+  - subtitle: Other
+    contents:
+      - matches(".")
+      - -starts_with("phyloseq_")
+      - -starts_with("parse_")
+      - -starts_with("dist_")
 
