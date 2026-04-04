@@ -16,7 +16,7 @@ Imports:
     plyr (>= 1.8.0),
     vegan (>= 2.7-0)
 Suggests: 
-    phyloseq (>= 1.19.0),
+    phyloseq,
     metagenomeSeq (>= 1.16.0),
     iNEXT (>= 3.0.0),
     crayon,
