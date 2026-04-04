@@ -3,7 +3,25 @@
 on:
   push:
     branches: [main, master]
+    paths:
+      # - 'DESCRIPTION'
+      # - 'NAMESPACE'
+      # - 'R/**'
+      - 'man/**'
+      - 'vignettes/**'
+      - 'README.md'
+      - '_pkgdown.yml'
+      - '.github/workflows/pkgdown.yaml'
   pull_request:
+    paths:
+      # - 'DESCRIPTION'
+      # - 'NAMESPACE'
+      # - 'R/**'
+      - 'man/**'
+      - 'vignettes/**'
+      - 'README.md'
+      - '_pkgdown.yml'
+      - '.github/workflows/pkgdown.yaml'
   release:
     types: [published]
   workflow_dispatch:
@@ -34,7 +52,7 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: |
-            cran/PhyloMeasures   # PhyloMeasures can be installed only from sources
+            cran/PhyloMeasures
             any::pkgdown
             local::.
           needs: website
