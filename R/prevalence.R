@@ -42,7 +42,7 @@
 prevalence <- function(physeq, add_tax = TRUE, package = "data.table"){
 
   ## Check if taxa are rows
-  trows <- taxa_are_rows(physeq)
+  trows <- phyloseq::taxa_are_rows(physeq)
 
   ## Extract OTU table
   otutab <- phyloseq_otu_to_df(physeq, taxa_as_rows = TRUE)
@@ -60,13 +60,13 @@ prevalence <- function(physeq, add_tax = TRUE, package = "data.table"){
     prevdf <- data.frame(
       Taxa            = rownames(otutab),
       Prevalence      = prevdf,
-      TotalAbundance  = taxa_sums(physeq),
+      TotalAbundance  = phyloseq::taxa_sums(physeq),
       MeanAbundance   = rowMeans(otutab),
       MedianAbundance = apply(otutab, 1, median))
 
     ## Add taxonomy table
-    if(add_tax == TRUE && !is.null(tax_table(physeq, errorIfNULL = F))){
-      prevdf <- cbind(prevdf, tax_table(physeq))
+    if(add_tax == TRUE && !is.null(phyloseq::tax_table(physeq, errorIfNULL = F))){
+      prevdf <- cbind(prevdf, phyloseq::tax_table(physeq))
     }
 
   } # end of `base` package
@@ -75,24 +75,24 @@ prevalence <- function(physeq, add_tax = TRUE, package = "data.table"){
   ## Process data using `data.table` package
   if(package %in% "data.table"){
 
-    setDT(otutab)
+    data.table::setDT(otutab)
 
     ## Row-wise medians
     ## Based on https://stackoverflow.com/a/48885574  by Jaap Walhout
-    meds <- melt(otutab, measure.vars = names(otutab))[, r := 1:.N, variable][, median(value), by = r]$V1
+    meds <- data.table::melt(otutab, measure.vars = names(otutab))[, r := 1:.N, variable][, median(value), by = r]$V1
 
     ## Add total and average read counts per OTU
-    prevdf <- data.table(
-      Taxa            = taxa_names(physeq),
+    prevdf <- data.table::data.table(
+      Taxa            = phyloseq::taxa_names(physeq),
       Prevalence      = rowSums(otutab > 0, na.rm = TRUE),
       TotalAbundance  = rowSums(otutab, na.rm = TRUE),
       MeanAbundance   = rowMeans(otutab, na.rm = TRUE),
       MedianAbundance = meds)
 
     ## Add taxonomy table
-    if(add_tax == TRUE && !is.null(tax_table(physeq, errorIfNULL = F))){
+    if(add_tax == TRUE && !is.null(phyloseq::tax_table(physeq, errorIfNULL = F))){
 
-      prevdf <- cbind(prevdf, as.data.frame(tax_table(physeq)))
+      prevdf <- cbind(prevdf, as.data.frame(phyloseq::tax_table(physeq)))
     }
 
   }

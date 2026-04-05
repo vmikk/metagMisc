@@ -20,7 +20,7 @@
 #' # and average diversity (richness and Shannon index) estimates over all iterations
 #' phyloseq_mult_raref_div(esophagus, divindex = c("Observed", "Shannon"), iter = 10)
 #' 
-phyloseq_mult_raref_div <- function(physeq, SampSize = min(sample_sums(physeq)), iter = 1000,
+phyloseq_mult_raref_div <- function(physeq, SampSize = min(phyloseq::sample_sums(physeq)), iter = 1000,
   divindex = c("Observed", "Shannon"), parallel = FALSE, verbose = TRUE, ...){
 
   ## Progress indicator
@@ -53,13 +53,13 @@ phyloseq_mult_raref_div <- function(physeq, SampSize = min(sample_sums(physeq)),
   colnames(DIV)[1] <- "Iteration"
 
   ## Reshape data to long-format
-  setDT(DIV)
-  DIV.resh <- melt(
+  data.table::setDT(DIV)
+  DIV.resh <- data.table::melt(
     data = DIV,
     id.vars = c("Iteration", "Sample"),
     variable.name = "Index",
     value.name = "Value")
-  setDF(DIV.resh)
+  data.table::setDF(DIV.resh)
 
   ## Average diversity estimates over all iterations
   if(verbose == TRUE){ cat("..Averaging diversity estimates\n") }

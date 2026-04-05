@@ -36,7 +36,7 @@ phyloseq_mult_raref_avg <- function(physeq, SampSize = NULL, iter = 1000, parall
   }
 
   ## Transpose data if necessary
-  if(taxa_are_rows(physeq) == FALSE){
+  if(phyloseq::taxa_are_rows(physeq) == FALSE){
     cat("Warning: transposing input data (OTUs should be arrenged by rows, and samples by columns)\n")
     physeq <- t(physeq)
   }

@@ -28,7 +28,7 @@ phyloseq_to_df <- function(physeq, addtax = T, addtot = F, addmaxrank = F, sorti
   }
 
   ## Prepare data frame
-  if(taxa_are_rows(physeq) == TRUE){
+  if(phyloseq::taxa_are_rows(physeq) == TRUE){
     res <- data.frame(OTU = phyloseq::taxa_names(physeq), phyloseq::otu_table(physeq), stringsAsFactors = F)
   } else {
     res <- data.frame(OTU = phyloseq::taxa_names(physeq), t(phyloseq::otu_table(physeq)), stringsAsFactors = F)
