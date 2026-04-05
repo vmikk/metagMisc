@@ -15,7 +15,6 @@
 #' @return ggplot2-object or data.frame (if justDF = TRUE).
 #'
 #' @importFrom plyr llply ldply aaply
-#' @importFrom ggplot2 ggplot aes geom_boxplot xlab ylab ggtitle
 #' @export
 #'
 #' @examples
@@ -31,12 +30,12 @@
 phyloseq_group_dissimilarity <- function(physeq, group = NULL, between_groups = TRUE, method = "bray", method_title = FALSE, notch = TRUE, justDF = FALSE, ...){
 
   ## Check the input
-  if(is.null(sample_data(physeq, errorIfNULL = T))){ stop("Error: Sample data is missing in the phyloseq-object.\n") }
+  if(is.null(phyloseq::sample_data(physeq, errorIfNULL = T))){ stop("Error: Sample data is missing in the phyloseq-object.\n") }
   if(is.null(group)){ stop("Error: groupping variable should be specified.\n") }
 
   ## Extract samle meta-data
-  mtd <- as(object = sample_data(physeq), Class = "data.frame")
-  mtd$SampleNames <- sample_names(physeq)
+  mtd <- as(object = phyloseq::sample_data(physeq), Class = "data.frame")
+  mtd$SampleNames <- phyloseq::sample_names(physeq)
 
   if(!group %in% colnames(mtd)){
     stop("Error: Grouping variable is missing from the sample data of phyloseq-object.\n")
@@ -54,14 +53,23 @@ phyloseq_group_dissimilarity <- function(physeq, group = NULL, between_groups = 
     physeq_split <- phyloseq_sep_variable(physeq, variable = group, drop_zeroes = T)
 
     ## Estimate within-group pairwise dissimilarities
-    dd <- llply(
+    dd <- plyr::llply(
       .data = physeq_split,
       .fun = function(z, ...){ phyloseq::distance(z, method = method, type = "samples", ...) },
       ...)
 
     ## Convert dist to data frame
-    ddm <- ldply(.data = dd, .fun = function(z){ 
-      data.frame(Dist = as.vector(z), Comparison = "within-group")
+    ddm <- plyr::ldply(.data = dd, .fun = function(z){ 
+      
+      ## Comparison names
+      zm <- as.matrix(z)
+      cmp <- data.frame(
+        Rows = rownames(zm), Cols = colnames(zm),  # TODO: see harrietr::melt_dist
+        stringsAsFactors = FALSE)
+
+      ## Dissimilarity values
+      rz <- data.frame(Dist = as.vector(z), Comparison = "within-group", stringsAsFactors = FALSE)
+      return(rz)
       }, .id = "Group")
 
     ## Estimate between-group dissimilarities
@@ -91,7 +99,7 @@ phyloseq_group_dissimilarity <- function(physeq, group = NULL, between_groups = 
       grr <- t(apply(ddl[,c("ColGroup", "RowGroup")], 1, sort))
 
       ## Create comparison name (merge names of two groups)
-      ddl$Group <- aaply(.data = grr, .margins = 1, .fun = paste, collapse = "-")
+      ddl$Group <- plyr::aaply(.data = grr, .margins = 1, .fun = paste, collapse = "-")
 
       ## Add to the main table
       ddm <- rbind(ddm, data.frame(Group = ddl$Group, Dist = ddl$value, Comparison = "between-groups"))
@@ -99,8 +107,8 @@ phyloseq_group_dissimilarity <- function(physeq, group = NULL, between_groups = 
     } # end of between_groups
 
     ## Prepare plot
-    pp <- ggplot(data = ddm, aes(x = Group, y = Dist, fill = Group)) +
-            geom_boxplot(size = 0.8, notch = notch)
+    pp <- ggplot2::ggplot(data = ddm, ggplot2::aes(x = Group, y = Dist, fill = Group)) +
+            ggplot2::geom_boxplot(size = 0.8, notch = notch)
   } # end of two-groups case
 
 
@@ -114,18 +122,18 @@ phyloseq_group_dissimilarity <- function(physeq, group = NULL, between_groups = 
     ddm <- data.frame(Dist = as.vector(dd), Group = names(tabb)[1])
 
     ## Plot pairwise dissimilarities
-    pp <- ggplot(ddm, aes(x = Group, y = Dist)) +
-            geom_boxplot(size = 0.8, notch = notch)
+    pp <- ggplot2::ggplot(ddm, ggplot2::aes(x = Group, y = Dist)) +
+            ggplot2::geom_boxplot(size = 0.8, notch = notch)
 
   } # end of one group
 
   ## Rename axes
-  pp <- pp + xlab(group) +
-    ylab(paste("Pairwise dissimilarity (", method, ")", sep=""))
+  pp <- pp + ggplot2::xlab(group) +
+    ggplot2::ylab(paste("Pairwise dissimilarity (", method, ")", sep=""))
 
   ## Add method name to the plot
   if(method_title == TRUE){
-    pp <- pp + ggtitle(method)
+    pp <- pp + ggplot2::ggtitle(method)
   }
 
   if(justDF == FALSE){ return(pp) }   # return plot

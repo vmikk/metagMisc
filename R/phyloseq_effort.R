@@ -138,21 +138,21 @@ phyloseq_effort_div_rangeplot <- function(physeq, range, range_type = "coverage"
   ## If multiple groups are provided
   if(!is.null(phyloseq::sample_data(physeq, errorIfNULL = FALSE)) & !is.null(variable)){
     res_avg <- plyr::ddply(.data=efforts, .variables=c(variable, xx), .fun=avgeff, yy = yy)
-    pp <- ggplot(data = res_avg, aes_string(x = xx, y = "Mean", color = variable, group = variable)) +
-      geom_line() +
-      geom_ribbon(aes_string(ymin = il, ymax = iu, color = NULL, fill = variable), alpha = 0.2)
+    pp <- ggplot2::ggplot(data = res_avg, ggplot2::aes_string(x = xx, y = "Mean", color = variable, group = variable)) +
+      ggplot2::geom_line() +
+      ggplot2::geom_ribbon(ggplot2::aes_string(ymin = il, ymax = iu, color = NULL, fill = variable), alpha = 0.2)
 
   } else {
 
     ## Single group
     res_avg <- plyr::ddply(.data=efforts, .variables=xx, .fun=avgeff, yy = yy)
-    pp <- ggplot(data = res_avg, aes_string(x = xx, y = "Mean")) +
-      geom_line() +
-      geom_ribbon(aes_string(ymin = il, ymax = iu), alpha = 0.2)
+    pp <- ggplot2::ggplot(data = res_avg, ggplot2::aes_string(x = xx, y = "Mean")) +
+      ggplot2::geom_line() +
+      ggplot2::geom_ribbon(ggplot2::aes_string(ymin = il, ymax = iu), alpha = 0.2)
   }
 
   ## Add axes labels
-  pp <- pp + labs(x = xlab, y = ylab)
+  pp <- pp + ggplot2::labs(x = xlab, y = ylab)
 
   ## Add raw data to the results
   attr(pp, which = "Data") <- efforts

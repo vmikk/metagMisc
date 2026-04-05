@@ -58,7 +58,6 @@
 #' # Modified CLR with default positive shift
 #' gp_mclr <- phyloseq_clr(gp, method = "mCLR")
 #'
-#' @importFrom phyloseq otu_table transform_sample_counts
 #' @export
 #' 
 phyloseq_clr <- function(physeq, method = "CLR", pseudocount = 0.5){
@@ -112,19 +111,19 @@ phyloseq_clr <- function(physeq, method = "CLR", pseudocount = 0.5){
 
   ## Add pseudocount if reqiured
   if(!is.null(pseudocount)){
-    otu_table(physeq) <- otu_table(physeq) + pseudocount
+    phyloseq::otu_table(physeq) <- phyloseq::otu_table(physeq) + pseudocount
   }
 
   ## Convert to relative abundances
-  physeq <- transform_sample_counts(physeq, function(OTU) OTU/sum(OTU))
+  physeq <- phyloseq::transform_sample_counts(physeq, function(OTU) OTU/sum(OTU))
 
   ## CLR-transform OTU table
   if(method == "CLR"){ 
-    otu_table(physeq) <- phyloseq::transform_sample_counts(otu_table(physeq), clr_func)
+    phyloseq::otu_table(physeq) <- phyloseq::transform_sample_counts(phyloseq::otu_table(physeq), clr_func)
   }
 
   if(method == "mCLR"){ 
-    otu_table(physeq) <- phyloseq::transform_sample_counts(otu_table(physeq), mclr_func)
+    phyloseq::otu_table(physeq) <- phyloseq::transform_sample_counts(phyloseq::otu_table(physeq), mclr_func)
   }
 
   return(physeq)

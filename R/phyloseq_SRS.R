@@ -41,7 +41,6 @@
 #' Beule L, Karlovsky P. (2020) Improved normalization of species count data in ecology by scaling with ranked subsampling (SRS): application to microbial communities // PeerJ 8:e9593, DOI:10.7717/peerj.9593
 #'
 #' @seealso \code{\link{phyloseq_SRS_lowcount}} for SRS normalization with preservation of low-count samples
-#' @importFrom phyloseq otu_table taxa_are_rows prune_taxa taxa_sums
 #' @export
 #'
 #' @examples
@@ -76,16 +75,16 @@ phyloseq_SRS <- function(physeq, Cmin, drop_zeros = FALSE, set_seed = TRUE, seed
   rownames(res) <- rownames(data)
 
   ## Transpose back
-  if(!taxa_are_rows(physeq)){
+  if(!phyloseq::taxa_are_rows(physeq)){
     res <- t(res)
   }
 
   ## Replace OTU table
-  otu_table(physeq) <- otu_table(res, taxa_are_rows = taxa_are_rows(physeq))
+  phyloseq::otu_table(physeq) <- phyloseq::otu_table(res, taxa_are_rows = phyloseq::taxa_are_rows(physeq))
 
   ## Remove zero-OTUs
   if(drop_zeros == TRUE){
-    physeq <- prune_taxa(taxa_sums(physeq) > 0, physeq)
+    physeq <- phyloseq::prune_taxa(phyloseq::taxa_sums(physeq) > 0, physeq)
   }
 
   return(physeq)
@@ -135,7 +134,6 @@ phyloseq_SRS <- function(physeq, Cmin, drop_zeros = FALSE, set_seed = TRUE, seed
 #'
 #' @seealso \code{\link{phyloseq_SRS}} for standard SRS normalization of all samples
 #'
-#' @importFrom phyloseq prune_samples sample_sums merge_phyloseq
 #' @export
 #'
 #' @examples
@@ -156,13 +154,13 @@ phyloseq_SRS <- function(physeq, Cmin, drop_zeros = FALSE, set_seed = TRUE, seed
 phyloseq_SRS_lowcount <- function(physeq, treshold = 10000){
   
   ## Split data into low- and high- count parts
-  pl <- prune_samples(sample_sums(physeq) < treshold, physeq)
-  ph <- prune_samples(sample_sums(physeq) >= treshold, physeq)
+  pl <- phyloseq::prune_samples(phyloseq::sample_sums(physeq) < treshold, physeq)
+  ph <- phyloseq::prune_samples(phyloseq::sample_sums(physeq) >= treshold, physeq)
 
   ## SRS-normalize high-count samples
   ps <- phyloseq_SRS(ph, Cmin = treshold, drop_zeros = FALSE)
 
   ## Merge phyloseq objects
-  res <- merge_phyloseq(pl, ps)
+  res <- phyloseq::merge_phyloseq(pl, ps)
   return(res)
 }

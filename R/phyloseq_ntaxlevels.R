@@ -31,8 +31,6 @@
 #' If \code{format = "wide"}, returns a wide format data frame with columns
 #' (samples are arranged by columns, taxonomic ranks in rows)
 #'
-#' @importFrom speedyseq psmelt
-#' @importFrom phyloseq rank_names
 #' @importFrom data.table setDT data.table uniqueN rbindlist setcolorder
 #' 
 #' @export
