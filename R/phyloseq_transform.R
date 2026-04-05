@@ -30,7 +30,7 @@ phyloseq_replace_zero <- function(physeq, method = "pseudocount", pseudocount = 
 
   ## Replace zeros with minimum observed OTU abundance
   if(method == "min"){
-    trows <- taxa_are_rows(physeq)
+    trows <- phyloseq::taxa_are_rows(physeq)
 
     if(trows == TRUE){
       ## Find minimum non-zero abundances for each sample
@@ -189,7 +189,7 @@ phyloseq_transform_css <- function(physeq, norm = TRUE, log = TRUE, ...){
 
   # Substitue raw abundance to the css-normalized data
   physeq.tr <- physeq
-  phyloseq::otu_table(physeq.tr) <- phyloseq::otu_table(otu_norm, taxa_are_rows = T)
+  phyloseq::otu_table(physeq.tr) <- phyloseq::otu_table(otu_norm, taxa_are_rows = phyloseq::taxa_are_rows(physeq))
   return(physeq.tr)
 }
 
@@ -257,7 +257,7 @@ phyloseq_transform_vst_blind <- function(physeq, dropneg = F, dropmissing = T, .
 
   ## Substitue raw abundance to the variance stabilized data
   physeq.tr <- physeq
-  phyloseq::otu_table(physeq.tr) <- phyloseq::otu_table(otu_norm, taxa_are_rows = T)
+  phyloseq::otu_table(physeq.tr) <- phyloseq::otu_table(otu_norm, taxa_are_rows = phyloseq::taxa_are_rows(physeq))
 
   ## Remove missing OTUs
   if(dropneg == TRUE & dropmissing == TRUE){
@@ -290,12 +290,13 @@ phyloseq_transform_vst_blind <- function(physeq, dropneg = F, dropmissing = T, .
 phyloseq_transform_rlog_blind <- function(physeq, dropneg = F, dropmissing = T, ...){
   require(DESeq2)
 
+  smpdat_nul <- FALSE
   # Add dummy sample data (phyloseq_to_deseq2 doesn't work without sample_data)
-  if(is.null( sample_data(physeq, errorIfNULL = F) )){
+  if(is.null( phyloseq::sample_data(physeq, errorIfNULL = F) )){
     smpdat_nul <- TRUE
-    smpdat <- data.frame(TMP = rep(1, times = nsamples(physeq)))
-    rownames(smpdat) <- sample_names(physeq)
-    sample_data(physeq) <- smpdat
+    smpdat <- data.frame(TMP = rep(1, times = phyloseq::nsamples(physeq)))
+    rownames(smpdat) <- phyloseq::sample_names(physeq)
+    phyloseq::sample_data(physeq) <- smpdat
   }
 
   dsc <- phyloseq_to_deseq2(physeq, design = formula(~ 1))
@@ -309,16 +310,16 @@ phyloseq_transform_rlog_blind <- function(physeq, dropneg = F, dropmissing = T, 
 
   # Substitue raw abundance to the rlog transformed data
   physeq.tr <- physeq
-  otu_table(physeq.tr) <- otu_table(otu_norm, taxa_are_rows = T)
+  phyloseq::otu_table(physeq.tr) <- phyloseq::otu_table(otu_norm, taxa_are_rows = phyloseq::taxa_are_rows(physeq))
 
   # Remove missing OTUs
   if(dropneg == TRUE & dropmissing == TRUE){
-    physeq.tr <- prune_taxa(taxa_sums(physeq.tr) > 0, physeq.tr)
+    physeq.tr <- phyloseq::prune_taxa(phyloseq::taxa_sums(physeq.tr) > 0, physeq.tr)
   }
 
   # Remove dummy sample data if present
   if(smpdat_nul == TRUE){
-    pp@sam_data <- NULL
+    physeq.tr@sam_data <- NULL
   }
 
   return(physeq.tr)
@@ -346,9 +347,9 @@ phyloseq_transform_rlog_blind <- function(physeq, dropneg = F, dropmissing = T, 
 #'
 physeq_transform_anderson_log <- function(physeq, ...){
   require(vegan)
-  otus <- as.data.frame( otu_table(physeq) )
-  otu_log <- decostand(otus, method = "log", ...)
-  rownames(otu_log) <- taxa_names(physeq)
-  otu_table(physeq) <- otu_table(otu_log, taxa_are_rows = T)
+  otus <- as.data.frame( phyloseq::otu_table(physeq) )
+  otu_log <- vegan::decostand(otus, method = "log", ...)
+  rownames(otu_log) <- phyloseq::taxa_names(physeq)
+  phyloseq::otu_table(physeq) <- phyloseq::otu_table(otu_log, taxa_are_rows = T)
   return(physeq)
 }

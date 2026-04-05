@@ -267,7 +267,7 @@ phyloseq_filter_sample_wise_abund_trim <- function(physeq, minabund = 10, relabu
 
   ## Remove zero-OTUs
   if(rm_zero_OTUs == TRUE){
-    res <- phyloseq::prune_taxa(taxa_sums(res) > 0, res)
+    res <- phyloseq::prune_taxa(phyloseq::taxa_sums(res) > 0, res)
   }
   return(res)
 }
@@ -314,28 +314,40 @@ phyloseq_filter_top_taxa <- function(physeq, perc = 10, n = NULL){
 #' @param physeq A phyloseq-class object
 #' @param show_plot Logical; if TRUE, shows the plot on screen
 #' @return ggplot-object.
+#' Each line represents a sample, 
+#' x-axis is the percentage of most abundant taxa retained,
+#' y-axis is the percentage of total sample abundance preserved.
+#' @importFrom plyr ldply mlply
 #' @export
 #'
 #' @examples
-#'
+#' data("GlobalPatterns")
+#' phyloseq_filter_top_taxa_range(GlobalPatterns)
+#' 
 phyloseq_filter_top_taxa_range <- function(physeq, show_plot = TRUE){
   percs <- seq(5, 95, 5)
 
-  fr <- plyr::mlply(.data = data.frame(perc = percs), .fun = function(...){ phyloseq_filter_top_taxa(physeq, ...) })
+  ## Convert data to relative abundances
+  ps <- phyloseq_standardize_otu_abundance(physeq, method = "total")
+
+  ## Perform filtering for each threshold value
+  fr <- plyr::mlply(
+    .data = data.frame(perc = percs),
+    .fun = function(...){ phyloseq_filter_top_taxa(ps, ...) })
   names(fr) <- percs
 
+  ## Count the preserved abundance for each sample
   fr_tab <- plyr::ldply(.data = fr, .fun = function(z){
     sz <- phyloseq::sample_sums(z)
-    res <- data.frame(Sample = names(sz), Preserved = sz)
+    res <- data.frame(Sample = names(sz), Preserved = sz * 100)
     return(res)
   })
 
-  pp <- ggplot(data = fr_tab, aes(x = perc, y = Preserved, group = Sample)) +   # color = Sample
-    geom_vline(xintercept=75, color="grey", linetype = "longdash") +
-    geom_line() +
-    geom_point() +
-    labs(x = "Number of most abundant taxa retained, %", y = "Percentage of total sample abundance") +
-    theme(legend.position = "none")
+  pp <- ggplot2::ggplot(data = fr_tab, ggplot2::aes(x = perc, y = Preserved, group = Sample)) +   # color = Sample
+    ggplot2::geom_line() +
+    ggplot2::geom_point() +
+    ggplot2::labs(x = "Number of most abundant taxa retained, %", y = "Percentage of total sample abundance") +
+    ggplot2::theme(legend.position = "none")
 
   if(show_plot == TRUE){ print(pp) }
   invisible(pp)

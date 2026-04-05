@@ -57,7 +57,7 @@ phyloseq_otu_occurrence <- function(physeq, variable = NULL,
     } else {
 
       ## Frequency of occurrence
-      rez <- data.frame(Taxa = names(sp_count), Occurrence = sp_count / nsamples(phys), stringsAsFactors = F)
+      rez <- data.frame(Taxa = names(sp_count), Occurrence = sp_count / phyloseq::nsamples(phys), stringsAsFactors = F)
 
       ## Relative frequency (OTU frequency / sum of the frequency of all OTUs)
       if(rel == "relfreq"){

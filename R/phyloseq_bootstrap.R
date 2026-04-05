@@ -39,8 +39,8 @@ phyloseq_bootstrap <- function(phys, n = 100, seed = NULL, other_slots = c("tax_
   ## Function to subset samples by IDs
   sample_boot <- function(ps, samp_ids, slots = other_slots){
 
-    if(taxa_are_rows(ps) == TRUE) { oo <- phyloseq::otu_table(ps)[, samp_ids] }
-    if(taxa_are_rows(ps) == FALSE){ oo <- phyloseq::otu_table(ps)[samp_ids, ] }
+    if(phyloseq::taxa_are_rows(ps) == TRUE) { oo <- phyloseq::otu_table(ps)[, samp_ids] }
+    if(phyloseq::taxa_are_rows(ps) == FALSE){ oo <- phyloseq::otu_table(ps)[samp_ids, ] }
 
     if(!is.null(phyloseq::sample_data(ps, errorIfNULL = FALSE))){
       dd <- phyloseq::sample_data(ps)[samp_ids, ]
