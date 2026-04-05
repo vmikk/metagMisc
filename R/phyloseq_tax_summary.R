@@ -36,9 +36,6 @@
 #'   phyloseq_rename_with_tax, phyloseq_otu_to_df, dfRowName
 #'
 #' @importFrom plyr ddply join_all
-#' @importFrom speedyseq tax_glom psmelt
-#' @importFrom stats median mad
-#' @importFrom phyloseq rank_names
 #' @export
 #'
 phyloseq_tax_summary <- function(ps, rnk = "Phylum"){
@@ -68,8 +65,8 @@ phyloseq_tax_summary <- function(ps, rnk = "Phylum"){
   my_avg <- function(x){
     data.frame(
       # Mean = mean(x, na.rm=TRUE),
-      Median = median(x, na.rm=TRUE),
-      MAD = mad(x, na.rm=TRUE)
+      Median = stats::median(x, na.rm=TRUE),
+      MAD = stats::mad(x, na.rm=TRUE)
       # Min = min(x, na.rm=TRUE),
       # Max = max(x, na.rm=TRUE),
       # Q1 = quantile(x, probs = 0.25, na.rm = TRUE),
@@ -80,25 +77,25 @@ phyloseq_tax_summary <- function(ps, rnk = "Phylum"){
   }
 
   otus_avg <- ddply(.data = otus,
-    .variables = colnames(otus)[colnames(otus) %in% rank_names(ps)],
+    .variables = colnames(otus)[colnames(otus) %in% phyloseq::rank_names(ps)],
     .fun = function(z){ my_avg(z$N.OTU) })
 
   reads_avg <- ddply(.data = readsr,
-    .variables = colnames(readsr)[colnames(readsr) %in% rank_names(ps)],
+    .variables = colnames(readsr)[colnames(readsr) %in% phyloseq::rank_names(ps)],
     .fun = function(z){ my_avg(z$Abundance) })
 
-  grp_colz <- which(colnames(otus_avg) %in% rank_names(ps))
+  grp_colz <- which(colnames(otus_avg) %in% phyloseq::rank_names(ps))
   colnames(otus_avg)[-grp_colz] <- paste("Alpha_NOTU_", colnames(otus_avg)[-grp_colz], sep = "")
 
-  grp_colz <- which(colnames(reads_avg) %in% rank_names(ps))
+  grp_colz <- which(colnames(reads_avg) %in% phyloseq::rank_names(ps))
   colnames(reads_avg)[-grp_colz] <- paste("Relabund_", colnames(reads_avg)[-grp_colz], sep = "")
 
 
   # res <- cbind(otus_avg, reads_avg[-grp_colz])
   res <- plyr::join_all(list(otus_avg, gmm, reads_avg, occ))
   res <- cbind(
-    res[, rank_names(ps)],
-    res[, which(!colnames(res) %in% rank_names(ps))])
+    res[, phyloseq::rank_names(ps)],
+    res[, which(!colnames(res) %in% phyloseq::rank_names(ps))])
 
   return(res)
 }

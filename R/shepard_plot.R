@@ -11,7 +11,6 @@
 #'
 #' @return Invisible returns ggplot-object.
 #'
-#' @importFrom ggplot2 ggplot aes annotate geom_point theme_classic labs
 #' @export
 #' @references Legendre P. & Legendre L. Numerical Ecology. 2012. 3rd Ed. - Chapter 9 (Ordination in reduced space).
 #' @seealso \code{\link[vegan]{stressplot}}
@@ -37,9 +36,9 @@ shepard_plot <- function(dis, ord, k=2, show = TRUE){
 
   ## If the ordination scores were provided
   if("matrix" %in% class(ord) || "data.frame" %in% class(ord)){
-    if(is.null(k)){ dd_ord <- dist(ord) }       # take all axes
+    if(is.null(k)){ dd_ord <- stats::dist(ord) }       # take all axes
     if(!is.null(k) & ncol(ord) > 1){            # take only a few ordination axes
-     dd_ord <- dist(ord[,1:k])
+     dd_ord <- stats::dist(ord[,1:k])
     }
   }
 
@@ -52,11 +51,11 @@ shepard_plot <- function(dis, ord, k=2, show = TRUE){
   dtt <- data.frame(Observed = as.vector(dis), Ordination = as.vector(dd_ord))
 
   ## Plot
-  pp <- ggplot(data = dtt, aes(x = Observed, y = Ordination)) +
-    annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=Inf, color="grey", linetype = "longdash") +
-    geom_point() +
-    theme_classic() +
-    labs(x = "Distance in multidimensional space", y = "Distance in reduced space")
+  pp <- ggplot2::ggplot(data = dtt, ggplot2::aes(x = Observed, y = Ordination)) +
+    ggplot2::annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=Inf, color="grey", linetype = "longdash") +
+    ggplot2::geom_point() +
+    ggplot2::theme_classic() +
+    ggplot2::labs(x = "Distance in multidimensional space", y = "Distance in reduced space")
 
   if(show == TRUE){ print(pp) }
   invisible(pp)

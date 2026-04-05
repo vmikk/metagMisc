@@ -39,7 +39,7 @@ phyloseq_mantel_correlog <- function(ps,
   ## In sample matadata, there should be columns "Long" and "Lat"
 
   ## Extract coordinates
-  smp <- as(sample_data(ps), "data.frame")
+  smp <- as(phyloseq::sample_data(ps), "data.frame")
 
   ## OTU distance matrix
   odd <- phyloseq::distance(ps, method = otu_dist, type = "samples")
@@ -47,12 +47,12 @@ phyloseq_mantel_correlog <- function(ps,
   ### Estimate geographic distances
   ## Euclidean distance
   if(geo_dist %in% "euclidean"){
-  	gdd <- dist(smp[, c("Long", "Lat")])
+  	gdd <- stats::dist(smp[, c("Long", "Lat")])
   }
   ## Geodesic distance
   if(geo_dist %in% "geodesic"){
     gdd <- geodist::geodist(smp[, c("Long", "Lat")], measure = "geodesic")
-    gdd <- as.dist(gdd)
+    gdd <- stats::as.dist(gdd)
 
     # measure = "cheap"    -- mapbox cheap ruler algo is innacurate for dists > 100 km
     # measure = "vincenty" -- errors of Vincenty distances remain constant
@@ -92,6 +92,3 @@ phyloseq_mantel_correlog <- function(ps,
 }
 
 
-# phyloseq_mantel_correlog(ps,
-#   p_adj = "fdr", cor_type = "pearson", permut = 30000,
-#   break_pts = log( c(1, 11, 20, 40, 80, 100, 300) )  # log breakpoints

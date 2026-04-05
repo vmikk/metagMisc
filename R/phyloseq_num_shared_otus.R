@@ -30,7 +30,6 @@
 ##' }
 #'
 #' @export
-#' @importFrom Matrix Matrix t diag
 #'
 #' @seealso
 #' \code{\link[metagMisc]{phyloseq_extract_shared_otus}},
@@ -66,20 +65,20 @@ phyloseq_num_shared_otus <- function(physeq, use_Matrix = TRUE){
   }
 
   ## Estimate the number of shared OTUs
-  if(taxa_are_rows(physeq) == TRUE){
-    otus_shared <- t(x) %*% x
+  if(phyloseq::taxa_are_rows(physeq) == TRUE){
+    otus_shared <- Matrix::t(x) %*% x
   } else {
-    otus_shared <- x %*% t(x)
+    otus_shared <- x %*% Matrix::t(x)
   }
 
   ## Estimate the number of non-shared OTUs
   ## Asymmetric (A-B, B-A)
   otus_nonshared_asymm <-  abs(
-    sweep(otus_shared, MARGIN = 2, diag(otus_shared))   # subtract the diagonal
+    sweep(otus_shared, MARGIN = 2, Matrix::diag(otus_shared))   # subtract the diagonal
     )
 
   ## Total number of non-shared OTUs (symmetric)
-  otus_nonshared <- otus_nonshared_asymm + t(otus_nonshared_asymm)
+  otus_nonshared <- otus_nonshared_asymm + Matrix::t(otus_nonshared_asymm)
 
   ## Prepare results
   res <- list(

@@ -10,7 +10,6 @@
 #'
 #' @return Plot of class 'ggplot'.
 #'
-#' @importFrom ggplot2 ggplot aes aes_string geom_hline geom_point scale_x_log10 xlab ylab theme facet_wrap
 #' @seealso \code{\link{phyloseq_filter_prevalence}}
 #' @export
 #'
@@ -24,23 +23,23 @@ phyloseq_prevalence_plot <- function(physeq, prev.trh = NULL, taxcolor = NULL, f
 
   ## Compute prevalence of each species
   prevdf <- prevalence(physeq)
-  prevdf$PrevFrac <- with(prevdf, Prevalence / nsamples(physeq))
+  prevdf$PrevFrac <- with(prevdf, Prevalence / phyloseq::nsamples(physeq))
 
   ## Prepare a plot
-  if(is.null(taxcolor)){ pp <- ggplot(prevdf, aes(x = TotalAbundance, y = PrevFrac)) }
-  if(!is.null(taxcolor)){ pp <- ggplot(prevdf, aes_string(x = "TotalAbundance", y = "PrevFrac", color = taxcolor)) }
+  if(is.null(taxcolor)){ pp <- ggplot2::ggplot(prevdf, ggplot2::aes(x = TotalAbundance, y = PrevFrac)) }
+  if(!is.null(taxcolor)){ pp <- ggplot2::ggplot(prevdf, ggplot2::aes_string(x = "TotalAbundance", y = "PrevFrac", color = taxcolor)) }
 
   ## Add prevalence threshold line
-  if(!is.null(prev.trh)){ pp <- pp + geom_hline(yintercept = prev.trh, alpha = 0.5, linetype = 2) }
+  if(!is.null(prev.trh)){ pp <- pp + ggplot2::geom_hline(yintercept = prev.trh, alpha = 0.5, linetype = 2) }
 
   pp <- pp +
-      geom_point(size = 2, alpha = point_alpha) +
-      scale_x_log10() +
-      xlab("Total Abundance") +
-      ylab("Prevalence [Frac. Samples]") +
-      theme(legend.position="none")
+      ggplot2::geom_point(size = 2, alpha = point_alpha) +
+      ggplot2::scale_x_log10() +
+      ggplot2::xlab("Total Abundance") +
+      ggplot2::ylab("Prevalence [Frac. Samples]") +
+      ggplot2::theme(legend.position="none")
 
-  if(facet == TRUE){ pp <- pp + facet_wrap(as.formula(paste("~", taxcolor))) }
+  if(facet == TRUE){ pp <- pp + ggplot2::facet_wrap(as.formula(paste("~", taxcolor))) }
   if(showplot == TRUE){ print(pp) }
   invisible(pp)
 }
