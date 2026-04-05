@@ -12,11 +12,7 @@
 #'
 #' @return Invisibly returns a plot ('ggplot' class).
 #' 
-#' @importFrom ggplot2 ggplot aes geom_point scale_size_continuous theme_bw theme element_text labs geom_segment ggplotGrob
-#' @importFrom ggdendro dendro_data segment theme_dendro
 #' @importFrom vegan vegdist
-#' @importFrom grid unit unit.pmax
-#' @importFrom gridExtra grid.arrange
 #' @export
 #'
 #' @examples
@@ -31,17 +27,17 @@ bubble_plot <- function(x, transp=0.9, circ=16, add.dendro = FALSE, ...){
 		# reshape data
 		xx <- data.frame(Spec = rownames(x), x)
 		setDT(xx)
-		xx <- melt(data = xx, value.name = "abund", id.vars = "Spec", variable.name = "Sample")
+		xx <- data.table::melt(data = xx, value.name = "abund", id.vars = "Spec", variable.name = "Sample")
 		setDF(xx)
 
 		# plot data
-		p1 <- ggplot(xx, aes(x = Sample, y = Spec)) +
-			geom_point(aes(size = abund, colour = abund), shape = 19, alpha = transp) +
-			scale_size_continuous(name = "Counts ", range=c(0, circ)) +
+		p1 <- ggplot2::ggplot(xx, ggplot2::aes(x = Sample, y = Spec)) +
+			ggplot2::geom_point(ggplot2::aes(size = abund, colour = abund), shape = 19, alpha = transp) +
+			ggplot2::scale_size_continuous(name = "Counts ", range=c(0, circ)) +
 			# scale_color_gradient(low="white", high="red") +
-			theme_bw() +
-			theme(axis.text.x = element_text(angle = 90)) +		# , hjust = 1
-			labs(x=NULL, y=NULL)
+			ggplot2::theme_bw() +
+			ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90)) +		# , hjust = 1
+			ggplot2::labs(x=NULL, y=NULL)
 
 		plot(p1)
 		res <- p1
@@ -57,37 +53,37 @@ bubble_plot <- function(x, transp=0.9, circ=16, add.dendro = FALSE, ...){
 		xx <- x[, row.ord]
 		xx <- data.frame(Spec = rownames(xx), xx)
 		setDT(xx)
-		xx <- melt(data = xx, value.name = "abund", id.vars = "Spec", variable.name = "Sample")
+		xx <- data.table::melt(data = xx, value.name = "abund", id.vars = "Spec", variable.name = "Sample")
 		setDF(xx)
 
 		# Extract dendrogram data and create the plots
-		ddata_x <- dendro_data(dd.row)
+		ddata_x <- ggdendro::dendro_data(dd.row)
 
 		### Create plot components ###
 		# Bubble plot
-		p1 <- ggplot(xx, aes(x = Sample, y = Spec)) +
-			geom_point(aes(size = abund, colour = abund), shape = 19, alpha = transp) +
-			scale_size_continuous(name = "Counts ", range=c(0, circ)) +
-			theme_bw() +
-			theme(axis.text.x = element_text(angle = 90)) +
-			labs(x=NULL, y=NULL) +
-			theme(plot.margin = unit(c(0,1,1,1), "lines"))
+		p1 <- ggplot2::ggplot(xx, ggplot2::aes(x = Sample, y = Spec)) +
+			ggplot2::geom_point(ggplot2::aes(size = abund, colour = abund), shape = 19, alpha = transp) +
+			ggplot2::scale_size_continuous(name = "Counts ", range=c(0, circ)) +
+			ggplot2::theme_bw() +
+			ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90)) +
+			ggplot2::labs(x=NULL, y=NULL) +
+			ggplot2::theme(plot.margin = grid::unit(c(0,1,1,1), "lines"))
 
 		# Dendrogram for samples
-		p2 <- ggplot(segment(ddata_x)) +
-			geom_segment(aes(x=x, y=y, xend=xend, yend=yend)) +
-			theme_dendro() +
-			theme(plot.margin = unit(c(0.2, 0, -1, 0), "lines"))
+		p2 <- ggplot2::ggplot(ggdendro::segment(ddata_x)) +
+			ggplot2::geom_segment(ggplot2::aes(x=x, y=y, xend=xend, yend=yend)) +
+			ggdendro::theme_dendro() +
+			ggplot2::theme(plot.margin = grid::unit(c(0.2, 0, -1, 0), "lines"))
 
 		### Draw graphic ###
 
-		gp1 <- ggplotGrob(p1)
-		gp2 <- ggplotGrob(p2)
+		gp1 <- ggplot2::ggplotGrob(p1)
+		gp2 <- ggplot2::ggplotGrob(p2)
 		maxWidth <- grid::unit.pmax(gp1$widths[2:5], gp2$widths[2:5])
 		gp1$widths[2:5] <- as.list(maxWidth)
 		gp2$widths[2:5] <- as.list(maxWidth)
 
-		res <- grid.arrange(gp2, gp1, ncol=1, heights=c(1/5, 4/5))
+		res <- gridExtra::grid.arrange(gp2, gp1, ncol=1, heights=c(1/5, 4/5))
 	}
   invisible(res)
 }

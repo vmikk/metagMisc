@@ -25,7 +25,6 @@
 #'   \item stress. Stress 1 measure which corresponds to the loss of the variance due to distance transformation (see \code{\link[smacof]{stress0}});
 #'   \item dissim_plot. (if 'show_plot = TRUE') gglot object with the corresponding plot.
 #' }
-#' @importFrom ggplot2 aes annotate geom_point labs ggtitle
 #' @export
 #' @seealso \code{\link[smacof]{smacofConstraint}}, \code{\link[vegan]{vegdist}}, \code{\link{dissimilarity_to_distance_importance_plot}}
 #' @references Greenacre, M. (2017), Ordination with any dissimilarity measure: a weighted Euclidean solution. Ecology, 98: 2293–2300. doi:10.1002/ecy.1937
@@ -128,7 +127,7 @@ dissimilarity_to_distance <- function(datt, dist_type = "bray", dst = NULL, drop
   }
 
   ## Estimate weighted Euclidean distances
-  WEdist <- dist(as.matrix(datt) %*% diag(sp_weights))
+  WEdist <- stats::dist(as.matrix(datt) %*% diag(sp_weights))
 
   ## Stress 1 measure = loss of the variance due to distance transformation (stress * 100 = %)
   stress <- cstr$stress
@@ -142,11 +141,11 @@ dissimilarity_to_distance <- function(datt, dist_type = "bray", dst = NULL, drop
 
     plt <- data.frame(Dissim = as.numeric(dst), Euclid = as.numeric(WEdist))
 
-    dissim_plot <- ggplot2::ggplot(data = plt, aes(x = Dissim, y = Euclid)) +
-      annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=Inf, color="grey", linetype = "longdash") +
-      geom_point() +
-      labs(x = "Original dissimilarity", y="Weighted Euclidean distance") +
-      ggtitle(paste("Loss of the variance due to distance transformation = ", round(stress * 100, 3), "%", sep=""))
+    dissim_plot <- ggplot2::ggplot(data = plt, ggplot2::aes(x = Dissim, y = Euclid)) +
+      ggplot2::annotate("segment", x=-Inf, xend=Inf, y=-Inf, yend=Inf, color="grey", linetype = "longdash") +
+      ggplot2::geom_point() +
+      ggplot2::labs(x = "Original dissimilarity", y="Weighted Euclidean distance") +
+      ggplot2::ggtitle(paste("Loss of the variance due to distance transformation = ", round(stress * 100, 3), "%", sep=""))
 
     print(dissim_plot)
   }
@@ -172,7 +171,6 @@ dissimilarity_to_distance <- function(datt, dist_type = "bray", dst = NULL, drop
 #'
 #' @return ggplot-object.
 #'
-#' @importFrom ggplot2 ggplot aes_string scale_shape_manual geom_point labs
 #' @export
 #' @seealso \code{\link{dissimilarity_to_distance}}
 #' @examples
@@ -199,19 +197,19 @@ dissimilarity_to_distance_importance_plot <- function(x, scaled_weights = TRUE, 
   if(scaled_weights == TRUE) { xx <- "WeightScaled" }
 
   if(mark_removed == FALSE){
-    plt <- ggplot(data = dtt, aes_string(x = xx, y = "Species"))
+    plt <- ggplot2::ggplot(data = dtt, ggplot2::aes_string(x = xx, y = "Species"))
   }
   if(mark_removed == TRUE){
-    plt <- ggplot(data = dtt, aes_string(x = xx, y = "Species", shape = "Importance")) +
-             scale_shape_manual(
+    plt <- ggplot2::ggplot(data = dtt, ggplot2::aes_string(x = xx, y = "Species", shape = "Importance")) +
+             ggplot2::scale_shape_manual(
                values = c(16, 8),
                breaks = c("important", "not_important_removed"),
                labels = c("important", "removed"))
   }
 
   plt <- plt +
-    geom_point(size = 2) +
-    labs(x = "Weight", y = "Species")
+    ggplot2::geom_point(size = 2) +
+    ggplot2::labs(x = "Weight", y = "Species")
 
   return(plt)
 }

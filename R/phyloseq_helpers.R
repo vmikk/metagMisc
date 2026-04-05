@@ -22,8 +22,6 @@
 #' for functions that expect specific data orientations (e.g., vegan functions 
 #' typically expect samples as rows).
 #'
-#' @importFrom phyloseq otu_table taxa_are_rows
-#'
 #' @export
 #'
 #' @examples

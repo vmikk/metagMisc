@@ -61,7 +61,6 @@
 #' plot(tr_multi)
 #' plot(tr_multi, use.edge.length = F)
 #'
-#' @importFrom phytools bind.tip
 #' @export
 #' 
 tree_add_sister_tip <- function(tree, new.tip.label, sister.tip.label, branch.length = 1e-5) {
