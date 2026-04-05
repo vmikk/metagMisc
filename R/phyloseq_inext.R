@@ -176,29 +176,29 @@ phyloseq_inext <- function(physeq, Q = 0,
   }
 
   ## Prepare a plot
-  pp <- ggplot(data = res, aes(x = m, y = .data[[YY]], group = Assemblage)) +  # color = color
-    geom_line(data = resl$interpolated, linetype = "solid") +
-    geom_line(data = resl$extrapolated, linetype = "dashed") +
-    geom_point(data = resl$observed, size = 2)
+  pp <- ggplot2::ggplot(data = res, ggplot2::aes(x = m, y = .data[[YY]], group = Assemblage)) +  # color = color
+    ggplot2::geom_line(data = resl$interpolated, linetype = "solid") +
+    ggplot2::geom_line(data = resl$extrapolated, linetype = "dashed") +
+    ggplot2::geom_point(data = resl$observed, size = 2)
 
   ## Show confinence interval
   if(show_CI == TRUE){
     pp <- pp +
-      geom_ribbon(
-        aes(ymin = .data[[YYL]], ymax = .data[[YYU]], color = NULL),
+      ggplot2::geom_ribbon(
+        ggplot2::aes(ymin = .data[[YYL]], ymax = .data[[YYU]], color = NULL),
         alpha = 0.2)   # fill = color
   }
 
   ## Show sample labels
   if(show_sample_labels == TRUE){
     pp <- pp +
-      geom_text(data = samplabs,
-        aes(x = SampSize, y = .data[[YYM]], label = Assemblage),
+      ggplot2::geom_text(data = samplabs,
+        ggplot2::aes(x = SampSize, y = .data[[YYM]], label = Assemblage),
         size = 4, hjust = -0.5)     # color = color
   }
 
   ## Add axes labels
-  pp <- pp + labs(x = "Sample Size", y = ylab)
+  pp <- pp + ggplot2::labs(x = "Sample Size", y = ylab)
 
   if(show_plot == TRUE){
     print(pp)

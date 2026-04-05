@@ -21,7 +21,7 @@ phyloseq_merge_samples <- function(phys, samples_to_merge, new_id = NULL){
   }
 
   ## Check if valid sample names were provided
-  if(any(!samples_to_merge %in% sample_names(phys))){
+  if(any(!samples_to_merge %in% phyloseq::sample_names(phys))){
     stop("Provided sample IDs are missing in the phyloseq object.\n")
   }
 
@@ -31,8 +31,8 @@ phyloseq_merge_samples <- function(phys, samples_to_merge, new_id = NULL){
   }
 
   ## Split phyloseq into samples that should be merged and the rest
-  ps_m <- prune_samples(sample_names(phys) %in% samples_to_merge, phys)
-  ps_r <- prune_samples(!sample_names(phys) %in% samples_to_merge, phys)
+  ps_m <- phyloseq::prune_samples(phyloseq::sample_names(phys) %in% samples_to_merge, phys)
+  ps_r <- phyloseq::prune_samples(!phyloseq::sample_names(phys) %in% samples_to_merge, phys)
 
   ## Merge chosen samples
   ps_mrg <- phyloseq_combine_samples(ps_m)
@@ -41,18 +41,18 @@ phyloseq_merge_samples <- function(phys, samples_to_merge, new_id = NULL){
   if(is.null(new_id)){
     new_id <- paste(samples_to_merge, collapse = "__")
   }
-  sample_names(ps_mrg) <- new_id
+  phyloseq::sample_names(ps_mrg) <- new_id
 
   ## Recover sample metadata
-  if(!is.null(sample_data(phys, errorIfNULL=F))){
-    ps_meta <- prune_samples(sample_names(phys) %in% samples_to_merge[1], phys)
-    sample_names(ps_meta) <- new_id
-    sample_data(ps_mrg) <- sample_data(ps_meta)
+  if(!is.null(phyloseq::sample_data(phys, errorIfNULL=F))){
+    ps_meta <- phyloseq::prune_samples(phyloseq::sample_names(phys) %in% samples_to_merge[1], phys)
+    phyloseq::sample_names(ps_meta) <- new_id
+    phyloseq::sample_data(ps_mrg) <- phyloseq::sample_data(ps_meta)
     rm(ps_meta)
   }
 
   ## Merge phyloseq objects back
-  res <- merge_phyloseq(ps_mrg, ps_r)
+  res <- phyloseq::merge_phyloseq(ps_mrg, ps_r)
 
   return(res)
 }

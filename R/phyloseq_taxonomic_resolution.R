@@ -64,21 +64,21 @@ phyloseq_taxonomic_resolution <- function(physeq, add_counts = TRUE, justDF = FA
     sp_ranks_long$Count <- NULL
 
     ## Make the plot
-    pp <- ggplot(data = sp_ranks_long, aes(x = RankName, y = Perc, fill = DataType)) +
-      geom_bar(stat = "identity", position = position_dodge()) +
-      scale_fill_manual(
+    pp <- ggplot2::ggplot(data = sp_ranks_long, ggplot2::aes(x = RankName, y = Perc, fill = DataType)) +
+      ggplot2::geom_bar(stat = "identity", position = ggplot2::position_dodge()) +
+      ggplot2::scale_fill_manual(
           values = c("#33658a", "#86bbd8"),  # blue + seagull (light-blue)
           labels = c("Reads", "OTUs"),
           name = "") +
-      labs(x = "Lowest taxonomic rank", y = "Percentage of data")
+      ggplot2::labs(x = "Lowest taxonomic rank", y = "Percentage of data")
 
     ## Add absolute number of reads or OTUs to the bars
     if(add_counts == TRUE){
-      pp <- pp + geom_text(
-                    aes(label = Counts),
+      pp <- pp + ggplot2::geom_text(
+                    ggplot2::aes(label = Counts),
                     hjust = 0.5, vjust = -0.5,
                     size = 3.5,
-                    position = position_dodge(0.9))
+                    position = ggplot2::position_dodge(0.9))
     }
 
     ## Add data in wide format (for export)

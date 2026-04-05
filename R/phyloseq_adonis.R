@@ -28,7 +28,7 @@ phyloseq_adonis <- function(physeq, group.var = NULL, method = "bray",
   ## Currently, independent variables can be only for factors !
 
   ## Extract sample metadata
-  metad <- as(sample_data(physeq), "data.frame")
+  metad <- as(phyloseq::sample_data(physeq), "data.frame")
   metad[, group.var] <- factor(metad[, group.var])
 
   ## Estimate pairwise dissimilarity

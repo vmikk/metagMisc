@@ -280,7 +280,7 @@ OTU_average <- function(x, avg_type = "aldex",
 
   ## Replace original counts with the average relative abundance
   if(result == "phyloseq"){
-    otu_table(x) <- phyloseq::otu_table(otuavg, taxa_are_rows = TRUE)
+    phyloseq::otu_table(x) <- phyloseq::otu_table(otuavg, taxa_are_rows = TRUE)
     return(x)
   }
 
