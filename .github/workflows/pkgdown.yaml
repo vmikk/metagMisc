@@ -52,9 +52,6 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: |
-            joey711/phyloseq
-            cran/PhyloMeasures
-            any::pkgdown
             local::.
           needs: website
 
