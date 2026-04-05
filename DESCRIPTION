@@ -42,6 +42,11 @@ Suggests:
     XML (>= 3.98),
     zCompositions (>= 1.1.1),
     tinytest
+Remotes:
+    mikemc/speedyseq,
+    cran/PhyloMeasures
+Config/Needs/website:
+    pkgdown
 License: MIT
 Encoding: UTF-8
 LazyData: true
