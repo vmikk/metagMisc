@@ -31,7 +31,7 @@
 #' - If `invert = TRUE` (dissimilarity): delta(d) = 1 - exp(-d^2/(2*sigma^2)), and
 #'   delta*(d) = delta(d) / delta(D_max).
 #' - If `invert = FALSE` (similarity): s(d) = exp(-d^2/(2*sigma^2)), and
-#'   s*(d) = {s(d) - s(D_max)} / {1 - s(D_max)}.
+#'   s*(d) = (s(d) - s(D_max)) / (1 - s(D_max)).
 #'
 #' This preserves monotonicity and ensures standardized scaling across datasets
 #' when a common D_max is used (e.g., 1 for Bray–Curtis or Jaccard dissimilarities).
