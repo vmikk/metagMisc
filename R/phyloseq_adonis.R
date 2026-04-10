@@ -18,6 +18,7 @@
 #' @export
 #' @seealso \code{\link[vegan]{adonis}}, \code{\link[vegan]{betadisper}}, \code{\link[metagMisc]{adonis_pairwise}}
 #' @examples
+#' library(phyloseq)
 #' data("GlobalPatterns")
 #' phyloseq_adonis(physeq = GlobalPatterns, group.var = "SampleType", all_results = FALSE, pairwise = TRUE, permut = 20)
 #'
