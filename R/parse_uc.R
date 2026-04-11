@@ -31,16 +31,16 @@
 #'
 #' @return Data.frame or data.table with the following columns:
 #' \itemize{
-#'   \item{"recordType"}{ - Indicates the type of the record (Hit, Centroid, Cluster, No hit).}
-#'   \item{"clusterNumber"}{ - The number of the cluster, starting from 0.}
-#'   \item{"seqLengthOrClusterSize"}{ - Represents either sequence length (for S, N, and H records) or cluster size (for C records).}
-#'   \item{"percentIdentity"}{ - For H records, this shows the percent identity with the target sequence.}
-#'   \item{"strand"}{ - For H records, indicates the DNA strand (+ or -) for nucleotides.}
-#'   \item{"unusedField1"}{ - A placeholder for a field that is not used, kept for backward compatibility.}
-#'   \item{"unusedField2"}{ - Another unused field, also included for backward compatibility.}
-#'   \item{"alignment"}{ - CIGAR string, representing the compressed alignment, or an '=' sign indicating 100% identity to the target sequence.}
-#'   \item{"queryLabel"}{ - Label of the query sequence.}
-#'   \item{"targetLabel"}{ - Label of the target sequence.}
+#'   \item{recordType}{Indicates the type of the record (Hit, Centroid, Cluster, No hit).}
+#'   \item{clusterNumber}{The number of the cluster, starting from 0.}
+#'   \item{seqLengthOrClusterSize}{Represents either sequence length (for S, N, and H records) or cluster size (for C records).}
+#'   \item{percentIdentity}{For H records, percent identity with the target sequence.}
+#'   \item{strand}{For H records, the DNA strand (\code{+} or \code{-}) for nucleotides.}
+#'   \item{unusedField1}{Placeholder field, kept for backward compatibility.}
+#'   \item{unusedField2}{Another unused field, kept for backward compatibility.}
+#'   \item{alignment}{CIGAR string (compressed alignment), or \code{=} for 100 percent identity to the target sequence.}
+#'   \item{queryLabel}{Label of the query sequence.}
+#'   \item{targetLabel}{Label of the target sequence.}
 #' }
 #' 
 #' With `map_only = TRUE`, the resulting table will have only two columns - "Query" and "OTU".
