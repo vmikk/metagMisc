@@ -113,6 +113,8 @@ phyloseq_extract_non_shared_otus <- function(x, samp_names = phyloseq::sample_na
 #' @export
 #'
 #' @examples
+#' data(esophagus)
+#' phyloseq_otu_appearance(esophagus, ref_level = sample_names(esophagus)[1])
 #'
 phyloseq_otu_appearance <- function(phys, ref_level){
 
