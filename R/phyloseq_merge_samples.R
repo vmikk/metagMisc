@@ -11,6 +11,10 @@
 #' Sample metadata of the first ID from `samples_to_merge` will be used as a representative for a group.
 #'
 #' @examples
+#' data(esophagus)
+#' head(otu_table(esophagus))
+#' ps <- phyloseq_merge_samples(esophagus, samples_to_merge = c("B", "C"), new_id = "merged")
+#' head(otu_table(ps))
 #'
 phyloseq_merge_samples <- function(phys, samples_to_merge, new_id = NULL){
 
