@@ -16,12 +16,12 @@ prevalence(physeq, add_tax = TRUE, package = "data.table")
 \value{
 Data frame or data.table with the following columns:
 \itemize{
- \item{"Taxa"}          {Taxa names (species, OTU, or ASV)}
- \item{"Prevalence"}    {The number of occurrences (the count of samples where the particular taxon is found)}
- \item{"TotalAbundance"}{The total abundance of a taxon across all samples}
- \item{"MeanAbundance"} {The average taxon abundance}
- \item{"MedianAbundance"}{The median abundance of a taxon}
- \item{"Taxonomy"}       {An optional set of columns containing taxonomic information present in phyloseq object}
+ \item{Taxa}{Taxa names (species, OTU, or ASV).}
+ \item{Prevalence}{The number of occurrences (samples where the taxon is found).}
+ \item{TotalAbundance}{The total abundance of a taxon across all samples.}
+ \item{MeanAbundance}{The average taxon abundance.}
+ \item{MedianAbundance}{The median abundance of a taxon.}
+ \item{Taxonomy}{Optional columns with taxonomic information from the phyloseq object.}
 }
 }
 \description{
