@@ -20,7 +20,9 @@
 #' # and average diversity (richness and Shannon index) estimates over all iterations
 #' phyloseq_mult_raref_div(esophagus, divindex = c("Observed", "Shannon"), iter = 10)
 #' 
-phyloseq_mult_raref_div <- function(physeq, SampSize = min(phyloseq::sample_sums(physeq)), iter = 1000,
+phyloseq_mult_raref_div <- function(physeq,
+  SampSize = min(phyloseq::sample_sums(physeq)),
+  iter = 1000,
   divindex = c("Observed", "Shannon"), parallel = FALSE, verbose = TRUE, ...){
 
   ## Progress indicator

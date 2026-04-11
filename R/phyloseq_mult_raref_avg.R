@@ -22,7 +22,9 @@
 #' res <- phyloseq_mult_raref_avg(GP, iter = 10)
 #' res
 #' 
-phyloseq_mult_raref_avg <- function(physeq, SampSize = NULL, iter = 1000, parallel = FALSE, verbose = TRUE, ...){
+phyloseq_mult_raref_avg <- function(physeq,
+  SampSize = min(phyloseq::sample_sums(physeq)),
+  iter = 1000, parallel = FALSE, verbose = TRUE, ...){
 
   # require(compositions)
   # require(plyr)
