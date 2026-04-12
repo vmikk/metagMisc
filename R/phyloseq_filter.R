@@ -286,16 +286,37 @@ phyloseq_filter_sample_wise_abund_trim <- function(physeq, minabund = 10, relabu
 phyloseq_filter_top_taxa <- function(physeq, perc = 10, n = NULL){
 
   ## Arguments validation
-  if(perc <= 0 | perc > 100){ stop("Error: percentage should be in 1-100 range.\n") }
+  if(is.null(perc) & is.null(n)){
+    stop("Error: either 'perc' or 'n' argument must be specified.\n")
+  }
+
+  if(!is.null(perc)){
+    if(perc <= 0 | perc > 100){ stop("Error: percentage should be in 0-100 range, excluding zero.\n") }
+  }
+
+  if(!is.null(n)){
+    if(n <= 0){ stop("Error: number of taxa to retain should be positive.\n") }
+  }
 
   ## Get total abundances for all taxa
   taxx <- sort(phyloseq::taxa_sums(physeq), decreasing = TRUE)
 
   ## Find how many taxa to preserve (if percentage is specified)
-  if(is.null(n)){
-    n <- phyloseq::ntaxa(physeq) * perc / 100
-    n <- floor(n)
+  if(!is.null(perc)){
+    pp <- phyloseq::ntaxa(physeq) * perc / 100
+    pp <- floor(pp)
+  } else {
+    pp <- NA
   }
+
+  if(!is.null(n)){
+    nn <- n
+  } else {
+    nn <- NA
+  }
+
+  ## Find the minimum number of taxa to preserve
+  n <- min(pp, nn, na.rm = TRUE)
 
   ## Extract names for the taxa that should be preserved
   keepTaxa <- names(taxx)[1:n]
