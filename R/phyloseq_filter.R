@@ -278,10 +278,16 @@ phyloseq_filter_sample_wise_abund_trim <- function(physeq, minabund = 10, relabu
 #' @param physeq A phyloseq-class object
 #' @param perc Percentage of the most abundant taxa to retain
 #' @param n Number of the most abundant taxa to retain (this argument will override perc argument)
+#' @details
+#' If `perc` is specified, the function will retain the most abundant taxa up to the specified percentage (floored to the nearest integer).
+#' If `n` is specified, the function will retain the most abundant taxa up to the specified number.
+#' If both `perc` and `n` are specified, the function will retain the most abundant taxa up to the specified percentage or number, whichever is smaller.
 #' @return Phyloseq object with a filtered data.
 #' @export
 #'
 #' @examples
+#' data(esophagus)
+#' phyloseq_filter_top_taxa(esophagus, perc = 10)
 #'
 phyloseq_filter_top_taxa <- function(physeq, perc = 10, n = NULL){
 
