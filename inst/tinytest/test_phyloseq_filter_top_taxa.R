@@ -12,5 +12,5 @@ n50 <- phyloseq_filter_top_taxa(ps, n = 50)
 expect_inherits(n50, "phyloseq")
 expect_true(ntaxa(n50) == 50)
 
-expect_error(phyloseq_filter_top_taxa(ps, perc = 0), "percentage should be in 1-100")
+expect_error(phyloseq_filter_top_taxa(ps, perc = 0), "percentage should be in 0-100 range, excluding zero")
 
