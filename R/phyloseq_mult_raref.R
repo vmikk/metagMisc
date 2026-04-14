@@ -39,6 +39,7 @@ phyloseq_mult_raref <- function(x,
   iter = 1000, replace = F, multithread = F, seeds = NULL, ...){
 
   ## Data validation
+  if(is.null(SampSize)){ SampSize <- min(phyloseq::sample_sums(x)) }
   if(!is.numeric(iter)){ stop("Error: 'iter' must be a numeric value.\n") }
   if(!is.numeric(SampSize)){ stop("Error: 'SampSize' must be a numeric value.\n") }
   if(iter < 1)    { stop("Error: 'iter' must be greater than 0.\n") }
@@ -53,9 +54,6 @@ phyloseq_mult_raref <- function(x,
 
   ## Filter samples by number of reads
   if(!is.null(MinSizeThreshold)){ x <- phyloseq::prune_samples(phyloseq::sample_sums(x) >= MinSizeThreshold, x) }
-
-  ## Define rarefication depth
-  if(is.null(SampSize)){ SampSize <- round( 0.9*min(phyloseq::sample_sums(x)) ) }
 
   ## Prepare seed values
   if(is.null(seeds)){ seeds <- 1:iter }
