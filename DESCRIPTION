@@ -19,6 +19,7 @@ Imports:
 Suggests: 
     phyloseq,
     speedyseq,
+    SRS (>= 0.2.0),
     phytools,
     ggdendro,
     ggplot2 (>= 2.2.0),
