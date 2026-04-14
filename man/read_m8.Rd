@@ -20,3 +20,7 @@ data.table / data.frame / tibble (depending on the `package` parameter)
 This function loads BLAST results saved in a tabular output format 6
 (`-outfmt 6`; 12 columns).
 }
+\examples{
+# read_m8("blast_results.m8")
+
+}
