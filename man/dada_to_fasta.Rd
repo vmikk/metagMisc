@@ -13,7 +13,7 @@ dada_to_fasta(seqtab, out = "DADA2.fasta", hash = "sha1", ...)
 
 \item{hash}{Hash function to use: "sha1" (default), "sha256", "md5"}
 
-\item{...}{Additional parameters passed on to \code{\link{uniquesToFasta}}}
+\item{...}{Additional parameters passed on to \code{\link[dada2]{uniquesToFasta}}}
 }
 \value{
 Invisible returns sequence names in the VSEARCH/USEARCH style.
@@ -37,5 +37,5 @@ dada_to_fasta(seqtab, out = "DADA2.fasta", hash = "sha1")
 
 }
 \seealso{
-\code{\link{uniquesToFasta}}, \code{\link{getUniques}}
+\code{\link[dada2]{uniquesToFasta}}, \code{\link[dada2]{getUniques}}
 }
