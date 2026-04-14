@@ -196,6 +196,37 @@ bitcode <- function(
   class(out) <- unique(c("bitcode", class(out)))
   out
 }
+
+#' Decode integer codes produced by \code{bitcode()}
+#'
+#' @description
+#' Inverts \code{bitcode()} and reconstructs the original tuple of discrete
+#' variables (as a data.frame) using the encoding metadata.
+#'
+#' @param code A vector produced by \code{bitcode()}, or a numeric/integer vector
+#'   plus explicit \code{levels}, \code{bases}, \code{order}, and \code{start}.
+#' @param levels Optional list of level sets per variable. Defaults to
+#'   \code{attr(code, "bitcode_levels")}.
+#' @param bases Optional integer vector of base sizes. Defaults to
+#'   \code{attr(code, "bitcode_bases")}.
+#' @param order Encoding order, as in \code{bitcode()}. Defaults to
+#'   \code{attr(code, "bitcode_order")}.
+#' @param start Start offset, as in \code{bitcode()}. Defaults to
+#'   \code{attr(code, "bitcode_start")}.
+#' @param varnames Optional variable names. Defaults to
+#'   \code{attr(code, "bitcode_varnames")}.
+#' @param is_factor Optional logical vector indicating which decoded variables
+#'   should be returned as factors (with the provided level sets as factor
+#'   levels). Defaults to \code{attr(code, "bitcode_is_factor")}.
+#' @param na_code Value representing missing codes. Defaults to \code{NA}.
+#'
+#' @return A \code{data.frame} with one column per encoded variable.
+#'
+#' @examples
+#' code <- bitcode(c("A","B"), c("x","y"))
+#' bitdecode(code)
+#'
+#' @export
 bitdecode <- function(code,
     levels = attr(code, "bitcode_levels"),
     bases = attr(code, "bitcode_bases"),
