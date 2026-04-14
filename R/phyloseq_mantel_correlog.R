@@ -28,6 +28,31 @@
 #'
 #' @seealso [vegan::mantel.correlog()], [geodist::geodist()]
 #'
+#' @examples
+#' \dontrun{
+#'   library(phyloseq)
+#'
+#'   # ps <- your phyloseq object with sample_data columns Long and Lat
+#'
+#'   res <- phyloseq_mantel_correlog(
+#'     ps,
+#'     otu_dist = "bray",
+#'     geo_dist = "geodesic",
+#'     log_geo_dist = TRUE,
+#'     p_adj = "fdr",
+#'     cor_type = "spearman",
+#'     permut = 100
+#'   )
+#'   head(res)
+#'
+#' phyloseq_mantel_correlog(ps,
+#'   p_adj = "fdr", cor_type = "pearson", permut = 100,
+#'   log_geo_dist = TRUE,
+#'   break_pts = log( c(1, 11, 20, 40, 80, 100, 300) )  # log breakpoints
+#' )
+#' }
+#' 
+#' @importFrom vegan mantel.correlog
 #' @export
 #' 
 phyloseq_mantel_correlog <- function(ps,
