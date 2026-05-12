@@ -21,3 +21,11 @@ if ("SampleType" %in% colnames(sample_data(ps))) {
   expect_true(all(taxa_names(ps) %in% gp_wide$Taxa))
 }
 
+## Return data.frame in long format
+if ("SampleType" %in% colnames(sample_data(ps))) {
+  gp_long <- phyloseq_otu_occurrence(ps, variable = "SampleType", taxa_frequency = "percentage", justdf = TRUE, long = TRUE)
+  expect_true(is.data.frame(gp_long))
+  expect_true(all(c("Taxa", "SampleType", "Occurrence") %in% colnames(gp_long)))
+  expect_true(all(taxa_names(ps) %in% gp_long$Taxa))
+  expect_true(all(unique(sample_data(ps)$SampleType) %in% gp_long$SampleType))
+}
