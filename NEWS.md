@@ -7,6 +7,7 @@
 * `dist_gower` - Gower's distance  
 * `chunk_table` - split data.table into chunks (optionally, taking a groupping variable into account`)  
 * `expand_CIGAR` - expands compact CIGAR (Compact Idiosyncratic Gapped Alignment Report) strings into a full-length sequence of CIGAR codes
+* `rc` - reverse complement of DNA/RNA sequences  
 * `tree_add_sister_tip` - add tips to a tree  
 
 ## Other updates
